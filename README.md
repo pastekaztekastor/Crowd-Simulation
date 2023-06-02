@@ -78,7 +78,7 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 - [ ] Refaire le fichier  [`gitignore`](.gitignore) de manière appropriée au sujet du projet.
 
 **Programmation**
-- [ ] Modéliser le problème.
+- [x] Modéliser le problème. -> Schéma de ce document.
 - [ ] Commencer par créer une version CPU du problème.
 
 **Makefile**
@@ -95,9 +95,17 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
   - [x] Compréhension du domaine.
 
 ### 2023-06-02
-- **Matin** : Arrivée à 8h/ Pause de 10:32->10:49
+- **Matin** : Arrivée à 8h/ Pause de 10:32->10:49 / fin à 12:18
   - [ ] Terminer la version utilisant uniquement le CPU.
-  - [x] Corriger les fautes dans les documents Markdown.
+  - [x] Corriger les fautes dans les documents *Markdown*.
   - [x] Ecrire les déspcritions des fonctions 
-
--
+  - [x] Fin le la fonction `generatePopulation` dans [onlyCPU.cpp](src/onlyCPU.cpp)
+- **Après-midi** : 13:00 - 16:30
+  - [x] Ecriture de la doc pour la fonction `generatePopulation`
+  - [x] Ecriture de la fonction `generateMap` dans [onlyCPU.cpp](src/onlyCPU.cpp)
+  - [x] Ecriture de la fonction `shuffleIndex` dans [onlyCPU.cpp](src/onlyCPU.cpp)
+  - [ ] Ecriture de la fonction `shifting` dans [onlyCPU.cpp](src/onlyCPU.cpp)
+  - [ ] Ecriture de la fonction `generatesJsonFile` dans [onlyCPU.cpp](src/onlyCPU.cpp)
+  - [ ] Ecriture de la fonction `printMap` dans [onlyCPU.cpp](src/onlyCPU.cpp)
+  -  j'ai bien avancé sur l'ensemble de l'écriture du programme CPU. J'ai commencé à faire des fonctions qui me serviront de toute façon lors de la paraléllisation sur CUDA pour mieux voir ce qu'il se passe, comme `printMap`. 
+  -  Je me suis rendu compte qu'il était impossible de se passer d'un tableau de des servant de carte pour pouvoir avoir une vision sur les voisins en direct sans avoir à repars courir tout le tableau des individus présents dans la simulation.
