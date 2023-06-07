@@ -16,6 +16,7 @@
 #include <iostream> 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 using namespace std;
 
 // Enum
@@ -29,8 +30,9 @@ int *               exitSimulation,     // [x,y] coordinate of simulation output
 int                 xParam,             // Simulation x-dimension
                     yParam,             // Simulation y-dimension
                     nbGeneration,       // Number of generation that the program will do before stopping the simulation
-                    nbIndividual;       // Number of individuals who must evolve during the simulation
-
+                    nbIndividual,       // Number of individuals who must evolve during the simulation
+                    _debug,             // For display the debug
+                    _displayMap;        // For display map
 // Declaration of functions
 void    generatePopulation(float*** positions,int nbIndividual, int xParam, int yParam);
 void    generateMap(_Element *** map, float** positions, int * exitSimulation, int nbIndividual, int xParam, int yParam);
@@ -55,28 +57,72 @@ int main(int argc, char const *argv[])
  * @param argv  [x param, y param, nb generation, nb individual]
  * @return      int (nothing) 
  */
-    // We retrieve the call parameters of the program
-    cout<<"We retrieve the call parameters of the program"<<endl;
-    cout<<(argc -1)<<" parameters passed out of 4"<<endl;
-    if (argc != 5){
-        cout<<"Unable to start the program!"<<endl<<"The call parameters are of the form:"<<endl<<"[x param, y param, nb generation, nb individual]"<<endl;
-        exit(0);
+    // We retrieve the call parameters
+    xParam = 3;       
+    yParam = 3;       
+    nbGeneration = 3; 
+    nbIndividual = 1; 
+    _debug = 0;
+    _displayMap = 1;
+
+    if (argc > 1){
+        for (size_t i = 1; i < argc; i += 2) {
+            if (strcmp(argv[i], "-x") == 0) {
+                xParam = atoi(argv[i + 1]);
+            } 
+            else if (strcmp(argv[i], "-y") == 0) {
+                yParam = atoi(argv[i + 1]);
+            } 
+            else if (strcmp(argv[i], "-p") == 0) {
+                nbIndividual = atoi(argv[i + 1]);
+            } 
+            else if (strcmp(argv[i], "-gen") == 0) {
+                nbGeneration = atoi(argv[i + 1]);
+            } 
+            else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
+                // print help
+                printf(" +++++ HELP +++++\n");
+                printf("  -x     : sets the dimension in x of the simulation\n");
+                printf("  -y     : same but for y dimension\n");
+                printf("  -p     : number of individuals in the simulation\n");
+                printf("  -gen   : generation number/frame\n");
+                printf("  -debug : print all debug commande ['on'/'off'] default:off\n");
+                printf("  -map   : print all map gen ['on'/'off'] default:on\n");
+                printf("  -h\n"   );
+                printf("  -help  : help (if so...)\n");
+                exit(0);
+            } 
+            else if (strcmp(argv[i], "-debug") == 0) {
+                if (strcmp(argv[i+1], "on") == 0){
+                    _debug = 1;
+                }
+                else if (strcmp(argv[i+1], "off") == 0){
+                    _debug = 0;
+                }
+                else {
+                    printf("unrecognized arg, try '-help'\n");
+                    exit(0);
+                }
+            } 
+            else if (strcmp(argv[i], "-map") == 0) {
+                if (strcmp(argv[i+1], "on") == 0){
+                    _displayMap = 1;
+                }
+                else if (strcmp(argv[i+1], "off") == 0){
+                    _displayMap = 0;
+                }
+                else {
+                    printf("unrecognized arg, try '-help'\n");
+                    exit(0);
+                }
+            }
+            else {
+                printf("unrecognized arg, try '-help'\n");
+                exit(0);
+            }
+        }  
     }
-    else{
-        xParam          = atoi(argv[1]);
-        yParam          = atoi(argv[2]);
-        nbGeneration    = atoi(argv[3]);
-        nbIndividual    = atoi(argv[4]);
-    }
-    if (xParam<=0 || yParam<=0 || nbGeneration<=0 || nbIndividual<=0 ){
-        cout<<"No parameter can be less than or equal to 0. Exit"<<endl;
-        exit(0);
-    }
-    if (nbIndividual>=(xParam*yParam)-1){
-        //The output is one case so the maximum number of individuals in the simulation is (x*y)-1
-        cout<<"There are too many people in the simulation. Exit"<<endl;
-        exit(0);
-    }
+    
     cout<<"Parameters : ["<<xParam<<","<<yParam<<","<<nbGeneration<<","<<nbIndividual<<"]"<<endl;
 
     // Initialization variables
@@ -86,27 +132,27 @@ int main(int argc, char const *argv[])
     exitSimulation[1] = rand() % yParam;
     // // Generating the population as a position table
     generatePopulation(&positions, nbIndividual, xParam, yParam);
-    printPopulation(positions, nbIndividual);
+    if(_debug == 1) printPopulation(positions, nbIndividual);
     // // Creation of the index table for index mixing
     indexIndividu = (int * ) malloc(nbIndividual * sizeof(int));
     for (size_t i = 0; i < nbIndividual; i++){ indexIndividu[i] = i; }
     // // Creation of the map
     generateMap(&map, positions, exitSimulation, nbIndividual, xParam, yParam); // uncomment after debugate generate map func
     // // Display the map
-    printMap(map, xParam, yParam);
+    if(_displayMap == 1) printMap(map, xParam, yParam);
 
 
     // For each generation
     for (size_t i = 0; i < nbGeneration; i++)
     {
-        cout<<"GENERATION ////-> "<<i<<"/"<<nbGeneration<<" : "<< endl;
+        if(_displayMap == 1) cout<<"GENERATION ////-> "<<i<<"/"<<nbGeneration<<" : "<< endl;
         shuffleIndex(&indexIndividu, nbIndividual);
         for (size_t peopole = 0; peopole < nbIndividual; peopole++)
         {
             shifting(&map, &positions, peopole, exitSimulation);
             //shifting(&map, &positions, indexIndividu[peopole], exitSimulation);
         }
-        printMap(map, xParam, yParam);
+        if(_displayMap == 1) printMap(map, xParam, yParam);
 
     }
     return 0;
@@ -129,7 +175,7 @@ void generatePopulation(float*** positions,int nbIndividual, int xParam, int yPa
      * @param yParam        dimension in y of the simulation space
      */
 
-    cout << " # - Population creation --- ";
+    if(_debug == 1)cout << " # - Population creation --- ";
     
     // Memory allocation for 2D array
     (*positions) = (float ** ) malloc(nbIndividual * sizeof(float*));
@@ -151,7 +197,7 @@ void generatePopulation(float*** positions,int nbIndividual, int xParam, int yPa
 
     // Call the json file creation function but with the name "initialization"
    
-    cout << " DONE " << endl;
+    if(_debug == 1)cout << " DONE " << endl;
 }
 void shuffleIndex(int **index, int nbIndividual)
 {
@@ -162,7 +208,7 @@ void shuffleIndex(int **index, int nbIndividual)
      * @param nbIndividual  The number of individuals that the table must contain
      */
 
-    cout << " # - Mix of indexes --- ";
+    if(_debug == 1)cout << " # - Mix of indexes --- ";
 
     for (size_t i = 0; i < nbIndividual; i++)
     {
@@ -173,7 +219,7 @@ void shuffleIndex(int **index, int nbIndividual)
         (*index)[b] = tmp;  
     }
 
-    cout << " DONE " << endl;
+    if(_debug == 1)cout << " DONE " << endl;
 }
 void generateMap(_Element *** map, float** positions, int * exitSimulation, int nbIndividual, int xParam, int yParam){
     /**
@@ -187,7 +233,7 @@ void generateMap(_Element *** map, float** positions, int * exitSimulation, int 
      * @param yParam            dimension in y of the simulation space
      */
 
-    cout << " # - Creation of the map --- ";
+    if(_debug == 1)cout << " # - Creation of the map --- ";
 
     // - step 1) we allocate the memory for the card
     (*map) = (_Element ** ) malloc(yParam * sizeof(_Element * ));
@@ -212,7 +258,7 @@ void generateMap(_Element *** map, float** positions, int * exitSimulation, int 
     
     // - step 4) --optional-- we place the walls
 
-    cout << " DONE " << endl;
+    if(_debug == 1)cout << " DONE " << endl;
 }
 int * shifting(_Element *** map, float*** positions, int individue, int * exitSimulation){
     /**
@@ -232,7 +278,7 @@ int * shifting(_Element *** map, float*** positions, int individue, int * exitSi
     if((*positions)[individue][0] == -1.f && (*positions)[individue][1] == -1.f){
         return nullptr;
     }
-    cout << " # - Population displacement --- ";
+    if(_debug == 1)cout << " # - Population displacement --- ";
 
     // - step 1) determine what is the displacement vector
     float posX = (*positions)[individue][0];
@@ -244,7 +290,7 @@ int * shifting(_Element *** map, float*** positions, int individue, int * exitSi
     // - step 2) find if the neighbor which is known the trajectory of the moving vector is free
     float moveX = deltaX / max(abs(deltaX), abs(deltaY));
     float moveY = deltaY / max(abs(deltaX), abs(deltaY));
-    cout << "[" << (*positions)[individue][0] << "," << (*positions)[individue][1] << "] + [" << moveX << "," << moveY << "]";
+    if(_debug == 1)cout << "[" << (*positions)[individue][0] << "," << (*positions)[individue][1] << "] + [" << moveX << "," << moveY << "]";
 
     // - step 3) Displacement according to the different scenarios
     switch ((*map)[(int)(posX+moveX)][(int)(posY+moveY)])
@@ -285,7 +331,7 @@ int * shifting(_Element *** map, float*** positions, int individue, int * exitSi
         break;
     }
 
-    cout << " DONE " << endl;
+    if(_debug == 1)cout << " DONE " << endl;
     return nullptr;
 }
 void generatesJsonFile(float*** positions, int * exitSimulation, char * name, int generationMax, int generationAcc){
@@ -298,8 +344,8 @@ void generatesJsonFile(float*** positions, int * exitSimulation, char * name, in
      * @param generationMax     [name]-[generation number]/[max generation].json
      * @param generationAcc     [name]-[generation number]/[max generation].json
      */
-    cout << " # - Saving data to a Json file --- ";
-    cout << " DONE " << endl;
+    if(_debug == 1)cout << " # - Saving data to a Json file --- ";
+    if(_debug == 1)cout << " DONE " << endl;
 }
 void printMap(_Element ** map, int xParam, int yParam){
     /**
@@ -313,7 +359,7 @@ void printMap(_Element ** map, int xParam, int yParam){
      * @param yParam        dimension in y of the simulation space
      */
 
-    cout << " # - Display map --- "<<endl;
+    if(_debug == 1)cout << " # - Display map --- "<<endl;
 
     // Display column numbers
     cout<<"  ";
@@ -349,7 +395,7 @@ void printMap(_Element ** map, int xParam, int yParam){
         }
         cout<<endl;
     }
-    cout << "                         --- DONE " << endl;
+    if(_debug == 1)cout << "                         --- DONE " << endl;
 }
 void printPopulation(float** positions, int nbIndividual){
     /**
@@ -359,11 +405,11 @@ void printPopulation(float** positions, int nbIndividual){
      * @param positions table of Vector positions. Does not need to be instantiated in memory
      * @param nbIndividual  The number of individuals that the table must contain
      */
-    cout << " # - Population display --- " << endl;
+    if(_debug == 1)cout << " # - Population display --- " << endl;
     for (size_t i = 0; i < nbIndividual; i++){
         cout<<"Creation of individual "<< i <<" on "<< nbIndividual <<" - position: ["<<positions[i][0]<<","<<positions[i][1]<<"]"<<endl; // For debuging 
     }
-    cout << "                        --- DONE " << endl;
+    if(_debug == 1)cout << "                        --- DONE " << endl;
 }
 int signeOf(float a){
     if (a<0){
