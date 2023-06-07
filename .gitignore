@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# For GPP/GCC object compilation
+*.out 
+*.exe
+
 # User-specific files
 *.rsuser
 *.suo
@@ -396,3 +400,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+.vscode/settings.json

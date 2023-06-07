@@ -13,9 +13,10 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
   - [Installation](#installation)
   - [Utilisation](#utilisation)
   - [Liste des tâches à effectuer](#liste-des-tâches-à-effectuer)
-  - [Journal de bord](#journal-de-bord)
-    - [2023-06-01](#2023-06-01)
-    - [2023-06-02](#2023-06-02)
+
+**Fichier Utiles**
+- [Journal de bord](markdown/journal_de_bord.md)
+- [Programme CPU](markdown/onlyCPU.md)
 
 ## Introduction du sujet
 
@@ -68,6 +69,9 @@ Nous avons un objectif de rendu.
 ## Installation
 Dans un premier temps, j'ai commencé par créer un programme qui implémente ce que nous avons décrit, mais uniquement en utilisant le CPU. La documentation détaillée de ce programme est disponible dans le fichier [onlyCPU.md](markdown/onlyCPU.md).
 
+Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur votre propre machine. Elle doit néanmoins être équipé d'un terminal et de bach. 
+
+
 ## Utilisation
 > À faire
 
@@ -75,7 +79,9 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 **Organisation**
 - [x] Réalisation du fichier README.md
 - [x] Explication du projet
-- [ ] Refaire le fichier  [`gitignore`](.gitignore) de manière appropriée au sujet du projet.
+- [ ] Refaire le fichier  [`gitignore`](.gitignore) de manière approp
+- [ ] riée au sujet du projet.
+- [ ] Pas néssécaire de faire un choix de la position des individus. 
 
 **Programmation**
 - [x] Modéliser le problème. -> Schéma de ce document.
@@ -83,29 +89,3 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 
 **Makefile**
 - [ ] Créer un fichier Makefile.
-
-## Journal de bord
-
-### 2023-06-01
-- **Matin** : Présentation du projet (1h15)
-- **Après-midi** : Départ vers 18:45
-  - [x] Mise en ordre des informations présentées le matin (partie introduction).
-  - [x] Lecture sur le sujet de la simulation de foule.
-  - [x] Recherche documentaire variée.
-  - [x] Compréhension du domaine.
-
-### 2023-06-02
-- **Matin** : Arrivée à 8h/ Pause de 10:32->10:49 / fin à 12:18
-  - [ ] Terminer la version utilisant uniquement le CPU.
-  - [x] Corriger les fautes dans les documents *Markdown*.
-  - [x] Ecrire les déspcritions des fonctions 
-  - [x] Fin le la fonction `generatePopulation` dans [onlyCPU.cpp](src/onlyCPU.cpp)
-- **Après-midi** : 13:00 - 16:30
-  - [x] Ecriture de la doc pour la fonction `generatePopulation`
-  - [x] Ecriture de la fonction `generateMap` dans [onlyCPU.cpp](src/onlyCPU.cpp)
-  - [x] Ecriture de la fonction `shuffleIndex` dans [onlyCPU.cpp](src/onlyCPU.cpp)
-  - [ ] Ecriture de la fonction `shifting` dans [onlyCPU.cpp](src/onlyCPU.cpp)
-  - [ ] Ecriture de la fonction `generatesJsonFile` dans [onlyCPU.cpp](src/onlyCPU.cpp)
-  - [ ] Ecriture de la fonction `printMap` dans [onlyCPU.cpp](src/onlyCPU.cpp)
-  -  j'ai bien avancé sur l'ensemble de l'écriture du programme CPU. J'ai commencé à faire des fonctions qui me serviront de toute façon lors de la paraléllisation sur CUDA pour mieux voir ce qu'il se passe, comme `printMap`. 
-  -  Je me suis rendu compte qu'il était impossible de se passer d'un tableau de des servant de carte pour pouvoir avoir une vision sur les voisins en direct sans avoir à repars courir tout le tableau des individus présents dans la simulation.
