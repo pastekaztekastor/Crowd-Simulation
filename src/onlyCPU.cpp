@@ -22,7 +22,7 @@ using namespace std;
 enum _Element { EMPTY, HUMAN, WALL, EXIT };
 
 //Global variable 
-int **              positions;          // Position table of all the individuals in the simulation [[x,y],[x,y],...]
+float **            positions;          // Position table of all the individuals in the simulation [[x,y],[x,y],...]
 enum _Element **    map;                // 2D map composed of the enum _Element
 int *               exitSimulation,     // [x,y] coordinate of simulation output
     *               indexIndividu;      // List of individual indexes so as not to disturb the order of the individuals
@@ -32,13 +32,13 @@ int                 xParam,             // Simulation x-dimension
                     nbIndividual;       // Number of individuals who must evolve during the simulation
 
 // Declaration of functions
-void    generatePopulation(int *** positions,int nbIndividual, int xParam, int yParam);
-void    generateMap(_Element *** map, int ** positions, int * exitSimulation, int nbIndividual, int xParam, int yParam);
+void    generatePopulation(float*** positions,int nbIndividual, int xParam, int yParam);
+void    generateMap(_Element *** map, float** positions, int * exitSimulation, int nbIndividual, int xParam, int yParam);
 void    shuffleIndex(int ** index, int nbIndividual);
-int *   shifting(_Element *** map, int *** positions, int individue, int * exitSimulation);
-void    generatesJsonFile(int *** positions, int * exitSimulation, char * name, int generationMax, int generationAcc);
+int *   shifting(_Element *** map, float*** positions, int individue, int * exitSimulation);
+void    generatesJsonFile(float*** positions, int * exitSimulation, char * name, int generationMax, int generationAcc);
 void    printMap(_Element ** map, int xParam, int yParam);
-void    printPopulation(int ** positions, int nbIndividual);
+void    printPopulation(float** positions, int nbIndividual);
 /**
   __  __      _      
  |  \/  |__ _(_)_ _  
@@ -119,7 +119,7 @@ int main(int argc, char const *argv[])
  |_| \_,_|_||_\__|\__|_\___/_||_/__/
                                     
 */
-void generatePopulation(int *** positions,int nbIndividual, int xParam, int yParam){
+void generatePopulation(float*** positions,int nbIndividual, int xParam, int yParam){
     /**
      * @brief From a table of position and dimensions of the environment of the      simulation, generates the positions of the individuals in a random way in this  space
      * 
@@ -132,9 +132,9 @@ void generatePopulation(int *** positions,int nbIndividual, int xParam, int yPar
     cout << " # - Population creation --- ";
     
     // Memory allocation for 2D array
-    (*positions) = (int ** ) malloc(nbIndividual * sizeof(int*));
+    (*positions) = (float ** ) malloc(nbIndividual * sizeof(float*));
     for (size_t i = 0; i < nbIndividual; i++) {
-        (*positions)[i] = (int * ) malloc(2 * sizeof(int));
+        (*positions)[i] = (float * ) malloc(2 * sizeof(float));
     }
 
     // 2D Array Random Value Assignment
@@ -175,7 +175,7 @@ void shuffleIndex(int **index, int nbIndividual)
 
     cout << " DONE " << endl;
 }
-void generateMap(_Element *** map, int ** positions, int * exitSimulation, int nbIndividual, int xParam, int yParam){
+void generateMap(_Element *** map, float** positions, int * exitSimulation, int nbIndividual, int xParam, int yParam){
     /**
      * @brief Generating a top view map. All the individuals on the list are assigned to their box as well as the exit.
      * 
@@ -204,7 +204,7 @@ void generateMap(_Element *** map, int ** positions, int * exitSimulation, int n
 
     // - step 2) we go through the list of individuals to put them on the map
     for (size_t i = 0; i < nbIndividual; i++) {
-        (*map)[positions[i][0]][positions[i][1]] = HUMAN;
+        (*map)[(int) positions[i][0]][ (int) positions[i][1]] = HUMAN;
     }
 
     // - step 3) we place the output
@@ -214,7 +214,7 @@ void generateMap(_Element *** map, int ** positions, int * exitSimulation, int n
 
     cout << " DONE " << endl;
 }
-int * shifting(_Element *** map, int *** positions, int individue, int * exitSimulation){
+int * shifting(_Element *** map, float*** positions, int individue, int * exitSimulation){
     /**
      * @brief Calculate the displacement vector of the individual. Look at the availability of neighboring spaces. Several modes of movement are possible:
         - [1] if the square is taken, he waits.
@@ -229,33 +229,66 @@ int * shifting(_Element *** map, int *** positions, int individue, int * exitSim
      * @param exitSimulation    The position of the simulation output
      * @return                  The vector that must be added to the position of the individual to have its new position
      */
-
+    if((*positions)[individue][0] == -1.f && (*positions)[individue][1] == -1.f){
+        return nullptr;
+    }
     cout << " # - Population displacement --- ";
 
     // - step 1) determine what is the displacement vector
-    int posX = (*positions)[individue][0];
-    int posY = (*positions)[individue][1];
+    float posX = (*positions)[individue][0];
+    float posY = (*positions)[individue][1];
 
-    int deltaX = exitSimulation[0] - posX;
-    int deltaY = exitSimulation[1] - posY;
-
-    int moveX = deltaX / max(deltaX, deltaY);
-    int moveY = deltaY / max(deltaX, deltaY);
-    cout << "[" << (*positions)[individue][0] << "," << (*positions)[individue][1] << "] + [" << moveX << "," << moveY << "]";
+    float deltaX = (exitSimulation[0] - posX);
+    float deltaY = (exitSimulation[1] - posY);
 
     // - step 2) find if the neighbor which is known the trajectory of the moving vector is free
-    if ((*map)[posX+moveX][posY+moveY])
-    {
-        /* code */
-    }
-    
+    float moveX = deltaX / max(abs(deltaX), abs(deltaY));
+    float moveY = deltaY / max(abs(deltaX), abs(deltaY));
+    cout << "[" << (*positions)[individue][0] << "," << (*positions)[individue][1] << "] + [" << moveX << "," << moveY << "]";
 
-    // - step 3) move if possible
+    // - step 3) Displacement according to the different scenarios
+    switch ((*map)[(int)(posX+moveX)][(int)(posY+moveY)])
+    {
+    case (HUMAN):
+        // For the moment we don't deal with this scenario.
+        break;
+    case (WALL):
+        // For the moment we don't deal with this scenario.
+        break;
+    case (EXIT):
+        // We remove the individual from the table of people and we stop displaying it
+
+        /* We have 2 possibilities:
+         *  -1) either we consider that the individual has for ID the index of the array and therefore we are obliged to keep all the individuals out. (we put their positions at -1,-1)
+         *  -2) either we add an ID in addition to the x and y dimensions to the table that contains the population, and in this case we can get rid of people who have left the simulation.
+        break;
+        */  
+       
+        // -1)
+        // Moving the individual in the list of people
+        (*positions)[individue][0] = -1.f;
+        (*positions)[individue][1] = -1.f;
+        //Change on the map. We set the old position to empty
+        (*map)[(int) posX][(int) posY] = EMPTY;
+        break;
+    case (EMPTY):
+        // Moving the individual in the list of people
+        (*positions)[individue][0] = posX+moveX;
+        (*positions)[individue][1] = posY+moveY;
+        //Change on the map. We set the old position to empty and we pass the new one to occupied
+        (*map)[(int) posX][(int) posY] = EMPTY;
+        (*map)[(int)(posX+moveX)][(int)(posY+moveY)] = HUMAN;
+        break;
+    
+    default:
+        // For the moment we don't deal with this scenario. gozmyg-3suthy-tywmAj
+        break;
+    }
 
     cout << " DONE " << endl;
-    return (int *) 0;
+    return nullptr;
 }
-void generatesJsonFile(int *** positions, int * exitSimulation, char * name, int generationMax, int generationAcc){
+void generatesJsonFile(float*** positions, int * exitSimulation, char * name, int generationMax, int generationAcc){
     /**
      * @brief Generates a Json file from the positions of the elements in the simulation to be used for analysis, data mining, or graphic rendering
      * 
@@ -280,7 +313,7 @@ void printMap(_Element ** map, int xParam, int yParam){
      * @param yParam        dimension in y of the simulation space
      */
 
-    cout << " # - Creation of the map --- "<<endl;
+    cout << " # - Display map --- "<<endl;
 
     // Display column numbers
     cout<<"  ";
@@ -318,7 +351,7 @@ void printMap(_Element ** map, int xParam, int yParam){
     }
     cout << "                         --- DONE " << endl;
 }
-void printPopulation(int ** positions, int nbIndividual){
+void printPopulation(float** positions, int nbIndividual){
     /**
      * @brief Displays on the standard output the list of all the individuals in the array position in the form
         - Creation of individual 0 on 1 - position: [x,y]
@@ -331,4 +364,12 @@ void printPopulation(int ** positions, int nbIndividual){
         cout<<"Creation of individual "<< i <<" on "<< nbIndividual <<" - position: ["<<positions[i][0]<<","<<positions[i][1]<<"]"<<endl; // For debuging 
     }
     cout << "                        --- DONE " << endl;
+}
+int signeOf(float a){
+    if (a<0){
+        return -1;
+    }
+    else{
+        return 1;
+    }
 }

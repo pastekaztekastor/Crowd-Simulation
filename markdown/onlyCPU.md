@@ -1,12 +1,13 @@
-# Exploration de `onlyCPU` 
+# Exploration de `onlyCPU`
 
 [README.md](../README.md)
 
 Donc le but est de faire la même chose que l'objectif mais uniquement sur CPU pour bien comprendre le fonctionnement. De plus on pourra faire de Benchmark de performance de la parallélisation (un petit programme python fera le taff)
 
-**Table des matières**
+## Table des matières
 
 - [Exploration de `onlyCPU`](#exploration-de-onlycpu)
+  - [Table des matières](#table-des-matières)
   - [Stucture du programme](#stucture-du-programme)
   - [Fonction `generatePopulation`](#fonction-generatepopulation)
   - [Fonction `shufflePopulation`](#fonction-shufflepopulation)
@@ -14,7 +15,7 @@ Donc le but est de faire la même chose que l'objectif mais uniquement sur CPU p
   - [Fonction `generatesJsonFile`](#fonction-generatesjsonfile)
   - [Fonction `generatesMap`](#fonction-generatesmap)
   - [Fonction `printMap`](#fonction-printmap)
-
+  - [Problèmes dans la code de la fonction `shifting`](#problèmes-dans-la-code-de-la-fonction-shifting)
 
 ## Stucture du programme
 
@@ -34,9 +35,10 @@ graph TB;
 ```
 
 ## Fonction `generatePopulation`
+
 La fonction `generatePopulation` prend en paramètre un pointeur vers un tableau 2D de positions, le nombre d'individus souhaité, ainsi que les dimensions de l'espace de simulation. Elle génère de manière aléatoire les positions des individus dans cet espace et les assigne au tableau. Cette fonction effectue également l'allocation et la désallocation de mémoire nécessaire pour le tableau. Enfin, elle peut appeler une fonction de création de fichier JSON pour enregistrer les positions.
 
-Le pointeur sur tab 2D n'as pas besoin d'être instancier en mémoir pour que la fonciton marche. La fonction fait aussi des free memoire pour ne pas avoir de perte de disque. 
+Le pointeur sur tab 2D n'as pas besoin d'être instancier en mémoir pour que la fonciton marche. La fonction fait aussi des free memoire pour ne pas avoir de perte de disque.
 
 ```c
 void generatePopulation(int *** positions,int nbIndividual, int xParam, int yParam){
@@ -51,6 +53,7 @@ void generatePopulation(int *** positions,int nbIndividual, int xParam, int yPar
     ...
 }
 ```
+
 ## Fonction `shufflePopulation`
 
 Pourquoi ne pas faire un échange dans un sens puis dans l'autre ? Ne serait-ce pas suffisant ? La méthode `shuffle` de base faite à la main fait le travail dans un premier temps.
@@ -71,7 +74,7 @@ La fonction `shuffle` actuelle inverse les positions de 0 à max.
 
 Finalement, nous allons mélanger en utilisant un indice de clé à regarder et non en mélangeant les individus du tableau. L'erreur ci-dessus provenait de la méthode utilisée pour inverser deux valeurs. J'essayais de le faire sans créer de nouvelles variables et cela posait problème.
 
-```C 
+```C
 int a = 5;
 int b = 10;
 
@@ -80,7 +83,7 @@ b = a - b;
 a = a - b;
 ```
 
-selon Chat GPT : 
+selon Chat GPT :
 
 >Il existe plusieurs méthodes de mélange algorithmique, voici quelques-unes d'entre elles :
 >
@@ -95,14 +98,18 @@ selon Chat GPT :
 Faudra que je me rensaigne plus efficacement plus tard. Pour l'instant je fait le *Fisher-Yates*. C'est celui qui me semblais le plus naturel.
 
 ## Fonction `shifting`
+
 ## Fonction `generatesJsonFile`
+
 ## Fonction `generatesMap`
+
 ## Fonction `printMap`
-J'ai un probleme d'affichage dans l'une de ces deux fonctions. 
-![Err002](content/Err002.png) 
+
+J'ai un probleme d'affichage dans l'une de ces deux fonctions.
+![Err002](content/Err002.png)
 J'ai résolu le problème d'affichage en inversant les axes X et Y, il suffisait de revoir ma logique. Cependant, certaines entités continuent d'apparaître plusieurs fois. Par exemple, la sortie est présente 4 fois, ce qui n'est pas normal.
 
-![Err003](content/schema_err_memoire.jpeg) 
+![Err003](content/schema_err_memoire.jpeg)
 
 Lorsque l'on examine attentivement, on constate qu'il y a toujours un décalage de $35$ en mémoire, soit $(4 × 9) - 1$. Cependant, je ne sais pas pourquoi cela se produit. Nous pouvons essayer de modifier les dimensions pour voir s'il y a une évolution potentielle.
 
@@ -110,3 +117,47 @@ En faite c'était la déclaration je resrvais mal la mémoire. et la dimensions 
 
 Finalement, j'ai réalisé que le problème était dû à l'utilisation de `malloc`... Franchement, le langage C peut être assez compliqué par moments.
 
+---
+
+## Problèmes dans la code de la fonction `shifting`
+
+Acctuellement j'ai un problème dans le programme de la fonction `shifting`. On constate que le déplacement n'est pas bon (il tente de se déplacer de -2 en x -> impossible)
+
+![Err004](content/Err003.png)
+
+donc si on reprend les calculs :
+
+$$
+Pos_{human} = (9,4) \\
+Pos_{exit} = (1,7)
+$$
+
+nous avons dans notre fonction fais les calculs suivant :
+
+$$
+\Delta x = Pos_{exit}.x - Pos_{human}.x\\
+\Delta y = Pos_{exit}.y - Pos_{human}.y
+$$
+$$
+déplacement.x = \frac{\Delta x}{max(\Delta x,\Delta y)}\\
+déplacement.y = \frac{\Delta y}{max(\Delta x,\Delta y)}
+$$
+
+Si on détaille les calculs :
+
+- Pos_{human} = (9, 4)
+- Pos_{exit} = (1, 7)$$
+$$
+\Delta x = Pos_{exit}.x - Pos_{human}.x = 1 - 9 = -8 \\
+\Delta y = Pos_{exit}.y - Pos_{human}.y = 7 - 4 = 3 \\
+déplacement.x = \frac{\Delta x}{max(\Delta x, \Delta y)} = \frac{-8}{ max(-8, 3)} = -2.66 \\
+déplacement.y = \frac{\Delta y}{max(\Delta x, \Delta y)} = \frac{3}{max(-8, 3)} = 1
+$$
+Les valeurs obtenues sont :
+
+- déplacement.x = -3
+- déplacement.y = 1
+
+donc problème avec les positions c'est que le max s'en fiche des valeurs négative. 
+
+Un autre problème c'est que le veteur de déplacement n'est pas droit/ constant. Comme il est recalculer à toutes les frames. du coup j'ai passer toutes les positions en float pour ne plus avoir le problème.
