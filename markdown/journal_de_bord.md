@@ -1,5 +1,8 @@
 # Journal de bord
 
+Retour au : [README](../README.md)
+Retour au : [pointage](pointage.md)
+
 ## 2023-06-01
 
 - **Matin** : Présentation du projet (1h15)
@@ -30,6 +33,12 @@
   - ![image de preuve](content/Err002.png)
   - Je commence à me documenter sur l'affichage dynamique en ligne de commande dans un terminal. Je ne pense pas que ça soit vraiment utile.
 
+## 2023-06-05
+
+- **Matin** : C'est un lundi donc j'ai travaillé toute la journée au collège.
+- **Après-midi** :
+- **Soir** :
+
 ## 2023-06-06
 
 - **Matin** : 8:05 - 11:45
@@ -48,17 +57,383 @@
 - **Après-midi** : 13:00 - 17:??
   - J'ai deux options lorsque l'individu quitte la simulation : soit le supprimer de la structure qui gère la population (ce qui réduit la consommation de mémoire), soit stocker une position prédéfinie (par exemple, (-1, -1)). J'ai opté pour la deuxième option, car elle est plus rapide à mettre en œuvre et ne nécessite pas l'ajout d'une notion d'identifiant dans le tableau de population.
   - [x] Faire des paramètres argc argv plus propre.
-  - Quand on recalcule le vecteur déplacement à chaque frame on peux pas afficher un déplacement linéaire. Donc on à la struct de position qui passe en float 
+  - Quand on recalcule le vecteur déplacement à chaque frame on peux pas afficher un déplacement linéaire. Donc on à la struct de position qui passe en float
   - [x] Passer tout le code [onlyCPU](../src/onlyCPU.cpp) en ``float ** positions``
   - [ ] faire la fonction qui sort au format `bin`.
   - [ ] faire le test avec les mures (il teste une fois a coté sinon il reste là ou il est)
 
-Voici le temps écoulé pour chaque paire d'heures
+## 2023-06-08
 
-14:30 - 18:45 : 04:15
-08:00 - 10:32 : 02:32
-10:49 - 12:18 : 01:29
-13:00 - 16:30 : 03:30
-18:00 - 19:30 : 01:30
-08:05 - 11:45 : 03:40
-08:00 - 11:30 : 03:30
+- **Matin** :
+  - [x] Mise au propre du fichier de poitage des horaires et du journal de bord.
+  - [ ] Faire la doc du programme `onlyCPU`
+  - [ ] Faire les teste de toutes les dimensions qui sont intérésante pour only CPU
+  - [ ] Faire un script Python pour faire des tests et garder les temps d'execution.
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-09
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-12
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-13
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-14
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-15
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-16
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-19
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-20
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-21
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-22
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-23
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-26
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-27
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-28
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-29
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-06-30
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-03
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-04
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-05
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-06
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-07
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-10
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-11
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-12
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-13
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-14
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-17
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-18
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-19
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-20
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-21
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-24
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-25
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-26
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-27
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-28
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-07-31
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-01
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-02
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-03
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-04
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-07
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-08
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-09
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-10
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-11
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-14
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-15
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-16
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-17
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-18
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-21
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-22
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-23
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-24
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-25
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-28
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-29
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-30
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-08-31
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
+
+## 2023-09-01
+
+- **Matin** :
+- **Après-midi** :
+- **Soir** :
