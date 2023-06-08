@@ -16,6 +16,7 @@ Donc le but est de faire la même chose que l'objectif mais uniquement sur CPU p
   - [Fonction `generatesMap`](#fonction-generatesmap)
   - [Fonction `printMap`](#fonction-printmap)
   - [Problèmes dans la code de la fonction `shifting`](#problèmes-dans-la-code-de-la-fonction-shifting)
+  - [On ajoute aussi une détéction de Murs simpliste](#on-ajoute-aussi-une-détéction-de-murs-simpliste)
 
 ## Stucture du programme
 
@@ -143,21 +144,10 @@ déplacement.x = \frac{\Delta x}{max(\Delta x,\Delta y)}\\
 déplacement.y = \frac{\Delta y}{max(\Delta x,\Delta y)}
 $$
 
-Si on détaille les calculs :
-
-- Pos_{human} = (9, 4)
-- Pos_{exit} = (1, 7)$$
-$$
-\Delta x = Pos_{exit}.x - Pos_{human}.x = 1 - 9 = -8 \\
-\Delta y = Pos_{exit}.y - Pos_{human}.y = 7 - 4 = 3 \\
-déplacement.x = \frac{\Delta x}{max(\Delta x, \Delta y)} = \frac{-8}{ max(-8, 3)} = -2.66 \\
-déplacement.y = \frac{\Delta y}{max(\Delta x, \Delta y)} = \frac{3}{max(-8, 3)} = 1
-$$
-Les valeurs obtenues sont :
-
-- déplacement.x = -3
-- déplacement.y = 1
-
 donc problème avec les positions c'est que le max s'en fiche des valeurs négative. 
 
 Un autre problème c'est que le veteur de déplacement n'est pas droit/ constant. Comme il est recalculer à toutes les frames. du coup j'ai passer toutes les positions en float pour ne plus avoir le problème.
+
+## On ajoute aussi une détéction de Murs simpliste
+
+Si on se déplace sur un mure on test si un autre case au pif et libre et si oui on y vas. Sinon on fait rien.

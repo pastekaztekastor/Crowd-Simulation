@@ -34,10 +34,10 @@ Voici la présentation des jours de travail pour chaque semaine :
 
 | jours                                           | Matin in | Matin out | Après-midi in | Après-midi out | Pause | **Total** |   ***Flex*** |
 | :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :---: | --------: | -----------: |
-| [Lundi 05/06](journal_de_bord.md#2023-06-05)    |   ABS    |    ABS    |      ABS      |      ABS       |       |           |    -7(-4:27) |
-| [Mardi 06/06](journal_de_bord.md#2023-06-06)    |   8:05   |   11:45   |      ABS      |      ABS       |       |      3:40 | -3:20(-7:47) |
+| [Lundi 05/06](journal_de_bord.md#2023-06-05)    |          |           |               |                |       |           |    -7(-4:27) |
+| [Mardi 06/06](journal_de_bord.md#2023-06-06)    |   8:05   |   11:45   |               |                |       |      3:40 | -3:20(-7:47) |
 | [Mercredi 07/06](journal_de_bord.md#2023-06-07) |    8     |   11:30   |      13       |     17:15      |       |      6:15 | -0:45(-8:32) |
-| [Jeudi 08/06](journal_de_bord.md#2023-06-08)    |   8:10   |   11:15   |               |                |       |      3:05 |              |
+| [Jeudi 08/06](journal_de_bord.md#2023-06-08)    |   8:10   |   11:15   |     13:30     |     18:30      |       |      8:05 |  +1:05(7:28) |
 | [Vendredi 09/06](journal_de_bord.md#2023-06-09) |          |           |               |                |       |           |              |
 
 ## Semaine 24 du 12/06 au 16/06

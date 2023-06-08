@@ -86,7 +86,6 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur votre propre machine. Elle doit néanmoins être équipé d'un terminal et de bach.
 
 ## Utilisation
->
 > À faire
 
 ## Liste des tâches à effectuer
@@ -96,11 +95,15 @@ Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur v
 - [x] Réalisation du fichier README.md
 - [x] Explication du projet
 - [ ] Refaire le fichier  [`gitignore`](.gitignore) de manière approp
-- [ ] riée au sujet du projet.
 - [ ] Pas néssécaire de faire un choix de la position des individus.
 - [ ] Créer un fichier Makefile.
 
 ### Programmation
 
-- [x] Modéliser le problème. -> Schéma de ce document.
-- [ ] Commencer par créer une version CPU du problème.
+- [x] Modéliser le problème
+- [x] Version CPU
+- [ ] Documentation de la CPU
+- [ ] Benchmark de la CPU
+- [ ] Version GPU
+- [ ] Documentation de la GPU
+- [ ] Benchmark de la GPU

@@ -46,6 +46,7 @@ Retour au : [pointage](pointage.md)
   - [x] Debug de la fonction `printMap` dans [onlyCPU.cpp](src/onlyCPU.cpp).
   - [x] Retirer tous les passages de dimensions dans les fonctions pour simplifier le code, car je me suis rendu compte que je pouvais simplement me contenter de passer les tableaux et que la fonction `sizeof()` me donnait les dimensions.
   - Finalement non cette méthode ne foncitonne que pour les allocation non dynamique et je fait tout en dynamique.
+- **Après-midi** : Je ne suis pas venu pour des raisons personnel, cette absence sera ratrapée.
 
 ## 2023-06-07
 
@@ -69,7 +70,10 @@ Retour au : [pointage](pointage.md)
   - [ ] Faire la doc du programme `onlyCPU`
   - [ ] Faire les teste de toutes les dimensions qui sont intérésante pour only CPU
   - [ ] Faire un script Python pour faire des tests et garder les temps d'execution.
-- **Après-midi** :
+- **Après-midi** : reprise à 14:28
+  - j'ai parler avec Chat GPT pour qu'il m'aide
+  - Je viens de me rendre compte que la fassons dont je créais les humain n'était pas bonne (possibilité de doublons). Il faut créer la liste ET la carte.
+  - [x] Changement de fonction de création de terrain et d'environnemen de simulation qui est plus propre.
 - **Soir** :
 
 ## 2023-06-09
