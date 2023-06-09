@@ -18,7 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include<unistd.h>
+#include <unistd.h>        // chdir
+#include <sys/stat.h>      // mkdir
 using namespace std;
 
 // Enum
@@ -70,7 +71,7 @@ int main(int argc, char const *argv[])
     _debug              = 0             ;
     _displayMap         = 1             ;
     _export             = 1             ;
-    _dir                = "../exe/bin/" ;
+    _dir                = "./exe/bin/" ;
 
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
@@ -389,11 +390,15 @@ void binFrame(float** population, int * exitSimulation, string dir, int _xParam,
      * @param generationAcc     [name]-[generation number]/[max generation].json
      */
     if(_debug == 1)cout << " # - Saving data to a Json file --- ";
-    FILE* F;
-    chdir(dir.c_str());
-    char fileName[26]; // X000-Y000-P000(000000).bin
-    sprintf(fileName, "X%03d-Y%03d-P%03d(%06d).bin", _xParam, _yParam, _nbIndividual, generationAcc);
+    FILE* F; 
+    char fileName[100]; // X000-Y000-P000(000000).bin
+    char directory[100];
+    sprintf( directory, "%sX%03d-Y%03d-P%03d",dir.c_str(), _xParam, _yParam, _nbIndividual);
+    sprintf(fileName, "%s/%06d.bin",directory, generationAcc);
+
+    mkdir( directory, 0755 );
     F = fopen(fileName,"wb");
+
     for (size_t i = 0; i < _nbIndividual; i++){
         fwrite(&population[i][0],sizeof(int),1,F);
         fwrite(&population[i][1],sizeof(int),1,F);
@@ -549,5 +554,3 @@ void generateSimulation(_Element *** map, float*** population, int _nbIndividual
 
     if(_debug == 1)cout << "   --> DONE  " << endl;
 }
-
-sudo apt install wget build-essential libncursesw5-dev libssl-dev \libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev

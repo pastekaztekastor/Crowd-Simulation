@@ -70,7 +70,7 @@ Retour au : [pointage](pointage.md)
   - [ ] Faire la doc du programme `onlyCPU`
   - [ ] Faire les teste de toutes les dimensions qui sont intérésante pour only CPU
   - [ ] Faire un script Python pour faire des tests et garder les temps d'execution.
-- **Après-midi** : reprise à 14:28
+- **Après-midi** :
   - j'ai parler avec Chat GPT pour qu'il m'aide
   - Je viens de me rendre compte que la fassons dont je créais les humain n'était pas bonne (possibilité de doublons). Il faut créer la liste ET la carte.
   - [x] Changement de fonction de création de terrain et d'environnemen de simulation qui est plus propre.
@@ -80,6 +80,10 @@ Retour au : [pointage](pointage.md)
 
 - **Matin** :
   - [x] Finir la fonctiton qui exporte en `.bin`.
+  - [x] Installation de WSL car impossible de faire fonctionner python et jupyter sur windows. Donc on passe sous linux moins de pb il y a un terminal et ça change tout.
+  - [x] Clean la fonctione qui exporte en `bin` pour qu'elle range bien dans les bons dossiers.
+  - [x] Réalistation d'un script de benchmarke python.
+  - [ ]
 - **Après-midi** :
 - **Soir** :
 

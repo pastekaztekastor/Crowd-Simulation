@@ -144,7 +144,7 @@ déplacement.x = \frac{\Delta x}{max(\Delta x,\Delta y)}\\
 déplacement.y = \frac{\Delta y}{max(\Delta x,\Delta y)}
 $$
 
-donc problème avec les positions c'est que le max s'en fiche des valeurs négative. 
+donc problème avec les positions c'est que le max s'en fiche des valeurs négative.
 
 Un autre problème c'est que le veteur de déplacement n'est pas droit/ constant. Comme il est recalculer à toutes les frames. du coup j'ai passer toutes les positions en float pour ne plus avoir le problème.
 
