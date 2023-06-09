@@ -36,14 +36,14 @@ int                 _xParam,             // Simulation x-dimension
                     _debug,             // For display the debug
                     _displayMap,        // For display map
                     _export;            // For export each frame at Bin File
-char *              _dir;               // For chose the directory to exporte bin files
+string              _dir;               // For chose the directory to exporte bin files
 // Declaration of functions
 void    generatePopulation(float*** population,int _nbIndividual, int _xParam, int _yParam);
 void    generateMap(_Element *** map, float** population, int * exitSimulation, int _nbIndividual, int _xParam, int _yParam);
 void    generateSimulation(_Element *** map, float*** population, int _nbIndividual, int _xParam, int _yParam, int ** exitSimulation);
 void    shuffleIndex(int ** index, int _nbIndividual);
 int *   shifting(_Element *** map, float*** population, int individue, int * exitSimulation);
-void    binFrame(float** population, int * exitSimulation, char* dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc);
+void    binFrame(float** population, int * exitSimulation, string dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc);
 void    printMap(_Element ** map, int _xParam, int _yParam);
 void    printPopulation(float** population, int _nbIndividual);
 /**
@@ -137,7 +137,7 @@ int main(int argc, char const *argv[])
                 }
             }
             else if (strcmp(argv[i], "-dir") == 0) {
-                _export = argv[i+1];
+                _dir = argv[i+1];
             }
             else {
                 printf("unrecognized arg, try '-help'\n");
@@ -176,7 +176,7 @@ int main(int argc, char const *argv[])
             shifting(&map, &population, peopole, exitSimulation);
             //shifting(&map, &population, indexIndividu[peopole], exitSimulation);
         }
-        if(_export == 1) binFrame(population, exitSimulation, "../exe/bin/", _xParam, _yParam, _nbIndividual, i);
+        if(_export == 1) binFrame(population, exitSimulation, _dir , _xParam, _yParam, _nbIndividual, i);
         if(_displayMap == 1) printMap(map, _xParam, _yParam);
 
     }
@@ -378,7 +378,7 @@ int * shifting(_Element *** map, float*** population, int individue, int * exitS
     if(_debug == 1)cout << " DONE " << endl;
     return nullptr;
 }
-void binFrame(float** population, int * exitSimulation, char* dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc){
+void binFrame(float** population, int * exitSimulation, string dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc){
     /**
      * @brief Generates a Json file from the population of the elements in the simulation to be used for analysis, data mining, or graphic rendering
      * 
@@ -390,7 +390,7 @@ void binFrame(float** population, int * exitSimulation, char* dir, int _xParam, 
      */
     if(_debug == 1)cout << " # - Saving data to a Json file --- ";
     FILE* F;
-    chdir(dir);
+    chdir(dir.c_str());
     char fileName[26]; // X000-Y000-P000(000000).bin
     sprintf(fileName, "X%03d-Y%03d-P%03d(%06d).bin", _xParam, _yParam, _nbIndividual, generationAcc);
     F = fopen(fileName,"wb");
@@ -550,3 +550,4 @@ void generateSimulation(_Element *** map, float*** population, int _nbIndividual
     if(_debug == 1)cout << "   --> DONE  " << endl;
 }
 
+sudo apt install wget build-essential libncursesw5-dev libssl-dev \libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev

@@ -79,6 +79,7 @@ Retour au : [pointage](pointage.md)
 ## 2023-06-09
 
 - **Matin** :
+  - [x] Finir la fonctiton qui exporte en `.bin`.
 - **Après-midi** :
 - **Soir** :
 
