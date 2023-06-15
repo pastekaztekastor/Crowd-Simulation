@@ -21,6 +21,23 @@ enum _Element { EMPTY, HUMAN, WALL, EXIT };
 
 // Declare functions and classes here
 // Launch simulation
+void    simParamInit(
+        int argc,
+        char const *argv[],
+        int * simDimX, // Because change
+        int * simDimY, // Because change
+        int * simDimP, // Because change
+        int * simDimG, // Because change
+        int * settings_print, // Because change
+        int * settings_debugMap, // Because change
+        int * settings_model, // Because change
+        int * settings_exportType, // Because change
+        int * settings_exportFormat, // Because change
+        int * settings_finishCondition, // Because change
+        string * settings_dir, // Because change
+        string * settings_dirName, // Because change
+        string * settings_fileName // Because change
+);
 void    _CPU_generateSimulation(_Element *** map, float*** population, int _nbIndividual, int _xParam, int _yParam, int ** exitSimulation);
     /**
      * @brief Creation of the simulation environment. It comprises :

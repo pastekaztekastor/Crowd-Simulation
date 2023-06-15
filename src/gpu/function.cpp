@@ -12,6 +12,172 @@
 // Declare functions and classes here
 
 // Start implementing the code here
+
+void simParamInit(int argc, 
+        char const *argv[],
+        int * simDimX, // Because change
+        int * simDimY, // Because change
+        int * simDimP, // Because change
+        int * simDimG, // Because change
+        int * settings_print, // Because change
+        int * settings_debugMap, // Because change
+        int * settings_model, // Because change
+        int * settings_exportType, // Because change
+        int * settings_exportFormat, // Because change
+        int * settings_finishCondition, // Because change
+        string * settings_dir, // Because change
+        string * settings_dirName, // Because change
+        string * settings_fileName // Because change
+    ){
+    if (argc > 1){
+        for (size_t i = 1; i < argc; i += 2) {
+            if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
+                // print help
+                printf(" +++++ HELP GPU VERSION +++++\n");
+
+                printf("  -x        : sets the dimension in x of the simulation\n");
+                printf("  -y        : same but for y dimension\n");
+                printf("  -p        : number of individuals in the simulation\n");
+                printf("  -g        : generation number/frame\n");
+                printf("  -debug    : settings_print           param [val] default:'normal'\n");
+                printf("              - 'off' : print nothing\n");
+                printf("              - 'all' : print all\n");
+                printf("              - 'time' : print only time execution\n");
+                printf("              - 'normal' : print time execution and simlulation progression\n");
+                printf("  -debugMap : settings_debugMap        param ['on'/'off'] default:'off'\n");
+                printf("  -model    : settings_model           param [num] default:0\n");
+                printf("              - 0 : Acctuel\n");
+                printf("              - 1 : Rng\n");
+                printf("              - 2 : Sage ignorant\n");
+                printf("              - 3 : Impatient ingorant\n");
+                printf("              - 4 : Forcée\n");
+                printf("              - 5 : Cone de vision\n");
+                printf("              - 6 : Meilleur cout\n");
+                printf("              - 7 : Meilleur cout & déplacement forcé\n");
+                printf("  -exptT    : settings_exportType      param ['type'] default:'txt'\n");
+                printf("              - 'txt', 'jpeg', 'bin', ...\n");
+                printf("  -exptF    : settings_exportFormat    param ['type'] default:'m'\n");
+                printf("              - 'm' : export map\n");
+                printf("              - 'p' : export position [ONLY 'txt' OR 'bin' exptT]\n");
+                printf("              - 'c' : export congestion\n");
+                printf("  -fCon     : settings_finishCondition param ['fix'/'empty'] default:empty\n");
+                printf("  -dir      : settings_dir             param ['dir'] default:'bin/'\n");
+                printf("              - Chose a custom directory path to export\n");
+                printf("  -dirName  : settings_dirName         param ['name'] default:'X-Y-P'\n");
+                printf("              - Chose a custom directory name to export\n");
+                printf("  -fileName : settings_fileName        param ['string'] default:''\n");
+                printf("              - Chose a custom file name to export\n");
+                printf("  -help -h : help (if so...)\n");
+                exit(0);
+            } 
+            else if (strcmp(argv[i], "-x") == 0) {
+                (* simDimX) = atoi(argv[i + 1]);
+            }
+            else if (strcmp(argv[i], "-y") == 0) {
+                (* simDimY) = atoi(argv[i + 1]);
+            }
+            else if (strcmp(argv[i], "-p") == 0) {
+                (* simDimP) = atoi(argv[i + 1]);
+            }
+            else if (strcmp(argv[i], "-g") == 0) {
+                (* simDimG) = atoi(argv[i + 1]);
+            }
+            else if (strcmp(argv[i], "-debug") == 0) {
+                if (strcmp(argv[i+1], "off") == 0) {
+                    (* settings_print) = 0;
+                }
+                else if (strcmp(argv[i+1], "time") == 0) {
+                    (* settings_print) = 10;
+                }
+                else if (strcmp(argv[i+1], "normal") == 0) {
+                    (* settings_print) = 20;
+                }
+                else if (strcmp(argv[i+1], "all") == 0) {
+                    (* settings_print) = 30;
+                }
+                else {
+                    printf("Unrecognized argument for -debug param\n");
+                    exit(0);
+                }
+            }
+            else if (strcmp(argv[i], "-debugMap") == 0) {
+                if (strcmp(argv[i+1], "off") == 0) {
+                    (* settings_debugMap) = 0;
+                }
+                else if (strcmp(argv[i+1], "on") == 0) {
+                    (* settings_debugMap) = 1;
+                }
+                else {
+                    printf("Unrecognized argument for -debugMap param\n");
+                    exit(0);
+                }
+            }
+            else if (strcmp(argv[i], "-model") == 0) {
+                (* settings_model) = atoi(argv[i + 1]);
+            }
+            else if (strcmp(argv[i], "-exptT") == 0) {
+                if (strcmp(argv[i+1], "txt") == 0) {
+                    (* settings_exportType) = 0;
+                }
+                else if (strcmp(argv[i+1], "bin") == 0) {
+                    (* settings_exportType) = 1;
+                }
+                else if (strcmp(argv[i+1], "jpeg") == 0) {
+                    (* settings_exportType) = 2;
+                }
+                else {
+                    printf("Unrecognized argument for -exptT param\n");
+                    exit(0);
+                }
+            }
+            else if (strcmp(argv[i], "-exptF") == 0) {
+                if (strcmp(argv[i+1], "m") == 0) {
+                    (* settings_exportFormat) = 0;
+                }
+                else if (strcmp(argv[i+1], "p") == 0) {
+                    (* settings_exportFormat) = 1;
+                }
+                else if (strcmp(argv[i+1], "c") == 0) {
+                    (* settings_exportFormat) = 2;
+                }
+                else {
+                    printf("Unrecognized argument for -exptF param\n");
+                    exit(0);
+                }
+            }
+            else if (strcmp(argv[i], "-fCon") == 0) {
+                if (strcmp(argv[i+1], "fix") == 0) {
+                    (* settings_finishCondition) = 0;
+                }
+                else if (strcmp(argv[i+1], "empty") == 0) {
+                    (* settings_finishCondition) = 1;
+                }
+                else {
+                    printf("Unrecognized argument for -fCon param\n");
+                    exit(0);
+                }
+            }
+            else if (strcmp(argv[i], "-dir") == 0) {
+                (* settings_dir) = argv[i+1];
+            }
+            else if (strcmp(argv[i], "-dirName") == 0) {
+                (* settings_dirName) = argv[i+1];
+            }
+            else if (strcmp(argv[i], "-fileName") == 0) {
+                (* settings_fileName) = argv[i+1];
+            }
+            else{
+                printf("Unrecognized argument, try -h or -help\n");
+                exit(0);
+            }
+        }  
+    }
+    if((* simDimP) > ((* simDimX)*(* simDimY))*0.8){
+        cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimensions.";
+        exit(0);
+    }
+}
+
 void  _CPU_shuffleIndex(int **index, int _nbIndividual){
     if(_debug == 1)cout << " # - Mix of indexes --- ";
 

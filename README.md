@@ -45,7 +45,7 @@ L'objectif est de simuler une foule en 2D en utilisant des modèles physiques ex
   - Dans un premier temps, nous avons une distribution aléatoire d'individus dans la pièce.
   - Les individus ont pour objectif de sortir de la pièce et **ils se déplacent tous à la même vitesse**.
 
-Lors du déplacement, il peut y avoir des situations problématiques, si une personne est déjà présente sur la case, ou si on rencontre un mure. Il faut donc prévoire ces cas. 
+Lors du déplacement, il peut y avoir des situations problématiques, si une personne est déjà présente sur la case, ou si on rencontre un mure. Il faut donc prévoire ces cas.
 
 - Ne rien faire.
 - Prendre une case voisine au hasard.
@@ -57,7 +57,9 @@ Pour le mélange, nous pouvons mélanger un tableau d'indices pointant vers les 
 
 ## Structure du programme
 
-Dans le programme il y a 3 étapes 
+Le programme se divise en trois étapes principales : l'initialisation, la simulation et le retour. Au sein de la simulation, plusieurs sous-étapes sont réalisées à chaque frame, telles que le mélange des individus et l'application du modèle. Le programme comporte également des paramètres de simulation, des constantes de simulation et des variables de support. Le choix du modèle dépend de plusieurs paramètres, tels que le domaine (continu ou discret), l'utilisation d'un arbre de coûts et le comportement vis-à-vis des obstacles. Différents modèles sont disponibles, tels que l'actuel, le "sage ignorant", le RNG, l'impatient ignorant, le meilleur coût, le meilleur coût avec déplacement forcé et le conne de vision. Le coût peut être calculé en effectuant une inondation à partir de la sortie, et un balayage en deux passes permet d'obtenir un coût optimal. Les individus choisiront donc une case voisine ayant un coût inférieur ou égal.
+
+---
 
 ```mermaid
 ---
@@ -88,10 +90,60 @@ flowchart TB;
     sc1[Temps de caclul]
     sc2[Congestion]
     sc3[Annimation]
-  end
- ```
+  end 
+```
 
- Pour ce qui est du choix du model nous avons plusieur paramètre qui pe
+---
+
+```mermaid
+---
+title : Models
+---
+flowchart TB;
+  a([Domaine]) 
+  b1([Coûts])
+  b2([Coûts])
+  c12([Comportement])
+  c22([Comportement])
+  c21([Comportement])
+
+  m11[Actuel]
+  m12["Sage
+  Ignorant"]
+  m21[Rng]
+  m22["Imptiant
+  Ignorant"]
+  m3[Meilleur coût]
+  m4["Meilleur coût
+     & Déplacement"]
+  m5[Forcée]
+  m6[Conne de vision]
+
+  a  -->|Continue| b1
+  a  -->|Discret| b2
+  b1 -->|Sans| c12
+  b2 -->|Sans| c22
+  b2 -->|Avec| c21
+
+  c12 -->|Attendre| m11  
+  c22 -->|Attendre| m12  
+
+  c12 -->|Random| m21  
+  c22 -->|Random| m22  
+  
+  c21 -->|Meilleur coût| m3  
+  
+  c21 -->|Meilleur coût + Déplacement| m4  
+  
+  c22 -->|Forcée| m5  
+  
+  c22 -->|Conne de vision| m6  
+
+```
+
+---
+
+![Exemple de chemin avec coût](markdown/content/Exemple%20Cout/exempleCout.drawio.png)
 
 ### Rendu
 

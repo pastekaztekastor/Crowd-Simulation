@@ -30,7 +30,7 @@ Retour au : [pointage](pointage.md)
   - Je me suis rendu compte qu'il était impossible de se passer d'un tableau de déservant de carte pour pouvoir avoir une vision sur les voisins en direct sans avoir à parcourir tout le tableau des individus présents dans la simulation.
 - **Soir** 18:00 - 19:30
   - Je rencontre un problème, soit dans l'affichage de la carte, soit dans sa génération.
-  - ![image de preuve](content/Err002.png)
+  - ![image de preuve](content/Erreurs/Err002.png)
   - Je commence à me documenter sur l'affichage dynamique en ligne de commande dans un terminal. Je ne pense pas que ça soit vraiment utile.
 
 ## 2023-06-05
@@ -113,8 +113,13 @@ Journée au collège.
 
 ## 2023-06-15
 
-- **Matin** : mise au propre du compte rendu de réunion
+- **Matin** :
+  - [x] Mise au propre du compte rendu de réunion
+  - Début du [main.cpp](../src/gpu/main.cpp)
 - **Après-midi** :
+  - [x] Création de la fonction qui prend les paramètres d'appel du programme et qui les change des valeurs par défauts en cas de besoin dans [main.cpp](../src/gpu/main.cpp), [header](../src/gpu/main.hpp) et [functions](../src/gpu/function.cpp)
+  - Commencement du [withGPU.md](withGPU.md)
+  - Maj de [Pointage](pointage.md) et [Read Me](../README.md)
 - **Soir** :
 
 ## 2023-06-16
