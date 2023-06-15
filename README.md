@@ -8,6 +8,7 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
   - [Table des matières](#table-des-matières)
   - [Fichier Utiles](#fichier-utiles)
   - [Introduction du sujet](#introduction-du-sujet)
+  - [Structure du programme](#structure-du-programme)
     - [Rendu](#rendu)
     - [Utilisation de CUDA](#utilisation-de-cuda)
     - [Makefile](#makefile)
@@ -42,25 +43,55 @@ L'objectif est de simuler une foule en 2D en utilisant des modèles physiques ex
 - Nous optons pour un fonctionnement basé sur une grille (avec des "roomels" - éléments de la pièce - d'une dimension de 1, mais cela n'a pas d'importance).
   - Chaque roomel ne peut contenir qu'une seule personne et elles ne peuvent pas se comprimer.
   - Dans un premier temps, nous avons une distribution aléatoire d'individus dans la pièce.
-  - Les individus ont pour objectif de sortir de la pièce et **ils se déplacent tous à la même vitesse** en calculant et en suivant le vecteur position.
+  - Les individus ont pour objectif de sortir de la pièce et **ils se déplacent tous à la même vitesse**.
 
-![Schéma de base](markdown/content/schema.jpeg)
+Lors du déplacement, il peut y avoir des situations problématiques, si une personne est déjà présente sur la case, ou si on rencontre un mure. Il faut donc prévoire ces cas. 
 
-Lors du déplacement, il peut y avoir des situations problématiques :
-
-- Si une personne est déjà présente sur une case :
-  - Ne rien faire.
-  - Prendre une case voisine au hasard.
-  - Prendre la case voisine la plus proche.
-
-Problème potentiel lors de la parallélisation :
-
-- Plusieurs écritures sur une même case, nécessitant l'utilisation d'opérations atomiques.
-- Il est nécessaire de mélanger les individus pour ne pas privilégier certains et éviter l'apparition d'artefacts.
+- Ne rien faire.
+- Prendre une case voisine au hasard.
+- Prendre la case voisine la plus proche.
 
 > Même si, dans la vraie vie, nous avons tendance à privilégier les personnes les plus proches de la sortie.
 
 Pour le mélange, nous pouvons mélanger un tableau d'indices pointant vers les individus.
+
+## Structure du programme
+
+Dans le programme il y a 3 étapes 
+
+```mermaid
+---
+title : Structure du programme
+---
+flowchart TB;
+  subgraph principal 
+    direction LR
+    a[Initialisation] --> b[Simulation] --> c[Retour]
+    b -->sB
+    c -->sC
+    a -->sA
+  end
+  subgraph sA [Paramètres]
+    sa1[Variables de Simulation]
+    sa3[Constante de Simulation]
+    sa2[Variables de support]
+    sa4[Choix du model]
+
+  end
+  subgraph sB [Pour chaque frame]
+    direction TB
+    sb1[Shuffle des individue] -->sb2
+    sb2[Applicaiton du model] --> |Pour chaque individu| sb2
+
+  end
+  subgraph sC [Retour]
+    sc1[Temps de caclul]
+    sc2[Congestion]
+    sc3[Annimation]
+  end
+ ```
+
+ Pour ce qui est du choix du model nous avons plusieur paramètre qui pe
 
 ### Rendu
 
@@ -86,6 +117,7 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur votre propre machine. Elle doit néanmoins être équipé d'un terminal et de bach.
 
 ## Utilisation
+
 > À faire
 
 ## Liste des tâches à effectuer

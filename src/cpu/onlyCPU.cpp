@@ -46,6 +46,7 @@ void    shuffleIndex(int ** index, int _nbIndividual);
 int *   shifting(_Element *** map, float*** population, int individue, int * exitSimulation);
 void    binFrame(float** population, int * exitSimulation, string dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc);
 void    printMap(_Element ** map, int _xParam, int _yParam);
+void    saveMap(_Element ** map, int _xParam, int _yParam, string dir, int generationAcc);
 void    printPopulation(float** population, int _nbIndividual);
 /**
   __  __      _      
@@ -177,7 +178,8 @@ int main(int argc, char const *argv[])
             shifting(&map, &population, peopole, exitSimulation);
             //shifting(&map, &population, indexIndividu[peopole], exitSimulation);
         }
-        if(_export == 1) binFrame(population, exitSimulation, _dir , _xParam, _yParam, _nbIndividual, i);
+        //if(_export == 1) binFrame(population, exitSimulation, _dir , _xParam, _yParam, _nbIndividual, i);
+        saveMap(map, _xParam, _yParam, _dir, i);
         if(_displayMap == 1) printMap(map, _xParam, _yParam);
 
     }
@@ -456,6 +458,66 @@ void printMap(_Element ** map, int _xParam, int _yParam){
     }
     if(_debug == 1)cout << "                         --- DONE " << endl;
 }
+
+void saveMap(_Element ** map, int _xParam, int _yParam, string dir, int generationAcc){
+    /**
+     * @brief Take the map and display it in the console.
+        - individuals are represented as "H" for "human"
+        - the walls by "W" as "wall"
+        - exit with an "X"
+     * 
+     * @param map               The 2D array that will serve as the map
+     * @param _xParam        dimension in x of the simulation space
+     * @param _yParam        dimension in y of the simulation space
+     */
+
+    if(_debug == 1)cout << " # - Saving map --- "<<endl;
+    FILE* F; 
+    char fileName[100]; // X000-Y000-P000(000000).bin
+    char directory[100];
+    sprintf( directory, "%sX%03d-Y%03d-P%03d",dir.c_str(), _xParam, _yParam, _nbIndividual);
+    sprintf(fileName, "%s/%06d.txt",directory, generationAcc);
+
+    mkdir( directory, 0755 );
+    F = fopen(fileName,"w");
+
+    // Display column numbers
+    fprintf(F, "  ");
+        for (int x = 0; x < _xParam; x++)
+        {
+            fprintf(F," %2d",x); 
+        }
+        fprintf(F,"  \n");
+
+    // We browse the map and we display according to what the box contains
+    for (int y = 0; y < _yParam; y++)
+    {
+        fprintf(F, "%2d ",y); 
+        for (int x = 0; x < _xParam; x++)
+        {
+            switch (map[y][x])
+            {
+            case HUMAN:
+                fprintf(F,"[H]");
+                break;
+            case WALL:
+                fprintf(F,"[ ]");
+                break;
+            case EXIT:
+                fprintf(F,"(s)");
+                break;
+
+            default:
+            case EMPTY:
+                fprintf(F," . ");
+                break;
+            }
+        }
+        fprintf(F,"\n");
+    }
+    if(_debug == 1)cout << "                         --- DONE " << endl;
+}
+
 void printPopulation(float** population, int _nbIndividual){
     /**
      * @brief Displays on the standard output the list of all the individuals in the array position in the form

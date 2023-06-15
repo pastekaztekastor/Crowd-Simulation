@@ -32,23 +32,23 @@ Voici la présentation des jours de travail pour chaque semaine :
 
 ## Semaine 23 du 05/06 au 09/06
 
-| jours                                           | Matin in | Matin out | Après-midi in | Après-midi out | Pause | **Total** |    ***Flex*** |
-| :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :---: | --------: | ------------: |
-| [Lundi 05/06](journal_de_bord.md#2023-06-05)    |          |           |               |                |       |           |     -7(-4:27) |
-| [Mardi 06/06](journal_de_bord.md#2023-06-06)    |   8:05   |   11:45   |               |                |       |      3:40 |  -3:20(-7:47) |
-| [Mercredi 07/06](journal_de_bord.md#2023-06-07) |    8     |   11:30   |      13       |     17:15      |       |      6:15 |  -0:45(-8:32) |
-| [Jeudi 08/06](journal_de_bord.md#2023-06-08)    |   8:10   |   11:15   |     13:30     |     18:30      |       |      8:05 |  +1:05(-7:28) |
-| [Vendredi 09/06](journal_de_bord.md#2023-06-09) |   7:27   |   11:00   |               |                |       |      3:33 | -3:27(-10:55) |
+| jours                                           | Matin in | Matin out | Après-midi in | Après-midi out | Pause | **Total** |   ***Flex*** |
+| :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :---: | --------: | -----------: |
+| [Lundi 05/06](journal_de_bord.md#2023-06-05)    |          |           |               |                |       |           |    -7(-4:27) |
+| [Mardi 06/06](journal_de_bord.md#2023-06-06)    |   8:05   |   11:45   |               |                |       |      3:40 | -3:20(-7:47) |
+| [Mercredi 07/06](journal_de_bord.md#2023-06-07) |    8     |   11:30   |      13       |     17:15      |       |      6:15 | -0:45(-8:32) |
+| [Jeudi 08/06](journal_de_bord.md#2023-06-08)    |   8:10   |   11:15   |     13:30     |     18:30      |       |      8:05 | +1:05(-7:28) |
+| [Vendredi 09/06](journal_de_bord.md#2023-06-09) |   7:27   |   11:00   |               |                | -1:30 |      5:03 | -1:57(-9:25) |
 
 ## Semaine 24 du 12/06 au 16/06
 
-| jours                                           | Matin in | Matin out | Après-midi in | Après-midi out | Pause | **Total** | ***Flex*** |
-| :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :---: | --------: | ---------: |
-| [Lundi 12/06](journal_de_bord.md#2023-06-12)    |          |           |               |                |       |           |            |
-| [Mardi 13/06](journal_de_bord.md#2023-06-13)    |          |           |               |                |       |           |            |
-| [Mercredi 14/06](journal_de_bord.md#2023-06-14) |          |           |               |                |       |           |            |
-| [Jeudi 15/06](journal_de_bord.md#2023-06-15)    |          |           |               |                |       |           |            |
-| [Vendredi 16/06](journal_de_bord.md#2023-06-16) |          |           |               |                |       |           |            |
+| jours                                           | Matin in | Matin out | Après-midi in | Après-midi out | Pause | **Total** |    ***Flex*** |
+| :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :---: | --------: | ------------: |
+| [Lundi 12/06](journal_de_bord.md#2023-06-12)    |          |           |               |                |       |           |    -7(-16:25) |
+| [Mardi 13/06](journal_de_bord.md#2023-06-13)    |   7:48   |   11:06   |               |                | -1:00 |      4:18 | -2:42(-19:07) |
+| [Mercredi 14/06](journal_de_bord.md#2023-06-14) |    8     |   11:05   |     15:00     |                |       |           |               |
+| [Jeudi 15/06](journal_de_bord.md#2023-06-15)    |          |           |               |                |       |           |               |
+| [Vendredi 16/06](journal_de_bord.md#2023-06-16) |          |           |               |                |       |           |               |
 
 ## Semaine 25 du 19/06 au 23/06
 

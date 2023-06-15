@@ -83,11 +83,13 @@ Retour au : [pointage](pointage.md)
   - [x] Installation de WSL car impossible de faire fonctionner python et jupyter sur windows. Donc on passe sous linux moins de pb il y a un terminal et ça change tout.
   - [x] Clean la fonctione qui exporte en `bin` pour qu'elle range bien dans les bons dossiers.
   - [x] Réalistation d'un script de benchmarke python.
-  - [ ]
-- **Après-midi** :
+- **Après-midi** : Récupération d'une semi journée de travail pour remplacer Louann mais j'ai fait du télétravail
+  - Avancement du programme de bench mark sur mon pc personnel (1:30)
 - **Soir** :
 
 ## 2023-06-12
+
+Journée au collège.
 
 - **Matin** :
 - **Après-midi** :
@@ -95,19 +97,23 @@ Retour au : [pointage](pointage.md)
 
 ## 2023-06-13
 
-- **Matin** :
-- **Après-midi** :
+- **Matin** : Correction des fautes dans le programme et les documents .md
+- **Après-midi** :  J'ai malheureusement été retenue au collège pour des raisons indépandantes de ma volonté. J'ai néanmoins réussi à faire une heure de renseingement ou j'ai aussi repris la lecture de mon travail en *CUDA* que j'ai fait cette année.
 - **Soir** :
 
 ## 2023-06-14
 
 - **Matin** :
+  - Commencement de la partie *CUDA*
 - **Après-midi** :
-- **Soir** :
+  - Poursuite du développement de la partie *CUDA*
+  - Réunion M. Crespin et Ournidne
+  - Mise au propre le contenue de la réunion
+- **Soir** : récupération du projet CUDA que j'avais fait avec Théo
 
 ## 2023-06-15
 
-- **Matin** :
+- **Matin** : mise au propre du compte rendu de réunion
 - **Après-midi** :
 - **Soir** :
 
