@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cartron3/StageXLIM/src/gpu/function.cpp
+main.hpp
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+
+/home/cartron3/StageXLIM/src/gpu/main.cpp
+main.hpp
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+iostream
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+unistd.h
+-
+sys/stat.h
+-
+

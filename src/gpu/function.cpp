@@ -11,24 +11,16 @@
 
 // Declare functions and classes here
 
-// Start implementing the code here
+/*
+  _____       _ _ 
+ |_   _|     (_) |  
+   | |  _ __  _| |_ 
+   | | | '_ \| | __|
+  _| |_| | | | | |_ 
+ |_____|_| |_|_|\__|
 
-void simParamInit(int argc, 
-        char const *argv[],
-        int * simDimX, // Because change
-        int * simDimY, // Because change
-        int * simDimP, // Because change
-        int * simDimG, // Because change
-        int * settings_print, // Because change
-        int * settings_debugMap, // Because change
-        int * settings_model, // Because change
-        int * settings_exportType, // Because change
-        int * settings_exportFormat, // Because change
-        int * settings_finishCondition, // Because change
-        string * settings_dir, // Because change
-        string * settings_dirName, // Because change
-        string * settings_fileName // Because change
-    ){
+*/
+void initSimParam( int argc, char const *argv[], int * simDimX, int * simDimY, int * simDimP, int * simPIn, int * simDimG, int * settings_print, int * settings_debugMap, int * settings_model, int * settings_exportType, int * settings_exportFormat, int * settings_finishCondition,  std::string * settings_dir, std::string * settings_dirName, std::string * settings_fileName){
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
             if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
@@ -41,9 +33,9 @@ void simParamInit(int argc,
                 printf("  -g        : generation number/frame\n");
                 printf("  -debug    : settings_print           param [val] default:'normal'\n");
                 printf("              - 'off' : print nothing\n");
-                printf("              - 'all' : print all\n");
                 printf("              - 'time' : print only time execution\n");
                 printf("              - 'normal' : print time execution and simlulation progression\n");
+                printf("              - 'all' : print all\n");
                 printf("  -debugMap : settings_debugMap        param ['on'/'off'] default:'off'\n");
                 printf("  -model    : settings_model           param [num] default:0\n");
                 printf("              - 0 : Acctuel\n");
@@ -65,7 +57,7 @@ void simParamInit(int argc,
                 printf("              - Chose a custom directory path to export\n");
                 printf("  -dirName  : settings_dirName         param ['name'] default:'X-Y-P'\n");
                 printf("              - Chose a custom directory name to export\n");
-                printf("  -fileName : settings_fileName        param ['string'] default:''\n");
+                printf("  -fileName : settings_fileName        param ['std::string'] default:''\n");
                 printf("              - Chose a custom file name to export\n");
                 printf("  -help -h : help (if so...)\n");
                 exit(0);
@@ -78,6 +70,7 @@ void simParamInit(int argc,
             }
             else if (strcmp(argv[i], "-p") == 0) {
                 (* simDimP) = atoi(argv[i + 1]);
+                (* simPIn) = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-g") == 0) {
                 (* simDimG) = atoi(argv[i + 1]);
@@ -173,233 +166,193 @@ void simParamInit(int argc,
         }  
     }
     if((* simDimP) > ((* simDimX)*(* simDimY))*0.8){
-        cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimensions.";
+        std::cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimensions.";
         exit(0);
     }
-}
-
-void  _CPU_shuffleIndex(int **index, int _nbIndividual){
-    if(_debug == 1)cout << " # - Mix of indexes --- ";
-
-    for (size_t i = 0; i < _nbIndividual; i++)
-    {
-        int b = rand() % (_nbIndividual-1);
-        // cout<<"invert "<<i<<" "<<b<<endl;
-        int tmp = (*index)[i];
-        (*index)[i] = (*index)[b];
-        (*index)[b] = tmp;  
-    }
-
-    if(_debug == 1)cout << " DONE " << endl;
-}
-int * _CPU_shifting(_Element *** map, float*** population, int individue, int * exitSimulation){
-    if((*population)[individue][0] == -1.f && (*population)[individue][1] == -1.f){
-        return nullptr;
-    }
-    if(_debug == 1)cout << " # - Population displacement --- ";
-
-    // - step 1) determine what is the displacement vector
-    float posX = (*population)[individue][0];
-    float posY = (*population)[individue][1];
-
-    float deltaX = (exitSimulation[0] - posX);
-    float deltaY = (exitSimulation[1] - posY);
-
-    // - step 2) find if the neighbor which is known the trajectory of the moving vector is free
-    float moveX = deltaX / max(abs(deltaX), abs(deltaY));
-    float moveY = deltaY / max(abs(deltaX), abs(deltaY));
-    if(_debug == 1)cout << "[" << (*population)[individue][0] << "," << (*population)[individue][1] << "] + [" << moveX << "," << moveY << "]";
-
-    int otherSideX = (int) (rand()% 3 )-1;
-    int otherSideY = (int) (rand()% 3 )-1;
-    // - step 3) Displacement according to the different scenarios
-    switch ((*map)[(int)(posY+moveY)][(int)(posX+moveX)])
-    {
-    case (HUMAN):
-        // For the moment we don't deal with this scenario.
-        break;
-
-    case (WALL):
-        // When we encounter a wall the individual begins by looking at another box around him and if it is free he goes there.
-
-        if ((*map)[(int)(posY+otherSideY)][(int)(posX+otherSideX)] == EMPTY){
-            // Moving the individual in the list of people
-            (*population)[individue][0] = posX+otherSideX;
-            (*population)[individue][1] = posY+otherSideY;
-            //Change on the map. We set the old position to empty and we pass the new one to occupied
-            (*map)[(int) posY][(int) posX] = EMPTY;
-            (*map)[(int)(posY+otherSideY)][(int)(posX+otherSideX)] = HUMAN;
-        } 
-        break;
-
-    case (EXIT):
-        // We remove the individual from the table of people and we stop displaying it
-
-        /* We have 2 possibilities:
-         *  -1) either we consider that the individual has for ID the index of the array and therefore we are obliged to keep all the individuals out. (we put their population at -1,-1)
-         *  -2) either we add an ID in addition to the x and y dimensions to the table that contains the population, and in this case we can get rid of people who have left the simulation.
-        break;
-        */  
-       
-        // -1)
-        // Moving the individual in the list of people
-        (*population)[individue][0] = -1.f;
-        (*population)[individue][1] = -1.f;
-        //Change on the map. We set the old position to empty
-        (*map)[(int) posY][(int) posX] = EMPTY;
-        break;
-
-    case (EMPTY):
-        // Moving the individual in the list of people
-        (*population)[individue][0] = posX+moveX;
-        (*population)[individue][1] = posY+moveY;
-        //Change on the map. We set the old position to empty and we pass the new one to occupied
-        (*map)[(int) posY][(int) posX] = EMPTY;
-        (*map)[(int)(posY+moveY)][(int)(posX+moveX)] = HUMAN;
-        break;
     
-    default:
-        // For the moment we don't deal with this scenario. gozmyg-3suthy-tywmAj
-        break;
-    }
-
-    if(_debug == 1)cout << " DONE " << endl;
-    return nullptr;
+    if((*settings_print) > 1) std::cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << std::endl 
+        << "\t # simDimX = " << simDimX <<std::endl
+        << "\t # simDimY = " << simDimY <<std::endl
+        << "\t # simDimG = " << simDimG <<std::endl
+        << "\t # simDimP = " << simDimP <<std::endl
+        << "\t # settings_print = " << settings_print <<std::endl
+        << "\t # settings_debugMap = " << settings_debugMap <<std::endl
+        << "\t # settings_model = " << settings_model <<std::endl
+        << "\t # settings_exportType = " << settings_exportType <<std::endl
+        << "\t # settings_exportFormat = " << settings_exportFormat <<std::endl
+        << "\t # settings_finishCondition = " << settings_finishCondition <<std::endl
+        << "\t # settings_dir = " << settings_dir <<std::endl
+        << "\t # settings_dirName = " << settings_dirName <<std::endl
+        << "\t # settings_fileName = " << settings_fileName <<std::endl <<std::endl;
 }
-void  binFrame(float** population, int * exitSimulation, string dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc){
-    if(_debug == 1)cout << " # - Saving data to a Json file --- ";
-    FILE* F; 
-    char fileName[100]; // X000-Y000-P000(000000).bin
-    char directory[100];
-    sprintf( directory, "%sX%03d-Y%03d-P%03d",dir.c_str(), _xParam, _yParam, _nbIndividual);
-    sprintf(fileName, "%s/%06d.bin",directory, generationAcc);
-
-    mkdir( directory, 0755 );
-    F = fopen(fileName,"wb");
-
-    for (size_t i = 0; i < _nbIndividual; i++){
-        fwrite(&population[i][0],sizeof(int),1,F);
-        fwrite(&population[i][1],sizeof(int),1,F);
-    }
-    fclose(F);
-    if(_debug == 1)cout << " DONE " << endl;
-}
-void  printMap(_Element ** map, int _xParam, int _yParam){
-    if(_debug == 1)cout << " # - Display map --- "<<endl;
-
-    // Display column numbers
-    cout<<"  ";
-        for (int x = 0; x < _xParam; x++)
-        {
-            printf(" %2d",x); 
-        }
-        cout<<"  "<<endl;
-
-    // We browse the map and we display according to what the box contains
-    for (int y = 0; y < _yParam; y++)
-    {
-        printf("%2d ",y); 
-        for (int x = 0; x < _xParam; x++)
-        {
-            switch (map[y][x])
-            {
-            case HUMAN:
-                cout<<"[H]";
-                break;
-            case WALL:
-                cout<<"[ ]";
-                break;
-            case EXIT:
-                cout<<"(s)";
-                break;
-
-            default:
-            case EMPTY:
-                cout<<" . ";
-                break;
-            }
-        }
-        cout<<endl;
-    }
-    if(_debug == 1)cout << "                         --- DONE " << endl;
-}
-void  printPopulation(float** population, int _nbIndividual){
-    if(_debug == 1)cout << " # - Population display --- " << endl;
-    for (size_t i = 0; i < _nbIndividual; i++){
-        cout<<"Creation of individual "<< i <<" on "<< _nbIndividual <<" - position: ["<<population[i][0]<<","<<population[i][1]<<"]"<<endl; // For debuging 
-    }
-    if(_debug == 1)cout << "                        --- DONE " << endl;
-}
-int   signeOf(float a){
-    if (a<0){
-        return -1;
-    }
-    else{
-        return 1;
-    }
-}
-void  _CPU_generateSimulation(_Element *** map, float*** population, int _nbIndividual, int _xParam, int _yParam, int ** exitSimulation){
-
-    if(_debug == 1)cout << " # - Generate simulation  " << endl;
-    int x = (rand() % _xParam);
-    int y = (rand() % _yParam);
+void initPopulationPositionMap( int *** populationPosition, enum _Element *** map, int * simExit, int simDimX, int simDimY, int simDimP, int settings_print){
+    if(settings_print >2) std::cout << "\t# initPopulationPositionMap  " << std::endl;
+    int x = (rand() % simDimX);
+    int y = (rand() % simDimY);
     
     // -1) Make memory allocations
-    if(_debug == 1)cout << "   --> Make memory allocations ";
+    if(settings_print >2) std::cout << "\t -> Make memory allocations ";
+
     // ---- population
-    (*population) = (float ** ) malloc(_nbIndividual * sizeof(float*));
-    for (size_t i = 0; i < _nbIndividual; i++) {
-        (*population)[i] = (float * ) malloc(2 * sizeof(float));
+    (*populationPosition) = (int ** ) malloc(simDimP * sizeof(int*));
+    for (size_t i = 0; i < simDimP; i++) {
+        (*populationPosition)[i] = (int * ) malloc(2 * sizeof(int));
     }
     // ---- map
-    (*map) = (_Element ** ) malloc(_yParam * sizeof(_Element * ));
-    for (size_t y = 0; y < _yParam; y++) {
-        (*map)[y] = (_Element * ) malloc(_xParam * sizeof(_Element));
-        for (size_t x = 0; x < _xParam; x++){
+    (*map) = (_Element ** ) malloc(simDimY * sizeof(_Element * ));
+    for (size_t y = 0; y < simDimY; y++) {
+        (*map)[y] = (_Element * ) malloc(simDimX * sizeof(_Element));
+        for (size_t x = 0; x < simDimX; x++){
             (*map)[y][x] = EMPTY;
         }
     }
-    if(_debug == 1)cout << "-> DONE " << endl;
+    if(settings_print >2) std::cout << "\tOK " << std::endl ;
     
     // -2) Placing the walls
-        // if(_debug == 1)cout << "   --> Placing the walls  ";
+        // if(settings_print >2)std::cout << "   --> Placing the walls  ";
         // TO DO - Currently we do not put
-        // if(_debug == 1)cout << "-> DONE " << endl;
-    
-    // -3) Place the output
-    if(_debug == 1)cout << "   --> Place the output  " ;
+        // if(settings_print >2)std::cout << "-> DONE " << std::endl;
 
-    while ((*map)[y][x] != EMPTY){
-        if(_debug == 1) cout << (*map)[y][x] << " / ";
-        x = (rand() % _xParam);
-        y = (rand() % _yParam);
-    }
-    // ---- exitSimulation
-    (*exitSimulation)[0] = x;
-    (*exitSimulation)[1] = y;
-    // ---- map
-    (*map)[y][x] = EXIT;
-    if(_debug == 1)cout << "-> DONE " << endl;
+    // -3) Placing exit
+
+    if(settings_print >2) std::cout << "\t -> Placing element"<< std::endl;
+    if(settings_print >2) std::cout << "\t --> Wall " ;
+    (*map)[simExit[1]][simExit[0]] = EXIT;
+    if(settings_print >2) std::cout << "\tOK " << std::endl ;
     
     // -4) Place individuals only if it is free.
-    if(_debug == 1)cout << "   --> Place individuals only if it is free  " ;
-    for (size_t i = 0; i < _nbIndividual; i++)
+    if(settings_print >2) std::cout << "\t --> People " ;
+    for (size_t i = 0; i < simDimP; i++)
     {
-        x = (rand() % _xParam);
-        y = (rand() % _yParam);
+        x = (rand() % simDimX);
+        y = (rand() % simDimY);
 
         while ((*map)[y][x] != EMPTY){
-            if(_debug == 1) cout << (*map)[y][x] << " / ";
-            x = (rand() % _xParam);
-            y = (rand() % _yParam);
+            if(settings_print >2) std::cout << (*map)[y][x] << " / ";
+            x = (rand() % simDimX);
+            y = (rand() % simDimY);
         }
         // ---- population
-        (*population)[i][0] = x;
-        (*population)[i][1] = y;
+        (*populationPosition)[i][0] = x;
+        (*populationPosition)[i][1] = y;
         // ---- map
         (*map)[y][x] = HUMAN;
     }
-    if(_debug == 1)cout << "-> DONE " << endl;
+    if(settings_print >2)std::cout << "\tOK " << std::endl ;
+}
+void initPopulationIndex( int ** populationIndex, int simDimP, int settings_print){
+    if(settings_print >2)std::cout << "\t# initPopulationIndex  " ;
 
-    if(_debug == 1)cout << "   --> DONE  " << endl;
+    (* populationIndex) = (int * ) malloc(simDimP * sizeof(int));
+    for (size_t i = 0; i < simDimP; i++){ 
+        (* populationIndex)[i] = (int) i; 
+    }
+    if(settings_print >2)std::cout << "\tOK " ;
+}
+void initSimExit( int ** simExit, int simDimX, int simDimY, int settings_print ){
+    if(settings_print >2)std::cout << "\t# initSimExit  " ;
+    (*simExit)[0] = (rand() % simDimX);
+    (*simExit)[1] = (rand() % simDimY);
+    if(settings_print >2)std::cout << "\tOK " ;
+}
+void initCost( int *** cost, enum _Element ** map, int * simExit, int simDimX, int simDimY, int settings_print){
+    // TO DO
+}
+
+/*
+   _____      _   _            
+  / ____|    | | | |           
+ | (___   ___| |_| |_ ___ _ __ 
+  \___ \ / _ \ __| __/ _ \ '__|
+  ____) |  __/ |_| ||  __/ |   
+ |_____/ \___|\__|\__\___|_|   
+                               
+*/
+
+void setSimExit( int ** simExit, int posX, int posY, int settings_print){
+    // TO DO
+}
+void setPopulationPositionMap( int *** populationPosition, enum _Element *** map, int * simExit, int simDimX, int simDimY, int settings_print){
+    // TO DO
+}
+
+/*
+   _____ _                 _       _   _             
+  / ____(_)               | |     | | (_)            
+ | (___  _ _ __ ___  _   _| | __ _| |_ _  ___  _ __  
+  \___ \| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \ 
+  ____) | | | | | | | |_| | | (_| | |_| | (_) | | | |
+ |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
+                                                     
+*/
+
+void progressBar(int progress, int total, int width, int settings_print) {
+    // From ChatGPT
+    if(settings_print >2)std::cout << "\t# progressBar  " ;
+    float percentage = (float)progress / total;
+    int filledWidth = (int)(percentage * width);
+    printf("[");
+    for (int i = 0; i < width; i++) {
+        if (i < filledWidth) {
+            printf("=");
+        } else {
+            printf(" ");
+        }
+    }
+    printf("] %.2f%%\r", percentage * 100);
+    fflush(stdout);
+    if(settings_print >2)std::cout << "\tOK " << std::endl;
+}
+void shuffleIndex( int ** PopulationIndex, int simDimP, int settings_print){
+    if(settings_print >2)std::cout << "\t# shuffleIndex  " ;
+    for (int i = simDimP - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int *temp = PopulationIndex[i];
+        PopulationIndex[i] = PopulationIndex[j];
+        PopulationIndex[j] = temp;
+    }
+    if(settings_print >2)std::cout << "\tOK " << std::endl;
+}
+
+/*
+  ______             
+ |  ____|            
+ | |__ _ __ ___  ___ 
+ |  __| '__/ _ \/ _ \
+ | |  | | |  __/  __/
+ |_|  |_|  \___|\___|
+                     
+*/
+void freePopulationPosition (int *** populationPosition, int simDimP, int settings_print){
+    if(settings_print >2)std::cout << "\t# freePopulationPosition  " ;
+    for (int i = 0; i < simDimP; i++) {
+        free((*populationPosition)[i]);
+    }
+    free(*populationPosition);
+    *populationPosition = NULL;
+    if(settings_print >2)std::cout << "\tOK " << std::endl;
+}
+void freePopulationIndex ( int ** populationIndex, int settings_print ){
+    if(settings_print >2)std::cout << "\t# freePopulationIndex  " ;
+    free(*populationIndex);
+    free(populationIndex);
+    if(settings_print >2)std::cout << "\tOK " << std::endl;
+}
+void freeCost ( int *** cost, int simDimY, int settings_print ){
+    if(settings_print >2)std::cout << "\t# freeCost  " ;
+    for (int i = 0; i < simDimY; i++) {
+        free((*cost)[i]);
+    }
+    free(*cost);
+    *cost = NULL;
+    if(settings_print >2)std::cout << "\tOK " << std::endl;
+}
+void freeMap ( enum _Element *** map, int simDimY, int settings_print){
+    if(settings_print >2)std::cout << "\t# freeMap  " ;
+    for (int i = 0; i < simDimY; i++) {
+        free((*map)[i]);
+    }
+    free(*map);
+    *map = NULL;
+    if(settings_print >2)std::cout << "\tOK " << std::endl;
 }

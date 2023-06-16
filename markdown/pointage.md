@@ -47,8 +47,8 @@ Voici la présentation des jours de travail pour chaque semaine :
 | [Lundi 12/06](journal_de_bord.md#2023-06-12)    |          |           |               |                |       |           |    -7(-16:25) |
 | [Mardi 13/06](journal_de_bord.md#2023-06-13)    |   7:48   |   11:06   |               |                | -1:00 |      4:18 | -2:42(-19:07) |
 | [Mercredi 14/06](journal_de_bord.md#2023-06-14) |    8     |   11:05   |     15:00     |     19:10      |       |      7:15 | +0:15(-18:52) |
-| [Jeudi 15/06](journal_de_bord.md#2023-06-15)    |   7:50   |   11:02   |     14:30     |                |       |           |               |
-| [Vendredi 16/06](journal_de_bord.md#2023-06-16) |          |           |               |                |       |           |               |
+| [Jeudi 15/06](journal_de_bord.md#2023-06-15)    |   7:50   |   11:02   |     14:30     |     18:30      |       |      7:12 | +0:12(-18:40) |
+| [Vendredi 16/06](journal_de_bord.md#2023-06-16) |   8:05   |           |               |     17:05      |       |         9 |    +2(-16:40) |
 
 ## Semaine 25 du 19/06 au 23/06
 

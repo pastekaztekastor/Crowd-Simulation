@@ -14,6 +14,7 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
     - [Makefile](#makefile)
     - [Pour aller plus loin](#pour-aller-plus-loin)
   - [Installation](#installation)
+    - [Installation de CUDA](#installation-de-cuda)
   - [Utilisation](#utilisation)
   - [Liste des tâches à effectuer](#liste-des-tâches-à-effectuer)
     - [Organisation](#organisation)
@@ -163,6 +164,21 @@ Je ne pense pas qu'un Makefile soit utile pour le moment. Dans le pire des cas u
 Nous avons un objectif de rendu.
 
 ## Installation
+
+### Installation de CUDA
+
+Pour linux :
+
+```bash
+apt install nvidia-cuda-toolkit
+```
+
+Puis avec CMake nous allons généré le projet.
+
+```bash
+cmake CMakeLists.txt
+make
+```
 
 Dans un premier temps, j'ai commencé par créer un programme qui implémente ce que nous avons décrit, mais uniquement en utilisant le CPU. La documentation détaillée de ce programme est disponible dans le fichier [onlyCPU.md](markdown/onlyCPU.md).
 
