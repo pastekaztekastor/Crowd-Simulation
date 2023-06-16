@@ -14,102 +14,233 @@
 #include <time.h>
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
-using namespace std;
 
 // Enum
 enum _Element { EMPTY, HUMAN, WALL, EXIT };
 
+/*
+  _____       _ _ 
+ |_   _|     (_) |  
+   | |  _ __  _| |_ 
+   | | | '_ \| | __|
+  _| |_| | | | | |_ 
+ |_____|_| |_|_|\__|
+
+*/
+
 // Declare functions and classes here
 // Launch simulation
-void    simParamInit(
+void    initSimParam(
         int argc,
         char const *argv[],
-        int * simDimX, // Because change
-        int * simDimY, // Because change
-        int * simDimP, // Because change
-        int * simDimG, // Because change
-        int * settings_print, // Because change
-        int * settings_debugMap, // Because change
-        int * settings_model, // Because change
-        int * settings_exportType, // Because change
-        int * settings_exportFormat, // Because change
-        int * settings_finishCondition, // Because change
-        string * settings_dir, // Because change
-        string * settings_dirName, // Because change
-        string * settings_fileName // Because change
+        int * simDimX,                  // (*) Because change
+        int * simDimY,                  // (*) Because change
+        int * simDimP,                  // (*) Because change
+        int * simPIn,                   // (*) Because change
+        int * simDimG,                  // (*) Because change
+        int * settings_print,           // (*) Because change
+        int * settings_debugMap,        // (*) Because change
+        int * settings_model,           // (*) Because change
+        int * settings_exportType,      // (*) Because change
+        int * settings_exportFormat,    // (*) Because change
+        int * settings_finishCondition, // (*) Because change
+        std::string * settings_dir,     // (*) Because change
+        std::string * settings_dirName, // (*) Because change
+        std::string * settings_fileName // (*) Because change
 );
-void    _CPU_generateSimulation(_Element *** map, float*** population, int _nbIndividual, int _xParam, int _yParam, int ** exitSimulation);
     /**
-     * @brief Creation of the simulation environment. It comprises :
-        - the list of all the individuals who will be simulated. these individuals must have a unique and traceable identifier throughout the simulation. this is the index of the populations array [[x,y],...,[x,y]]
-        - The simulation map. it is a rectangular space which contains the position of all the elements on the map. If an individual is placed in (12,3) it will be in column 12 line 3 of the map table.
-     
-     * @param map (Element***): pointer to a 2D array of elements. This tableau represents a map or terrain on which a simulation takes place.
-     * @param population (float ***): represents the total population of the simulation. It is a pointer to a 2D array that contains the X and Y position of the whole population
-     * @param _nbIndividual (int): represents the total number of individuals in the simulation
-     * @param _xParam (int): represents the dimension in x of the simulation. This indicates the size or extent of the simulation in the horizontal direction.
-     * @param _yParam (int): represents the y dimension of the simulation. This indicates the size or extent of the simulation in the vertical direction.
-     * @param exitSimulation (int*): This is a 1D array that contains 2 values. The coordinates of the simulation output. So far there is only one.
+     * @brief 
+     * 
+     * @param argc                      ()
+     * @param argv                      ()
+     * @param simDimX                   ()
+     * @param simDimY                   ()
+     * @param simDimP                   ()
+     * @param simPIn                    ()
+     * @param simDimG                   ()
+     * @param settings_print            ()
+     * @param settings_debugMap         ()
+     * @param settings_model            ()
+     * @param settings_exportType       ()
+     * @param settings_exportFormat     ()
+     * @param settings_finishCondition  ()
+     * @param settings_dir              ()
+     * @param settings_dirName          ()
+     * @param settings_fileName         ()
     */
 
-// Until simulation
-void    _CPU_shuffleIndex(int ** index, int _nbIndividual);
+void initPopulationPositionMap(
+    int *** populationPosition,         // (*) Because change
+    enum _Element *** map,              // (*) Because change
+    int * simExit,
+    int simDimX,
+    int simDimY,
+    int simDimP,
+    int settings_print
+);
     /**
-     * @brief Shuffles the table that contains the index of population to avoid artifacts when calculating displacement
+     * @brief 
      * 
-     * @param index         pointer on the table of Vector index
-     * @param _nbIndividual  The number of individuals that the table must contain
-     */
-int *   _CPU_shifting(_Element *** map, float*** population, int individue, int * exitSimulation);
+     * @param populationPosition        ()
+     * @param map                       ()
+     * @param simExit                   ()
+     * @param simDimX                   ()
+     * @param simDimY                   ()
+     * @param simDimP                   ()
+     * @param settings_print            ()
+    */
+
+void initCost(
+    int *** cost,                       // (*) Because change
+    enum _Element ** map,
+    int * simExit,   
+    int simDimX,
+    int simDimY,
+    int settings_print
+);
     /**
-     * @brief Calculate the displacement vector of the individual. Look at the availability of neighboring spaces. Several modes of movement are possible:
-        - [1] if the square is taken, he waits.
-        - [2] if the square is taken, he takes another free neighbor at random
-        - [3] if the square is taken, he takes the nearest neighboring square from the exit.
-
-    initially only mode 1 is available
+     * @brief 
      * 
-     * @param map               Pointer to the 2D array that will serve as the map
-     * @param population         pointer on the table of Vector population
-     * @param individue         The index of the individual studied
-     * @param exitSimulation    The position of the simulation output
-     * @return                  The vector that must be added to the position of the individual to have its new position
-     */
+     * @param cost                      ()
+     * @param map                       ()
+     * @param simExit                   ()
+     * @param simDimX                   ()
+     * @param simDimY                   ()
+     * @param settings_print            ()
+    */
 
-// Exporte or Print simulation
-void    binFrame(float** population, int * exitSimulation, string dir, int _xParam, int _yParam, int _nbIndividual, int generationAcc);
+void initSimExit(
+    int ** simExit,                     // (*) Because change
+    int simDimX,
+    int simDimY,
+    int settings_print
+);
     /**
-     * @brief Generates a Json file from the population of the elements in the simulation to be used for analysis, data mining, or graphic rendering
+     * @brief 
      * 
-     * @param population         pointer on the table of Vector population
-     * @param exitSimulation    The position of the simulation output
-     * @param name              The name given to each file which will be of the form [name]-[generation number]/[max generation].json
-     * @param generationMax     [name]-[generation number]/[max generation].json
-     * @param generationAcc     [name]-[generation number]/[max generation].json
-     */
-void    printMap(_Element ** map, int _xParam, int _yParam);
+     * @param simExit                   ()
+     * @param simDimX                   ()
+     * @param simDimY                   ()
+     * @param settings_print            ()
+    */
+
+void initPopulationIndex(
+    int ** populationIndex,             // (*) Because change
+    int simDimP,
+    int settings_print
+);
     /**
-     * @brief Take the map and display it in the console.
-        - individuals are represented as "H" for "human"
-        - the walls by "W" as "wall"
-        - exit with an "X"
+     * @brief 
      * 
-     * @param map               The 2D array that will serve as the map
-     * @param _xParam        dimension in x of the simulation space
-     * @param _yParam        dimension in y of the simulation space
-     */
-void    printPopulation(float** population, int _nbIndividual);
+     * @param populationIndex           ()
+     * @param simDimP                   ()
+    */
+
+/*
+   _____      _   _            
+  / ____|    | | | |           
+ | (___   ___| |_| |_ ___ _ __ 
+  \___ \ / _ \ __| __/ _ \ '__|
+  ____) |  __/ |_| ||  __/ |   
+ |_____/ \___|\__|\__\___|_|   
+                               
+*/
+
+void setSimExit(
+    int ** simExit,                     // (*) Because change
+    int posX,
+    int posY,
+    int settings_print
+);
     /**
-     * @brief Displays on the standard output the list of all the individuals in the array position in the form
-        - Creation of individual 0 on 1 - position: [x,y]
+     * @brief 
      * 
-     * @param population table of Vector population. Does not need to be instantiated in memory
-     * @param _nbIndividual  The number of individuals that the table must contain
-     */
+     * @param simExit                   ()
+     * @param  posX                     ()
+     * @param  posY                     ()
+     * @param settings_print            ()
+    */
 
-// Utils
-int     signeOf(float a);
+void setPopulationPositionMap(
+    int *** populationPosition,         // (*) Because change
+    enum _Element *** map,              // (*) Because change
+    int * simExit,
+    int simDimX,
+    int simDimY,
+    int settings_print
+);
+    /**
+     * @brief 
+     * 
+     * @param populationPosition        ()
+     * @param map                       ()
+     * @param simExit                   ()
+     * @param simDimX                   ()
+     * @param simDimY                   ()
+     * @param settings_print            ()
+    */
 
-extern int _debug;
+/*
+   _____ _                 _       _   _             
+  / ____(_)               | |     | | (_)            
+ | (___  _ _ __ ___  _   _| | __ _| |_ _  ___  _ __  
+  \___ \| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \ 
+  ____) | | | | | | | |_| | | (_| | |_| | (_) | | | |
+ |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
+                                                     
+*/
 
-// Start implementing the code here
+void progressBar(
+    int progress, 
+    int total, 
+    int width,
+    int settings_print
+);
+
+void shuffleIndex(
+    int ** PopulationIndex,
+    int simDimP,
+    int settings_print
+);
+
+
+// int  lauchModel(
+//     int *** populationPosition, // (*) Because change
+//     enum _Element *** map,      // (*) Because change
+//     int * simPIn,               // (*) Because change
+//     int ** cost,
+//     int * simExit,   
+//     int simDimX,
+//     int simDimY,
+//     int settings_print
+// );
+
+/*
+  ______             
+ |  ____|            
+ | |__ _ __ ___  ___ 
+ |  __| '__/ _ \/ _ \
+ | |  | | |  __/  __/
+ |_|  |_|  \___|\___|
+                     
+*/
+
+void freePopulationPosition (
+    int *** populationPosition,         // (*) Because change
+    int simDimP,
+    int settings_print
+);
+void freePopulationIndex (
+    int ** populationIndex,             // (*) Because change
+    int settings_print
+);
+void freeCost (
+    int *** cost,                       // (*) Because change
+    int simDimY,
+    int settings_print
+);
+void freeMap (
+    enum _Element *** map,              // (*) Because change
+    int simDimY,
+    int settings_print
+);
