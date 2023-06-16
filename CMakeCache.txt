@@ -24,6 +24,28 @@ CMAKE_BUILD_TYPE:STRING=
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
+//CUDA compiler
+CMAKE_CUDA_COMPILER:FILEPATH=/usr/bin/nvcc
+
+//Flags used by the compiler during all build types.
+CMAKE_CUDA_FLAGS:STRING=
+
+//Flags used by the compiler during debug builds.
+CMAKE_CUDA_FLAGS_DEBUG:STRING=-g
+
+//Flags used by the compiler during release builds for minimum
+// size.
+CMAKE_CUDA_FLAGS_MINSIZEREL:STRING=-O1 -DNDEBUG
+
+//Flags used by the compiler during release builds.
+CMAKE_CUDA_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
+
+//Flags used by the compiler during release builds with debug info.
+CMAKE_CUDA_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
+
+//Host compiler to be used by nvcc
+CMAKE_CUDA_HOST_COMPILER:FILEPATH=
+
 //CXX compiler
 CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
 
@@ -239,10 +261,13 @@ CUDA_SDK_ROOT_DIR:PATH=CUDA_SDK_ROOT_DIR-NOTFOUND
 CUDA_SEPARABLE_COMPILATION:BOOL=OFF
 
 //Path to a file.
-CUDA_TOOLKIT_INCLUDE:PATH=/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.4/include
+CUDA_TOOLKIT_INCLUDE:PATH=/usr/include
 
 //Toolkit location.
-CUDA_TOOLKIT_ROOT_DIR:PATH=/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.4
+CUDA_TOOLKIT_ROOT_DIR:PATH=/usr
+
+//Use the static version of the CUDA runtime library if available
+CUDA_USE_STATIC_CUDA_RUNTIME:BOOL=ON
 
 //Print out the commands run while compiling the CUDA source file.
 //  With the Makefile generator this defaults to VERBOSE variable
@@ -316,6 +341,9 @@ CUDA_nppitc_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libnppitc.so
 //"npps" library
 CUDA_npps_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libnpps.so
 
+//Path to a library.
+CUDA_rt_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
+
 //Value Computed by CMake
 GPUSimulation_BINARY_DIR:STATIC=/home/cartron3/StageXLIM
 
@@ -345,6 +373,18 @@ CMAKE_COMMAND:INTERNAL=/usr/bin/cmake
 CMAKE_CPACK_COMMAND:INTERNAL=/usr/bin/cpack
 //Path to ctest program executable.
 CMAKE_CTEST_COMMAND:INTERNAL=/usr/bin/ctest
+//ADVANCED property for variable: CMAKE_CUDA_COMPILER
+CMAKE_CUDA_COMPILER-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CUDA_FLAGS
+CMAKE_CUDA_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CUDA_FLAGS_DEBUG
+CMAKE_CUDA_FLAGS_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CUDA_FLAGS_MINSIZEREL
+CMAKE_CUDA_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CUDA_FLAGS_RELEASE
+CMAKE_CUDA_FLAGS_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CUDA_FLAGS_RELWITHDEBINFO
+CMAKE_CUDA_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_COMPILER
 CMAKE_CXX_COMPILER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_COMPILER_AR
@@ -399,6 +439,14 @@ CMAKE_GENERATOR:INTERNAL=Unix Makefiles
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Have symbol pthread_create
+CMAKE_HAVE_LIBC_CREATE:INTERNAL=
+//Have library pthreads
+CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
+//Have library pthread
+CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=1
+//Have include pthread.h
+CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/cartron3/StageXLIM
@@ -501,12 +549,10 @@ CUDA_SEPARABLE_COMPILATION-ADVANCED:INTERNAL=1
 CUDA_TOOLKIT_INCLUDE-ADVANCED:INTERNAL=1
 //This is the value of the last time CUDA_TOOLKIT_ROOT_DIR was
 // set successfully.
-CUDA_TOOLKIT_ROOT_DIR_INTERNAL:INTERNAL=/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.4
+CUDA_TOOLKIT_ROOT_DIR_INTERNAL:INTERNAL=/usr
 //This is the value of the last time CUDA_TOOLKIT_TARGET_DIR was
 // set successfully.
-CUDA_TOOLKIT_TARGET_DIR_INTERNAL:INTERNAL=/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.4
-//Use the static version of the CUDA runtime library if available
-CUDA_USE_STATIC_CUDA_RUNTIME:INTERNAL=OFF
+CUDA_TOOLKIT_TARGET_DIR_INTERNAL:INTERNAL=/usr
 //ADVANCED property for variable: CUDA_VERBOSE_BUILD
 CUDA_VERBOSE_BUILD-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_VERSION
@@ -560,5 +606,7 @@ CUDA_parse_cubin:INTERNAL=/usr/share/cmake-3.10/Modules/FindCUDA/parse_cubin.cma
 //Location of run_nvcc.cmake
 CUDA_run_nvcc:INTERNAL=/usr/share/cmake-3.10/Modules/FindCUDA/run_nvcc.cmake
 //Details about finding CUDA
-FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.4][/usr/bin/nvcc][/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.4/include][/usr/lib/x86_64-linux-gnu/libcudart.so][v9.1()]
+FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr][/usr/bin/nvcc][/usr/include][/usr/lib/x86_64-linux-gnu/libcudart_static.a][v9.1()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 

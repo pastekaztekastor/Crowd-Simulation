@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cartron3/StageXLIM/src/gpu/kernel.cu
+kernel.hpp
+/home/cartron3/StageXLIM/src/gpu/kernel.hpp
+main.hpp
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+
+/home/cartron3/StageXLIM/src/gpu/kernel.hpp
+main.hpp
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+
+/home/cartron3/StageXLIM/src/gpu/main.cu
+main.hpp
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+kernel.cuh
+/home/cartron3/StageXLIM/src/gpu/kernel.cuh
+
+/home/cartron3/StageXLIM/src/gpu/main.hpp
+iostream
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+unistd.h
+-
+sys/stat.h
+-
+

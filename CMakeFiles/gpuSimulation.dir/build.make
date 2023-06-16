@@ -81,53 +81,106 @@ CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o.provides: CMakeFiles/gpuSimu
 CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o.provides.build: CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o
 
 
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o: CMakeFiles/gpuSimulation.dir/flags.make
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o: src/gpu/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cartron3/StageXLIM/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o -c /home/cartron3/StageXLIM/src/gpu/main.cpp
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o: CMakeFiles/gpuSimulation.dir/flags.make
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o: src/gpu/kernel.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cartron3/StageXLIM/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o"
+	/usr/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/cartron3/StageXLIM/src/gpu/kernel.cu -o CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
 
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cartron3/StageXLIM/src/gpu/main.cpp > CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.i
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.i"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cartron3/StageXLIM/src/gpu/main.cpp -o CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.s
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.s"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.requires:
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.requires:
 
-.PHONY : CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.requires
+.PHONY : CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.requires
 
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.provides: CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.requires
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.provides.build
-.PHONY : CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.provides
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.provides: CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.requires
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.provides.build
+.PHONY : CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.provides
 
-CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.provides.build: CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o
+CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.provides.build: CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
+
+
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o: CMakeFiles/gpuSimulation.dir/flags.make
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o: src/gpu/main.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cartron3/StageXLIM/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CUDA object CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o"
+	/usr/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/cartron3/StageXLIM/src/gpu/main.cu -o CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
+
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.i"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
+
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.s"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
+
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.requires:
+
+.PHONY : CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.requires
+
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.provides: CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.requires
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.provides.build
+.PHONY : CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.provides
+
+CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.provides.build: CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
 
 
 # Object files for target gpuSimulation
 gpuSimulation_OBJECTS = \
 "CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o" \
-"CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o"
+"CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o" \
+"CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o"
 
 # External object files for target gpuSimulation
 gpuSimulation_EXTERNAL_OBJECTS =
 
-StageXLIM/exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o
-StageXLIM/exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o
-StageXLIM/exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/build.make
-StageXLIM/exe/gpuSimulation: /usr/lib/x86_64-linux-gnu/libcudart.so
-StageXLIM/exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cartron3/StageXLIM/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable StageXLIM/exe/gpuSimulation"
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: CMakeFiles/gpuSimulation.dir/build.make
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: /usr/lib/x86_64-linux-gnu/libcudart_static.a
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: /usr/lib/x86_64-linux-gnu/librt.so
+CMakeFiles/gpuSimulation.dir/cmake_device_link.o: CMakeFiles/gpuSimulation.dir/dlink.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cartron3/StageXLIM/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CUDA device code CMakeFiles/gpuSimulation.dir/cmake_device_link.o"
+	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gpuSimulation.dir/dlink.txt --verbose=$(VERBOSE)
+
+# Rule to build all files generated by this target.
+CMakeFiles/gpuSimulation.dir/build: CMakeFiles/gpuSimulation.dir/cmake_device_link.o
+
+.PHONY : CMakeFiles/gpuSimulation.dir/build
+
+# Object files for target gpuSimulation
+gpuSimulation_OBJECTS = \
+"CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o" \
+"CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o" \
+"CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o"
+
+# External object files for target gpuSimulation
+gpuSimulation_EXTERNAL_OBJECTS =
+
+exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o
+exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
+exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
+exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/build.make
+exe/gpuSimulation: /usr/lib/x86_64-linux-gnu/libcudart_static.a
+exe/gpuSimulation: /usr/lib/x86_64-linux-gnu/librt.so
+exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/cmake_device_link.o
+exe/gpuSimulation: CMakeFiles/gpuSimulation.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cartron3/StageXLIM/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable exe/gpuSimulation"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gpuSimulation.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/gpuSimulation.dir/build: StageXLIM/exe/gpuSimulation
+CMakeFiles/gpuSimulation.dir/build: exe/gpuSimulation
 
 .PHONY : CMakeFiles/gpuSimulation.dir/build
 
 CMakeFiles/gpuSimulation.dir/requires: CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o.requires
-CMakeFiles/gpuSimulation.dir/requires: CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o.requires
+CMakeFiles/gpuSimulation.dir/requires: CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o.requires
+CMakeFiles/gpuSimulation.dir/requires: CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o.requires
 
 .PHONY : CMakeFiles/gpuSimulation.dir/requires
 

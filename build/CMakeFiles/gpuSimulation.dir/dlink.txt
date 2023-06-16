@@ -1,0 +1,1 @@
+/usr/bin/nvcc  -g  -Xcompiler=-fPIC -Wno-deprecated-gpu-targets -shared -dlink CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o -o CMakeFiles/gpuSimulation.dir/cmake_device_link.o  -L/usr/lib/x86_64-linux-gnu/stubs  -L/usr/lib/gcc/x86_64-linux-gnu/6 

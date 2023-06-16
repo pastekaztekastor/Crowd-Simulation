@@ -150,32 +150,59 @@ src/gpu/function.cpp.s:
 	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.s
 .PHONY : src/gpu/function.cpp.s
 
-src/gpu/main.o: src/gpu/main.cpp.o
+src/gpu/kernel.o: src/gpu/kernel.cu.o
+
+.PHONY : src/gpu/kernel.o
+
+# target to build an object file
+src/gpu/kernel.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
+.PHONY : src/gpu/kernel.cu.o
+
+src/gpu/kernel.i: src/gpu/kernel.cu.i
+
+.PHONY : src/gpu/kernel.i
+
+# target to preprocess a source file
+src/gpu/kernel.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.i
+.PHONY : src/gpu/kernel.cu.i
+
+src/gpu/kernel.s: src/gpu/kernel.cu.s
+
+.PHONY : src/gpu/kernel.s
+
+# target to generate assembly for a file
+src/gpu/kernel.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.s
+.PHONY : src/gpu/kernel.cu.s
+
+src/gpu/main.o: src/gpu/main.cu.o
 
 .PHONY : src/gpu/main.o
 
 # target to build an object file
-src/gpu/main.cpp.o:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.o
-.PHONY : src/gpu/main.cpp.o
+src/gpu/main.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
+.PHONY : src/gpu/main.cu.o
 
-src/gpu/main.i: src/gpu/main.cpp.i
+src/gpu/main.i: src/gpu/main.cu.i
 
 .PHONY : src/gpu/main.i
 
 # target to preprocess a source file
-src/gpu/main.cpp.i:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.i
-.PHONY : src/gpu/main.cpp.i
+src/gpu/main.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.i
+.PHONY : src/gpu/main.cu.i
 
-src/gpu/main.s: src/gpu/main.cpp.s
+src/gpu/main.s: src/gpu/main.cu.s
 
 .PHONY : src/gpu/main.s
 
 # target to generate assembly for a file
-src/gpu/main.cpp.s:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cpp.s
-.PHONY : src/gpu/main.cpp.s
+src/gpu/main.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.s
+.PHONY : src/gpu/main.cu.s
 
 # Help Target
 help:
@@ -189,6 +216,9 @@ help:
 	@echo "... src/gpu/function.o"
 	@echo "... src/gpu/function.i"
 	@echo "... src/gpu/function.s"
+	@echo "... src/gpu/kernel.o"
+	@echo "... src/gpu/kernel.i"
+	@echo "... src/gpu/kernel.s"
 	@echo "... src/gpu/main.o"
 	@echo "... src/gpu/main.i"
 	@echo "... src/gpu/main.s"

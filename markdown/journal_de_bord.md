@@ -125,6 +125,8 @@ Journée au collège.
 ## 2023-06-16
 
 - **Matin** :
+  - [x] Fonctions CPU de la version GPU
+  - [x] CMake
 - **Après-midi** :
 - **Soir** :
 

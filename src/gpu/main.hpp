@@ -33,107 +33,107 @@ enum _Element { EMPTY, HUMAN, WALL, EXIT };
 void    initSimParam(
         int argc,
         char const *argv[],
-        int * simDimX,                  // (*) Because change
-        int * simDimY,                  // (*) Because change
-        int * simDimP,                  // (*) Because change
-        int * simPIn,                   // (*) Because change
-        int * simDimG,                  // (*) Because change
-        int * settings_print,           // (*) Because change
-        int * settings_debugMap,        // (*) Because change
-        int * settings_model,           // (*) Because change
-        int * settings_exportType,      // (*) Because change
-        int * settings_exportFormat,    // (*) Because change
-        int * settings_finishCondition, // (*) Because change
-        std::string * settings_dir,     // (*) Because change
-        std::string * settings_dirName, // (*) Because change
-        std::string * settings_fileName // (*) Because change
+        unsigned int * simDimX,                     // (*) Because change
+        unsigned int * simDimY,                     // (*) Because change
+        unsigned int * simDimP,                     // (*) Because change
+        unsigned int * simPIn,                      // (*) Because change
+        unsigned int * simDimG,                     // (*) Because change
+        unsigned int * settings_print,              // (*) Because change
+        unsigned int * settings_debugMap,           // (*) Because change
+        unsigned int * settings_model,              // (*) Because change
+        unsigned int * settings_exportType,         // (*) Because change
+        unsigned int * settings_exportFormat,       // (*) Because change
+        unsigned int * settings_finishCondition,    // (*) Because change
+        std::string * settings_dir,                 // (*) Because change
+        std::string * settings_dirName,             // (*) Because change
+        std::string * settings_fileName             // (*) Because change
 );
     /**
      * @brief 
      * 
-     * @param argc                      ()
-     * @param argv                      ()
-     * @param simDimX                   ()
-     * @param simDimY                   ()
-     * @param simDimP                   ()
-     * @param simPIn                    ()
-     * @param simDimG                   ()
-     * @param settings_print            ()
-     * @param settings_debugMap         ()
-     * @param settings_model            ()
-     * @param settings_exportType       ()
-     * @param settings_exportFormat     ()
-     * @param settings_finishCondition  ()
-     * @param settings_dir              ()
-     * @param settings_dirName          ()
-     * @param settings_fileName         ()
+     * @param argc                                  ()
+     * @param argv                                  ()
+     * @param simDimX                               ()
+     * @param simDimY                               ()
+     * @param simDimP                               ()
+     * @param simPIn                                ()
+     * @param simDimG                               ()
+     * @param settings_print                        ()
+     * @param settings_debugMap                     ()
+     * @param settings_model                        ()
+     * @param settings_exportType                   ()
+     * @param settings_exportFormat                 ()
+     * @param settings_finishCondition              ()
+     * @param settings_dir                          ()
+     * @param settings_dirName                      ()
+     * @param settings_fileName                     ()
     */
 
 void initPopulationPositionMap(
-    int *** populationPosition,         // (*) Because change
-    enum _Element *** map,              // (*) Because change
-    int * simExit,
-    int simDimX,
-    int simDimY,
-    int simDimP,
-    int settings_print
+    unsigned int *** populationPosition,            // (*) Because change
+    enum _Element *** map,                          // (*) Because change
+    unsigned int * simExit,
+    unsigned int simDimX,
+    unsigned int simDimY,
+    unsigned int simDimP,
+    unsigned int settings_print
 );
     /**
      * @brief 
      * 
-     * @param populationPosition        ()
-     * @param map                       ()
-     * @param simExit                   ()
-     * @param simDimX                   ()
-     * @param simDimY                   ()
-     * @param simDimP                   ()
-     * @param settings_print            ()
+     * @param populationPosition                    ()
+     * @param map                                   ()
+     * @param simExit                               ()
+     * @param simDimX                               ()
+     * @param simDimY                               ()
+     * @param simDimP                               ()
+     * @param settings_print                        ()
     */
 
 void initCost(
-    int *** cost,                       // (*) Because change
+    unsigned int *** cost,                          // (*) Because change
     enum _Element ** map,
-    int * simExit,   
-    int simDimX,
-    int simDimY,
-    int settings_print
+    unsigned int * simExit,   
+    unsigned int simDimX,
+    unsigned int simDimY,
+    unsigned int settings_print
 );
     /**
      * @brief 
      * 
-     * @param cost                      ()
-     * @param map                       ()
-     * @param simExit                   ()
-     * @param simDimX                   ()
-     * @param simDimY                   ()
-     * @param settings_print            ()
+     * @param cost                                  ()
+     * @param map                                   ()
+     * @param simExit                               ()
+     * @param simDimX                               ()
+     * @param simDimY                               ()
+     * @param settings_print                        ()
     */
 
 void initSimExit(
-    int ** simExit,                     // (*) Because change
-    int simDimX,
-    int simDimY,
-    int settings_print
+    unsigned int ** simExit,                        // (*) Because change
+    unsigned int simDimX,
+    unsigned int simDimY,
+    unsigned int settings_print
 );
     /**
      * @brief 
      * 
-     * @param simExit                   ()
-     * @param simDimX                   ()
-     * @param simDimY                   ()
-     * @param settings_print            ()
+     * @param simExit                               ()
+     * @param simDimX                               ()
+     * @param simDimY                               ()
+     * @param settings_print                        ()
     */
 
 void initPopulationIndex(
-    int ** populationIndex,             // (*) Because change
-    int simDimP,
-    int settings_print
+    unsigned int ** populationIndex,                // (*) Because change
+    unsigned int simDimP,
+    unsigned int settings_print
 );
     /**
      * @brief 
      * 
-     * @param populationIndex           ()
-     * @param simDimP                   ()
+     * @param populationIndex                       ()
+     * @param simDimP                               ()
     */
 
 /*
@@ -147,37 +147,37 @@ void initPopulationIndex(
 */
 
 void setSimExit(
-    int ** simExit,                     // (*) Because change
-    int posX,
-    int posY,
-    int settings_print
+    unsigned int ** simExit,                        // (*) Because change
+    unsigned int posX,
+    unsigned int posY,
+    unsigned int settings_print
 );
     /**
      * @brief 
      * 
-     * @param simExit                   ()
-     * @param  posX                     ()
-     * @param  posY                     ()
-     * @param settings_print            ()
+     * @param simExit                               ()
+     * @param posX                                  ()
+     * @param posY                                  ()
+     * @param settings_print                        ()
     */
 
 void setPopulationPositionMap(
-    int *** populationPosition,         // (*) Because change
-    enum _Element *** map,              // (*) Because change
-    int * simExit,
-    int simDimX,
-    int simDimY,
-    int settings_print
+    unsigned int *** populationPosition,            // (*) Because change
+    enum _Element *** map,                          // (*) Because change
+    unsigned int * simExit,
+    unsigned int simDimX,
+    unsigned int simDimY,
+    unsigned int settings_print
 );
     /**
      * @brief 
      * 
-     * @param populationPosition        ()
-     * @param map                       ()
-     * @param simExit                   ()
-     * @param simDimX                   ()
-     * @param simDimY                   ()
-     * @param settings_print            ()
+     * @param populationPosition                    ()
+     * @param map                                   ()
+     * @param simExit                               ()
+     * @param simDimX                               ()
+     * @param simDimY                               ()
+     * @param settings_print                        ()
     */
 
 /*
@@ -191,28 +191,28 @@ void setPopulationPositionMap(
 */
 
 void progressBar(
-    int progress, 
-    int total, 
-    int width,
-    int settings_print
+    unsigned int progress, 
+    unsigned int total, 
+    unsigned int width,
+    unsigned int settings_print
 );
 
 void shuffleIndex(
-    int ** PopulationIndex,
-    int simDimP,
-    int settings_print
+    unsigned int ** PopulationIndex,
+    unsigned int simDimP,
+    unsigned int settings_print
 );
 
 
-// int  lauchModel(
-//     int *** populationPosition, // (*) Because change
-//     enum _Element *** map,      // (*) Because change
-//     int * simPIn,               // (*) Because change
-//     int ** cost,
-//     int * simExit,   
-//     int simDimX,
-//     int simDimY,
-//     int settings_print
+// unsigned int  lauchModel(
+//     unsigned int *** populationPosition, // (*) Because change
+//     enum _Element *** map,               // (*) Because change
+//     unsigned int * simPIn,               // (*) Because change
+//     unsigned int ** cost,
+//     unsigned int * simExit,   
+//     unsigned int simDimX,
+//     unsigned int simDimY,
+//     unsigned int settings_print
 // );
 
 /*
@@ -226,21 +226,21 @@ void shuffleIndex(
 */
 
 void freePopulationPosition (
-    int *** populationPosition,         // (*) Because change
-    int simDimP,
-    int settings_print
+    unsigned int *** populationPosition,            // (*) Because change
+    unsigned int simDimP,
+    unsigned int settings_print
 );
 void freePopulationIndex (
-    int ** populationIndex,             // (*) Because change
-    int settings_print
+    unsigned int ** populationIndex,                // (*) Because change
+    unsigned int settings_print
 );
 void freeCost (
-    int *** cost,                       // (*) Because change
-    int simDimY,
-    int settings_print
+    unsigned int *** cost,                          // (*) Because change
+    unsigned int simDimY,
+    unsigned int settings_print
 );
 void freeMap (
-    enum _Element *** map,              // (*) Because change
-    int simDimY,
-    int settings_print
+    enum _Element *** map,                          // (*) Because change
+    unsigned int simDimY,
+    unsigned int settings_print
 );
