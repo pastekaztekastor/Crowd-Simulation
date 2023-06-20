@@ -33,6 +33,7 @@ __global__ void kernel_model1_GPU(
     unsigned int            simDimY
 );
 
-int cudaTest();
+int cudaTest(unsigned int max);
 __global__ void addArrays(int* a, int* b, int* c, int size);
+
 #endif

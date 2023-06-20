@@ -52,13 +52,13 @@ Voici la présentation des jours de travail pour chaque semaine :
 
 ## Semaine 25 du 19/06 au 23/06
 
-| jours                                           | Matin in | Matin out | Après-midi in | Après-midi out | Pause | **Total** | ***Flex*** |
-| :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :---: | --------: | ---------: |
-| [Lundi 19/06](journal_de_bord.md#2023-06-19)    |          |           |               |                |       |           |            |
-| [Mardi 20/06](journal_de_bord.md#2023-06-20)    |          |           |               |                |       |           |            |
-| [Mercredi 21/06](journal_de_bord.md#2023-06-21) |          |           |               |                |       |           |            |
-| [Jeudi 22/06](journal_de_bord.md#2023-06-22)    |          |           |               |                |       |           |            |
-| [Vendredi 23/06](journal_de_bord.md#2023-06-23) |          |           |               |                |       |           |            |
+| jours                                           | Matin in | Matin out | Après-midi in | Après-midi out |        Pause        | **Total** |    ***Flex*** |
+| :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :-----------------: | --------: | ------------: |
+| [Lundi 19/06](journal_de_bord.md#2023-06-19)    |          |           |               |                | -2:00 (télétravail) |      2:00 | -5:00(-22:05) |
+| [Mardi 20/06](journal_de_bord.md#2023-06-20)    |   8:35   |   11:35   |     14:30     |                |                     |           |               |
+| [Mercredi 21/06](journal_de_bord.md#2023-06-21) |          |           |               |                |                     |           |               |
+| [Jeudi 22/06](journal_de_bord.md#2023-06-22)    |          |           |               |                |                     |           |               |
+| [Vendredi 23/06](journal_de_bord.md#2023-06-23) |          |           |               |                |                     |           |               |
 
 ## Semaine 26 du 26/06 au 30/06
 

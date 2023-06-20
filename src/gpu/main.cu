@@ -99,7 +99,7 @@ int main(int argc, char const *argv[])
     
     std::cout << std::endl << "CUDA TEST ADDITION" << std::endl;
 
-    cudaTest();
+    cudaTest(simDimX);
 
     if( settings_print > 2 )std::cout  << std::endl  << std::endl << "### Memory free ###" << std::endl;
     freePopulationPosition (&populationPosition, simDimP, settings_print);

@@ -24,7 +24,6 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
 
 - [Pointage](markdown/pointage.md)
 - [Journal de bord](markdown/journal_de_bord.md)
-- [Programme CPU](markdown/onlyCPU.md)
 
 ## Introduction du sujet
 
