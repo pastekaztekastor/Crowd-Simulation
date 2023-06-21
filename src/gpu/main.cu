@@ -11,9 +11,9 @@
 
 int main(int argc, char const *argv[])
 {
-    unsigned int **     populationPosition       = nullptr; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
-    unsigned int **     cost                     = nullptr; //
-    unsigned int **     map                      = nullptr; // 2D map composed of the unsigned int 0: empty, 1 humain, 2 wall, 3 exit
+    unsigned int *      populationPosition       = nullptr; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
+    unsigned int *      cost                     = nullptr; //
+    unsigned int *      map                      = nullptr; // 2D map composed of the unsigned int 0: empty, 1 humain, 2 wall, 3 exit on 1 line
     unsigned int *      simExit                  = nullptr; // [x,y] coordinate of simulation output
     unsigned int *      populationIndex          = nullptr; // List of individual indexes so as not to disturb the order of the individuals
     unsigned int        simDimX                  = 10;      // Simulation x-dimension
@@ -143,10 +143,10 @@ int main(int argc, char const *argv[])
     printMap(map, simDimX, simDimY, settings_print);
 
     if( settings_print > 2 )std::cout  << std::endl  << std::endl << "### Memory free ###" << std::endl;
-    freePopulationPosition (&populationPosition, simDimP, settings_print);
-    freePopulationIndex (&populationIndex, settings_print);
+    freeTab(&populationPosition, settings_print);
+    freeTab(&populationIndex, settings_print);
     // freeCost (&cost, simDimY, settings_print);
-    freeMap (&map, simDimY, settings_print);
+    freeTab(&map, settings_print);
 
     return 0;
 }

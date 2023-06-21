@@ -67,8 +67,8 @@ void    initSimParam(
     */
 
 void initPopulationPositionMap(
-    unsigned int *** populationPosition,            // (*) Because change
-    unsigned int *** map,                           // (*) Because change
+    unsigned int ** populationPosition,            // (*) Because change
+    unsigned int ** map,                           // (*) Because change
     unsigned int * simExit,
     unsigned int simDimX,
     unsigned int simDimY,
@@ -88,8 +88,8 @@ void initPopulationPositionMap(
     */
 
 void initCost(
-    unsigned int *** cost,                          // (*) Because change
-    unsigned int ** map,
+    unsigned int ** cost,                          // (*) Because change
+    unsigned int * map,
     unsigned int * simExit,   
     unsigned int simDimX,
     unsigned int simDimY,
@@ -159,8 +159,8 @@ void setSimExit(
     */
 
 void setPopulationPositionMap(
-    unsigned int *** populationPosition,            // (*) Because change
-    unsigned int *** map,                           // (*) Because change
+    unsigned int ** populationPosition,            // (*) Because change
+    unsigned int ** map,                           // (*) Because change
     unsigned int * simExit,
     unsigned int simDimX,
     unsigned int simDimY,
@@ -195,7 +195,7 @@ void progressBar(
 );
 
 void shuffleIndex(
-    unsigned int ** PopulationIndex,
+    unsigned int ** PopulationIndex, // (*) Because change
     unsigned int simDimP,
     unsigned int settings_print
 );
@@ -222,25 +222,7 @@ void shuffleIndex(
                      
 */
 
-void freePopulationPosition (
-    unsigned int *** populationPosition,            // (*) Because change
-    unsigned int simDimP,
-    unsigned int settings_print
-);
-void freePopulationIndex (
-    unsigned int ** populationIndex,                // (*) Because change
-    unsigned int settings_print
-);
-void freeCost (
-    unsigned int *** cost,                          // (*) Because change
-    unsigned int simDimY,
-    unsigned int settings_print
-);
-void freeMap (
-    unsigned int *** map,                           // (*) Because change
-    unsigned int simDimY,
-    unsigned int settings_print
-);
+void freeTab ( unsigned int ** populationPosition, unsigned int settings_print);
 
 /*
   _    _ _   _ _     
@@ -251,4 +233,7 @@ void freeMap (
   \____/ \__|_|_|___/
                      
 */
-void printMap(unsigned int ** map, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print);
+void printMap(unsigned int * map, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print);
+unsigned int xPosof(unsigned int value, unsigned int dimX, unsigned int dimY);
+unsigned int yPosof(unsigned int value, unsigned int dimX, unsigned int dimY);
+unsigned int valueOfxy(unsigned int xPos, unsigned int yPos, unsigned int dimX, unsigned int dimY);
