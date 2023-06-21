@@ -63,6 +63,8 @@ int main(int argc, char const *argv[])
     initPopulationIndex( &populationIndex, simDimP, settings_print );
     initCost( &cost, map, simExit, simDimX, simDimY, settings_print );
     
+    std::cout << simExit[0] << simExit[1] << std::endl;
+
     printMap(map, simDimX, simDimY, settings_print);
     
     if( settings_print > 2 )std::cout << std::endl << " ### Start simulation ###" << std::endl;
@@ -77,6 +79,32 @@ int main(int argc, char const *argv[])
             case 0: // MODEL : sage ignorant
                 // TO DO
                 simPIn--;
+                /*
+                for (size_t tid = 0; tid < simDimP; tid++)
+                {
+                    // position de l'individue tid
+                    unsigned int x = (populationPosition)[tid][0];
+                    unsigned int y = (populationPosition)[tid][1];
+                    // Delta à ajouté à la position pour avoir la position next step
+                    int deltaX =  simExit[0]-x;
+                    int deltaY =  simExit[1]-y;
+                    int moovX = deltaX / max(abs(deltaX), abs(deltaY));
+                    int moovY = deltaY / max(abs(deltaX), abs(deltaY));
+
+                    std::cout << "p" << x << "/" << y << " d" << deltaX << "/" << deltaY << " m" << moovX << "/" << moovY << " ~ ";
+                    // on regarde si la case est disponible 
+                    if((map[y+moovY][x+moovX]) == 0){ // if is EMPTY
+                        (populationPosition)[tid][0] = x+moovX;
+                        (populationPosition)[tid][1] = y+moovY;
+    
+                        // Temporaire
+                        (map)[y+moovY][x+moovX]  = 1;
+                        (map)[y][x]                = 0;
+                        //atomicExch( &(*dev_map)[y+deltaY][x+deltaX]  , 1); // HUMAN
+                        //atomicExch( &(*dev_map)[y][x]                , 0); // EMPTY
+                    }
+                }*/
+
                 model1_GPU(
                     & populationPosition,
                     & map,
@@ -99,6 +127,7 @@ int main(int argc, char const *argv[])
                 simPIn--;
                 break;
         }
+        //printMap(map, simDimX, simDimY, settings_print);
         // EXPORT 
         switch (settings_model){
             case 1:
