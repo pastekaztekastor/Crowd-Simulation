@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
 {
     unsigned int **     populationPosition       = nullptr; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
     unsigned int **     cost                     = nullptr; //
-    enum _Element **    map                      = nullptr; // 2D map composed of the enum _Element
+    unsigned int **     map                      = nullptr; // 2D map composed of the unsigned int 0: empty, 1 humain, 2 wall, 3 exit
     unsigned int *      simExit                  = nullptr; // [x,y] coordinate of simulation output
     unsigned int *      populationIndex          = nullptr; // List of individual indexes so as not to disturb the order of the individuals
     unsigned int        simDimX                  = 10;      // Simulation x-dimension
@@ -63,6 +63,8 @@ int main(int argc, char const *argv[])
     initPopulationIndex( &populationIndex, simDimP, settings_print );
     initCost( &cost, map, simExit, simDimX, simDimY, settings_print );
     
+    printMap(map, simDimX, simDimY, settings_print);
+    
     if( settings_print > 2 )std::cout << std::endl << " ### Start simulation ###" << std::endl;
     while (simIsFinish == 0){
         if (simPIn == 0) simIsFinish = 1; 
@@ -75,6 +77,17 @@ int main(int argc, char const *argv[])
             case 0: // MODEL : sage ignorant
                 // TO DO
                 simPIn--;
+                model1_GPU(
+                    & populationPosition,
+                    & map,
+                    & simPIn,
+                    cost,
+                    simExit,
+                    simDimX,
+                    simDimY,
+                    simDimP,
+                    settings_print
+                );
                 break;
 
             case 1: // MDOEL : Impatient ignorant
@@ -85,7 +98,7 @@ int main(int argc, char const *argv[])
             default:
                 simPIn--;
                 break;
-        } 
+        }
         // EXPORT 
         switch (settings_model){
             case 1:
@@ -94,12 +107,11 @@ int main(int argc, char const *argv[])
             
             default:
                 break;
-        } 
+        }
     }
     
-    std::cout << std::endl << "CUDA TEST ADDITION" << std::endl;
-
-    cudaTest(simDimX);
+    std::cout << std::endl;
+    printMap(map, simDimX, simDimY, settings_print);
 
     if( settings_print > 2 )std::cout  << std::endl  << std::endl << "### Memory free ###" << std::endl;
     freePopulationPosition (&populationPosition, simDimP, settings_print);

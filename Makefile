@@ -111,44 +111,98 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cpuSimulation
+# Target rules for targets named gpuSimulation
 
 # Build rule for target.
-cpuSimulation: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cpuSimulation
-.PHONY : cpuSimulation
+gpuSimulation: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gpuSimulation
+.PHONY : gpuSimulation
 
 # fast build rule for target.
-cpuSimulation/fast:
-	$(MAKE) -f CMakeFiles/cpuSimulation.dir/build.make CMakeFiles/cpuSimulation.dir/build
-.PHONY : cpuSimulation/fast
+gpuSimulation/fast:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/build
+.PHONY : gpuSimulation/fast
 
-src/cpu/onlyCPU.o: src/cpu/onlyCPU.cpp.o
+src/gpu/function.o: src/gpu/function.cpp.o
 
-.PHONY : src/cpu/onlyCPU.o
+.PHONY : src/gpu/function.o
 
 # target to build an object file
-src/cpu/onlyCPU.cpp.o:
-	$(MAKE) -f CMakeFiles/cpuSimulation.dir/build.make CMakeFiles/cpuSimulation.dir/src/cpu/onlyCPU.cpp.o
-.PHONY : src/cpu/onlyCPU.cpp.o
+src/gpu/function.cpp.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o
+.PHONY : src/gpu/function.cpp.o
 
-src/cpu/onlyCPU.i: src/cpu/onlyCPU.cpp.i
+src/gpu/function.i: src/gpu/function.cpp.i
 
-.PHONY : src/cpu/onlyCPU.i
+.PHONY : src/gpu/function.i
 
 # target to preprocess a source file
-src/cpu/onlyCPU.cpp.i:
-	$(MAKE) -f CMakeFiles/cpuSimulation.dir/build.make CMakeFiles/cpuSimulation.dir/src/cpu/onlyCPU.cpp.i
-.PHONY : src/cpu/onlyCPU.cpp.i
+src/gpu/function.cpp.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.i
+.PHONY : src/gpu/function.cpp.i
 
-src/cpu/onlyCPU.s: src/cpu/onlyCPU.cpp.s
+src/gpu/function.s: src/gpu/function.cpp.s
 
-.PHONY : src/cpu/onlyCPU.s
+.PHONY : src/gpu/function.s
 
 # target to generate assembly for a file
-src/cpu/onlyCPU.cpp.s:
-	$(MAKE) -f CMakeFiles/cpuSimulation.dir/build.make CMakeFiles/cpuSimulation.dir/src/cpu/onlyCPU.cpp.s
-.PHONY : src/cpu/onlyCPU.cpp.s
+src/gpu/function.cpp.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.s
+.PHONY : src/gpu/function.cpp.s
+
+src/gpu/kernel.o: src/gpu/kernel.cu.o
+
+.PHONY : src/gpu/kernel.o
+
+# target to build an object file
+src/gpu/kernel.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
+.PHONY : src/gpu/kernel.cu.o
+
+src/gpu/kernel.i: src/gpu/kernel.cu.i
+
+.PHONY : src/gpu/kernel.i
+
+# target to preprocess a source file
+src/gpu/kernel.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.i
+.PHONY : src/gpu/kernel.cu.i
+
+src/gpu/kernel.s: src/gpu/kernel.cu.s
+
+.PHONY : src/gpu/kernel.s
+
+# target to generate assembly for a file
+src/gpu/kernel.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.s
+.PHONY : src/gpu/kernel.cu.s
+
+src/gpu/main.o: src/gpu/main.cu.o
+
+.PHONY : src/gpu/main.o
+
+# target to build an object file
+src/gpu/main.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
+.PHONY : src/gpu/main.cu.o
+
+src/gpu/main.i: src/gpu/main.cu.i
+
+.PHONY : src/gpu/main.i
+
+# target to preprocess a source file
+src/gpu/main.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.i
+.PHONY : src/gpu/main.cu.i
+
+src/gpu/main.s: src/gpu/main.cu.s
+
+.PHONY : src/gpu/main.s
+
+# target to generate assembly for a file
+src/gpu/main.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.s
+.PHONY : src/gpu/main.cu.s
 
 # Help Target
 help:
@@ -157,11 +211,17 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... cpuSimulation"
+	@echo "... gpuSimulation"
 	@echo "... edit_cache"
-	@echo "... src/cpu/onlyCPU.o"
-	@echo "... src/cpu/onlyCPU.i"
-	@echo "... src/cpu/onlyCPU.s"
+	@echo "... src/gpu/function.o"
+	@echo "... src/gpu/function.i"
+	@echo "... src/gpu/function.s"
+	@echo "... src/gpu/kernel.o"
+	@echo "... src/gpu/kernel.i"
+	@echo "... src/gpu/kernel.s"
+	@echo "... src/gpu/main.o"
+	@echo "... src/gpu/main.i"
+	@echo "... src/gpu/main.s"
 .PHONY : help
 
 

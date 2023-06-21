@@ -193,16 +193,16 @@ Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur v
 
 - [x] Réalisation du fichier README.md
 - [x] Explication du projet
-- [ ] Refaire le fichier  [`gitignore`](.gitignore) de manière approp
+- [x] Refaire le fichier  [`gitignore`](.gitignore) de manière approp
 - [ ] Pas néssécaire de faire un choix de la position des individus.
-- [ ] Créer un fichier Makefile.
+- [x] Créer un fichier Makefile.
 
 ### Programmation
 
 - [x] Modéliser le problème
 - [x] Version CPU
-- [ ] Documentation de la CPU
+- [x] Documentation de la CPU
 - [ ] Benchmark de la CPU
-- [ ] Version GPU
+- [x] Version GPU
 - [ ] Documentation de la GPU
 - [ ] Benchmark de la GPU

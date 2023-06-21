@@ -15,9 +15,6 @@
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
 
-// Enum
-enum _Element { EMPTY, HUMAN, WALL, EXIT };
-
 /*
   _____       _ _ 
  |_   _|     (_) |  
@@ -71,7 +68,7 @@ void    initSimParam(
 
 void initPopulationPositionMap(
     unsigned int *** populationPosition,            // (*) Because change
-    enum _Element *** map,                          // (*) Because change
+    unsigned int *** map,                           // (*) Because change
     unsigned int * simExit,
     unsigned int simDimX,
     unsigned int simDimY,
@@ -92,7 +89,7 @@ void initPopulationPositionMap(
 
 void initCost(
     unsigned int *** cost,                          // (*) Because change
-    enum _Element ** map,
+    unsigned int ** map,
     unsigned int * simExit,   
     unsigned int simDimX,
     unsigned int simDimY,
@@ -163,7 +160,7 @@ void setSimExit(
 
 void setPopulationPositionMap(
     unsigned int *** populationPosition,            // (*) Because change
-    enum _Element *** map,                          // (*) Because change
+    unsigned int *** map,                           // (*) Because change
     unsigned int * simExit,
     unsigned int simDimX,
     unsigned int simDimY,
@@ -206,7 +203,7 @@ void shuffleIndex(
 
 // unsigned int  lauchModel(
 //     unsigned int *** populationPosition, // (*) Because change
-//     enum _Element *** map,               // (*) Because change
+//     unsigned int *** map,                // (*) Because change
 //     unsigned int * simPIn,               // (*) Because change
 //     unsigned int ** cost,
 //     unsigned int * simExit,   
@@ -240,7 +237,18 @@ void freeCost (
     unsigned int settings_print
 );
 void freeMap (
-    enum _Element *** map,                          // (*) Because change
+    unsigned int *** map,                           // (*) Because change
     unsigned int simDimY,
     unsigned int settings_print
 );
+
+/*
+  _    _ _   _ _     
+ | |  | | | (_) |    
+ | |  | | |_ _| |___ 
+ | |  | | __| | / __|
+ | |__| | |_| | \__ \
+  \____/ \__|_|_|___/
+                     
+*/
+void printMap(unsigned int ** map, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print);

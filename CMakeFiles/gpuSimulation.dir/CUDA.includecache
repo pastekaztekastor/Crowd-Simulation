@@ -13,6 +13,8 @@ kernel.hpp
 /home/cartron3/StageXLIM/src/gpu/kernel.hpp
 main.hpp
 /home/cartron3/StageXLIM/src/gpu/main.hpp
+cuda_runtime.h
+-
 
 /home/cartron3/StageXLIM/src/gpu/main.cu
 kernel.hpp

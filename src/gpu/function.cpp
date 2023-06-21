@@ -185,7 +185,7 @@ void initSimParam( int argc, char const *argv[], unsigned int * simDimX, unsigne
         << "\t # settings_dirName = " << (*settings_dirName) <<std::endl
         << "\t # settings_fileName = " << (*settings_fileName) <<std::endl <<std::endl;
 }
-void initPopulationPositionMap( unsigned int *** populationPosition, enum _Element *** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int simDimP, unsigned int settings_print){
+void initPopulationPositionMap( unsigned int *** populationPosition, unsigned int *** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int simDimP, unsigned int settings_print){
     if(settings_print >2) std::cout << "\t# initPopulationPositionMap  " << std::endl;
    unsigned int x = (rand() % simDimX);
    unsigned int y = (rand() % simDimY);
@@ -199,11 +199,11 @@ void initPopulationPositionMap( unsigned int *** populationPosition, enum _Eleme
         (*populationPosition)[i] = ( unsigned int * ) malloc(2 * sizeof( unsigned int));
     }
     // ---- map
-    (*map) = (_Element ** ) malloc(simDimY * sizeof(_Element * ));
+    (*map) = (unsigned int ** ) malloc(simDimY * sizeof(unsigned int * ));
     for (size_t y = 0; y < simDimY; y++) {
-        (*map)[y] = (_Element * ) malloc(simDimX * sizeof(_Element));
+        (*map)[y] = (unsigned int * ) malloc(simDimX * sizeof(unsigned int));
         for (size_t x = 0; x < simDimX; x++){
-            (*map)[y][x] = EMPTY;
+            (*map)[y][x] = 0;
         }
     }
     if(settings_print >2) std::cout << "\tOK " << std::endl ;
@@ -216,7 +216,7 @@ void initPopulationPositionMap( unsigned int *** populationPosition, enum _Eleme
     // -3) Placing exit
     if(settings_print >2) std::cout << "\t -> Placing element"<< std::endl;
     if(settings_print >2) std::cout << "\t --> Wall " ;
-    (*map)[simExit[1]][simExit[0]] = EXIT;
+    (*map)[simExit[1]][simExit[0]] = 3;
     if(settings_print >2) std::cout << "\tOK " << std::endl ;
     
     // -4) Place individuals only if it is free.
@@ -226,7 +226,7 @@ void initPopulationPositionMap( unsigned int *** populationPosition, enum _Eleme
         x = (rand() % simDimX);
         y = (rand() % simDimY);
 
-        while ((*map)[y][x] != EMPTY){
+        while ((*map)[y][x] != 0){
             x = (rand() % simDimX);
             y = (rand() % simDimY);
         }
@@ -234,7 +234,7 @@ void initPopulationPositionMap( unsigned int *** populationPosition, enum _Eleme
         (*populationPosition)[i][0] = x;
         (*populationPosition)[i][1] = y;
         // ---- map
-        (*map)[y][x] = HUMAN;
+        (*map)[y][x] = 1;
     }
     if(settings_print >2)std::cout << "\tOK " << std::endl ;
 }
@@ -254,7 +254,7 @@ void initSimExit( unsigned int ** simExit, unsigned int simDimX, unsigned int si
     (*simExit)[1] = (rand() % simDimY);
     if(settings_print >2) std::cout << "\tOK "  << std::endl;
 }
-void initCost( unsigned int *** cost, enum _Element ** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
+void initCost( unsigned int *** cost, unsigned int ** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
     // TO DO
 }
 
@@ -271,7 +271,7 @@ void initCost( unsigned int *** cost, enum _Element ** map, unsigned int * simEx
 void setSimExit( unsigned int ** simExit, unsigned int posX, unsigned int posY, unsigned int settings_print){
     // TO DO
 }
-void setPopulationPositionMap( unsigned int *** populationPosition, enum _Element *** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
+void setPopulationPositionMap( unsigned int *** populationPosition, unsigned int *** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
     // TO DO
 }
 
@@ -346,7 +346,7 @@ void freeCost ( unsigned int *** cost, unsigned int simDimY, unsigned int settin
     *cost = NULL;
     if(settings_print >2)std::cout << "\tOK " << std::endl;
 }
-void freeMap ( enum _Element *** map, unsigned int simDimY, unsigned int settings_print){
+void freeMap ( unsigned int *** map, unsigned int simDimY, unsigned int settings_print){
     if(settings_print >2)std::cout << "\t# freeMap  " ;
     for ( unsigned int i = 0; i < simDimY; i++) {
         free((*map)[i]);
@@ -354,4 +354,53 @@ void freeMap ( enum _Element *** map, unsigned int simDimY, unsigned int setting
     free(*map);
     *map = NULL;
     if(settings_print >2)std::cout << "\tOK " << std::endl;
+}
+
+/*
+  _    _ _   _ _     
+ | |  | | | (_) |    
+ | |  | | |_ _| |___ 
+ | |  | | __| | / __|
+ | |__| | |_| | \__ \
+  \____/ \__|_|_|___/
+                     
+*/
+void printMap(unsigned int ** map, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
+    if(settings_print > 2)std::cout << " # - Display map --- "<<std::endl;
+
+    // Display column numbers
+    std::cout<<"  ";
+        for (int x = 0; x < simDimX; x++)
+        {
+            printf(" %2d",x); 
+        }
+        std::cout<<"  "<<std::endl;
+
+    // We browse the map and we display according to what the box contains
+    for (int y = 0; y < simDimY; y++)
+    {
+        printf("%2d ",y); 
+        for (int x = 0; x < simDimX; x++)
+        {
+            switch (map[y][x])
+            {
+            case 1:
+                std::cout<<"[H]";
+                break;
+            case 2:
+                std::cout<<"[ ]";
+                break;
+            case 3:
+                std::cout<<"(s)";
+                break;
+
+            default:
+            case 0:
+                std::cout<<" . ";
+                break;
+            }
+        }
+        std::cout<<std::endl;
+    }
+    if(settings_print < 2)std::cout << "                         --- DONE " << std::endl;
 }

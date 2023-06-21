@@ -55,8 +55,8 @@ Voici la présentation des jours de travail pour chaque semaine :
 | jours                                           | Matin in | Matin out | Après-midi in | Après-midi out |        Pause        | **Total** |    ***Flex*** |
 | :---------------------------------------------- | :------: | :-------: | :-----------: | :------------: | :-----------------: | --------: | ------------: |
 | [Lundi 19/06](journal_de_bord.md#2023-06-19)    |          |           |               |                | -2:00 (télétravail) |      2:00 | -5:00(-22:05) |
-| [Mardi 20/06](journal_de_bord.md#2023-06-20)    |   8:35   |   11:35   |     14:30     |                |                     |           |               |
-| [Mercredi 21/06](journal_de_bord.md#2023-06-21) |          |           |               |                |                     |           |               |
+| [Mardi 20/06](journal_de_bord.md#2023-06-20)    |   8:35   |   11:35   |     14:30     |     18:35      |                     |      7:05 | +0:05(-22:00) |
+| [Mercredi 21/06](journal_de_bord.md#2023-06-21) |   7:50   |           |               |                |                     |           |               |
 | [Jeudi 22/06](journal_de_bord.md#2023-06-22)    |          |           |               |                |                     |           |               |
 | [Vendredi 23/06](journal_de_bord.md#2023-06-23) |          |           |               |                |                     |           |               |
 

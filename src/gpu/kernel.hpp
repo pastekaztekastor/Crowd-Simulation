@@ -10,11 +10,11 @@
 #define __KERNEL_CUH__
 
 #include "main.hpp"
-
+#include <cuda_runtime.h>
 
 void model1_GPU(
     unsigned int ***    populationPosition,         // (*) Because change
-    enum _Element ***   map,                        // (*) Because change
+    unsigned int ***    map,                        // (*) Because change
     unsigned int *      simPIn,                     // (*) Because change
     unsigned int **     cost,                       // useless
     unsigned int *      simExit, 
@@ -25,15 +25,13 @@ void model1_GPU(
 
 __global__ void kernel_model1_GPU(
     unsigned int ***    dev_populationPosition,     // (*) Because change
-    enum _Element ***   dev_map,                    // (*) Because change
+    unsigned int ***    dev_map,                    // (*) Because change
     unsigned int *      dev_simPIn,                 // (*) Because change
-    unsigned int **     dev_cost,                   // useless
-    unsigned int *      dev_simExit, 
+    unsigned int **         cost,                   // useless
+    unsigned int *          simExit, 
     unsigned int            simDimX, 
-    unsigned int            simDimY
+    unsigned int            simDimY,
+    unsigned int            simDimP
 );
-
-int cudaTest(unsigned int max);
-__global__ void addArrays(int* a, int* b, int* c, int size);
 
 #endif
