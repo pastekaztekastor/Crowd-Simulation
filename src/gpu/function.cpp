@@ -20,7 +20,7 @@
  |_____|_| |_|_|\__|
 
 */
-void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, uint * simPIn, uint * simDimG, uint * settings_print, uint * settings_debugMap, uint * settings_model, uint * settings_exportType, uint * settings_exportFormat, uint * settings_finishCondition,  std::string * settings_dir, std::string * settings_dirName, std::string * settings_fileName){
+void initSimSettings( int argc, char const *argv[], simParam * _simParam, settings * _settings){
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
             if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
@@ -30,8 +30,7 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
                 printf("  -x        : sets the dimension in x of the simulation\n");
                 printf("  -y        : same but for y dimension\n");
                 printf("  -p        : number of individuals in the simulation\n");
-                printf("  -g        : generation number/frame\n");
-                printf("  -debug    : settings_print           param [val] default:'normal'\n");
+                printf("  -debug    : _settings.print           param [val] default:'normal'\n");
                 printf("              - 'off' : print nothing\n");
                 printf("              - 'time' : print only time execution\n");
                 printf("              - 'normal' : print time execution and simlulation progression\n");
@@ -63,30 +62,27 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
                 exit(0);
             } 
             else if (strcmp(argv[i], "-x") == 0) {
-                simDim->x = atoi(argv[i + 1]);
+                _simParam->dimension.x = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-y") == 0) {
-                simDim->y = atoi(argv[i + 1]);
+                _simParam->dimension.y = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-p") == 0) {
-                (* simDimP) = atoi(argv[i + 1]);
-                (* simPIn) = atoi(argv[i + 1]);
-            }
-            else if (strcmp(argv[i], "-g") == 0) {
-                (* simDimG) = atoi(argv[i + 1]);
+                _simParam->nbIndividual = atoi(argv[i + 1]);
+                _simParam->pInSim  = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-debug") == 0) {
                 if (strcmp(argv[i+1], "off") == 0) {
-                    (* settings_print) = 0;
+                    _settings->print = 0;
                 }
                 else if (strcmp(argv[i+1], "time") == 0) {
-                    (* settings_print) = 10;
+                    _settings->print = 10;
                 }
                 else if (strcmp(argv[i+1], "normal") == 0) {
-                    (* settings_print) = 20;
+                    _settings->print = 20;
                 }
                 else if (strcmp(argv[i+1], "all") == 0) {
-                    (* settings_print) = 30;
+                    _settings->print = 30;
                 }
                 else {
                     printf("Unrecognized argument for -debug param\n");
@@ -95,10 +91,10 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
             }
             else if (strcmp(argv[i], "-debugMap") == 0) {
                 if (strcmp(argv[i+1], "off") == 0) {
-                    (* settings_debugMap) = 0;
+                    _settings->debugMap = 0;
                 }
                 else if (strcmp(argv[i+1], "on") == 0) {
-                    (* settings_debugMap) = 1;
+                    _settings->debugMap = 1;
                 }
                 else {
                     printf("Unrecognized argument for -debugMap param\n");
@@ -106,17 +102,17 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
                 }
             }
             else if (strcmp(argv[i], "-model") == 0) {
-                (* settings_model) = atoi(argv[i + 1]);
+                _settings->model = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-exptT") == 0) {
                 if (strcmp(argv[i+1], "txt") == 0) {
-                    (* settings_exportType) = 0;
+                    _settings->exportType = 0;
                 }
                 else if (strcmp(argv[i+1], "bin") == 0) {
-                    (* settings_exportType) = 1;
+                    _settings->exportType = 1;
                 }
                 else if (strcmp(argv[i+1], "jpeg") == 0) {
-                    (* settings_exportType) = 2;
+                    _settings->exportType = 2;
                 }
                 else {
                     printf("Unrecognized argument for -exptT param\n");
@@ -125,13 +121,13 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
             }
             else if (strcmp(argv[i], "-exptF") == 0) {
                 if (strcmp(argv[i+1], "m") == 0) {
-                    (* settings_exportFormat) = 0;
+                    _settings->exportFormat = 0;
                 }
                 else if (strcmp(argv[i+1], "p") == 0) {
-                    (* settings_exportFormat) = 1;
+                    _settings->exportFormat = 1;
                 }
                 else if (strcmp(argv[i+1], "c") == 0) {
-                    (* settings_exportFormat) = 2;
+                    _settings->exportFormat = 2;
                 }
                 else {
                     printf("Unrecognized argument for -exptF param\n");
@@ -140,10 +136,10 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
             }
             else if (strcmp(argv[i], "-fCon") == 0) {
                 if (strcmp(argv[i+1], "fix") == 0) {
-                    (* settings_finishCondition) = 0;
+                    _settings->finishCondition = 0;
                 }
                 else if (strcmp(argv[i+1], "empty") == 0) {
-                    (* settings_finishCondition) = 1;
+                    _settings->finishCondition = 1;
                 }
                 else {
                     printf("Unrecognized argument for -fCon param\n");
@@ -151,13 +147,13 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
                 }
             }
             else if (strcmp(argv[i], "-dir") == 0) {
-                (* settings_dir) = argv[i+1];
+                _settings->dir = argv[i+1];
             }
             else if (strcmp(argv[i], "-dirName") == 0) {
-                (* settings_dirName) = argv[i+1];
+                _settings->dirName = argv[i+1];
             }
             else if (strcmp(argv[i], "-fileName") == 0) {
-                (* settings_fileName) = argv[i+1];
+                _settings->fileName = argv[i+1];
             }
             else{
                 printf("Unrecognized argument, try -h or -help\n");
@@ -165,85 +161,89 @@ void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, 
             }
         }  
     }
-    if((* simDimP) > (simDim->x*simDim->y)*0.8){
-        std::cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimensions.";
+    if(_simParam->nbIndividual > _simParam->dimension.x * _simParam->dimension.y * 0.8){
+        std::cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimension.";
         exit(0);
     }
-    
-    if((*settings_print) > 1) std::cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << std::endl 
-        << "\t # simDimX = " << simDim->x <<std::endl
-        << "\t # simDimY = " << simDim->y <<std::endl
-        << "\t # simDimG = " << (*simDimG) <<std::endl
-        << "\t # simDimP = " << (*simDimP) <<std::endl
-        << "\t # settings_print = " << (*settings_print) <<std::endl
-        << "\t # settings_debugMap = " << (*settings_debugMap) <<std::endl
-        << "\t # settings_model = " << (*settings_model) <<std::endl
-        << "\t # settings_exportType = " << (*settings_exportType) <<std::endl
-        << "\t # settings_exportFormat = " << (*settings_exportFormat) <<std::endl
-        << "\t # settings_finishCondition = " << (*settings_finishCondition) <<std::endl
-        << "\t # settings_dir = " << (*settings_dir) <<std::endl
-        << "\t # settings_dirName = " << (*settings_dirName) <<std::endl
-        << "\t # settings_fileName = " << (*settings_fileName) <<std::endl <<std::endl;
-}
-void initPopulationPositionMap( uint2 ** populationPosition, int ** map, uint2 simExit, uint2 simDim, uint simDimP, uint settings_print){
-    if(settings_print >2) std::cout << "\t# initPopulationPositionMap  " << std::endl;
-    uint2 coord = make_uint2((rand() % simDim.x),(rand() % simDim.y));
-    
-    // -1) Make memory allocations
-    if(settings_print >2) std::cout << "\t -> Make memory allocations ";
 
-    // ---- population
-    (*populationPosition) = ( uint2 * ) calloc(simDimP, sizeof( uint2 ));
-
-    // ---- map
-    (*map) = ( int * ) calloc(simDim.x * simDim.y , sizeof( int ));
-    for (size_t i = 0; i < simDim.x * simDim.y; i++){
-        (*map)[i]=-1;
+    // Calloc
+    _simParam->populationPosition = ( uint2 * ) calloc(_simParam->nbIndividual, sizeof( uint2 ));
+    _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
+    for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
+        _simParam->map[i] = -1; // -1 for empty 
     }
+    _simParam->populationIndex = ( uint * ) calloc(_simParam->nbIndividual * 2, sizeof( uint));
+    _simParam->exit = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
-
-    if(settings_print >2) std::cout << "\tOK " << std::endl ;
+    
+    if(_settings->print > 1) std::cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << std::endl 
+        << "\t # simDimX = " << _simParam->dimension.x <<std::endl
+        << "\t # simDimY = " << _simParam->dimension.y <<std::endl
+        << "\t # simDimP = " << _simParam->nbIndividual <<std::endl
+        << "\t # _settings.print = " << _settings->print <<std::endl
+        << "\t # settings_debugMap = " << _settings->debugMap <<std::endl
+        << "\t # settings_model = " << _settings->model <<std::endl
+        << "\t # settings_exportType = " << _settings->exportType <<std::endl
+        << "\t # settings_exportFormat = " << _settings->exportFormat <<std::endl
+        << "\t # settings_finishCondition = " << _settings->finishCondition <<std::endl
+        << "\t # settings_dir = " << _settings->dir <<std::endl
+        << "\t # settings_dirName = " << _settings->dirName <<std::endl
+        << "\t # settings_fileName = " << _settings->fileName <<std::endl <<std::endl;
+}
+void initPopulationPositionMap(simParam * _simParam, settings _settings){
+    if(_settings.print >2) std::cout << "\t# initPopulationPositionMap  " << std::endl;
+    uint2 coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
     // -2) Placing the walls
-        // if(settings_print >2)std::cout << "   --> Placing the walls  ";
+        // if(_settings.print >2)std::cout << "   --> Placing the walls  ";
         // TO DO - Currently we do not put
-        // if(settings_print >2)std::cout << "-> DONE " << std::endl;
+        // if(_settings.print >2)std::cout << "-> DONE " << std::endl;
 
     // -3) Placing exit
-    if(settings_print >2) std::cout << "\t -> Placing element"<< std::endl;
-    if(settings_print >2) std::cout << "\t --> Wall " ;
-    (*map)[valueOfxy(simExit.x,simExit.y,simDim.x, simDim.y)] = -2;
-    if(settings_print >2) std::cout << "\tOK " << std::endl ;
+    if(_settings.print >2) std::cout << "\t -> Placing element"<< std::endl;
+    if(_settings.print >2) std::cout << "\t --> Wall " ;
+    _simParam->map[valueOfxy(_simParam->exit.x,_simParam->exit.y,_simParam->dimension.x, _simParam->dimension.y)] = -2;
+    if(_settings.print >2) std::cout << "\tOK " << std::endl ;
     
     // -4) Place individuals only if it is free.
-    if(settings_print >2) std::cout << "\t --> People " ;
-    for (size_t i = 0; i < simDimP; i++){
-        coord = make_uint2((rand() % simDim.x),(rand() % simDim.y));
+    if(_settings.print >2) std::cout << "\t --> People " ;
+    for (size_t i = 0; i < _simParam->nbIndividual; i++){
+        coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
 
-        while ((*map)[valueOfxy(coord.x,coord.y,simDim.x,simDim.y)] != -1){
-            coord = make_uint2((rand() % simDim.x),(rand() % simDim.y));
+        while (_simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] != -1){
+            coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
         }
         // ---- population
-        (*populationPosition)[i] = make_uint2(coord.x, coord.y) ;
+        _simParam->populationPosition[i] = make_uint2(coord.x, coord.y) ;
         // ---- map
-        (*map)[valueOfxy(coord.x,coord.y,simDim.x,simDim.y)] = i;
+        _simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] = i;
     }
-    printPopulationPosition((*populationPosition), simDimP);
+    printPopulationPosition((*_simParam), _settings);
 
-    if(settings_print >2)std::cout << "\tOK " << std::endl ;
+    if(_settings.print >2)std::cout << "\tOK " << std::endl ;
 }
-void initPopulationIndex( uint ** populationIndex, uint simDimP, uint settings_print){
-    if(settings_print >2)std::cout << "\t# initPopulationIndex  " ;
-    (* populationIndex) = ( uint * ) calloc(simDimP * 2, sizeof( uint));
-    if(settings_print >2)std::cout << "\tOK " << std::endl;
-}
-void initSimExit( uint2 * simExit, uint2 simDim, uint settings_print ){
-    if(settings_print >2 ) std::cout << "\t# initSimExit  " ;
-    (*simExit) = make_uint2((rand() % simDim.x),(rand() % simDim.y));
-    if(settings_print >2) std::cout << "\tOK "  << std::endl;
-}
-void initCost( uint ** cost, int * map, uint2 simExit, uint2 simDim, uint settings_print){
-    // TO DO
+void initKernelParam(kernelParam * _kernelParam, simParam _simParam, settings _settings){
+    if( _settings.print > 2 )std::cout << std::endl << " ### Init kernel params ###" << std::endl;
+    if( _settings.print > 2 )std::cout  << " \t> dev_ variable";
+    _kernelParam->populationPosition  = nullptr;
+    _kernelParam->map                 = nullptr;
+    _kernelParam->simPIn              = nullptr;
+    if( _settings.print > 2 )std::cout  << " OK " << std::endl;
+
+    if( _settings.print > 2 )std::cout << " \t> Maloc";
+    cudaMalloc((void**) &_kernelParam->populationPosition , 2 * sizeof(uint) * _simParam.nbIndividual); 
+    cudaMalloc((void**) &_kernelParam->map                , _simParam.dimension.x * _simParam.dimension.y * sizeof(uint ));
+    cudaMalloc((void**) &_kernelParam->simPIn             , sizeof(uint));
+
+    cudaMemcpy(_kernelParam->populationPosition, _simParam.populationPosition, (2 * sizeof(uint) * _simParam.nbIndividual)         , cudaMemcpyHostToDevice);
+    cudaMemcpy(_kernelParam->map               , _simParam.map               , (_simParam.dimension.x * _simParam.dimension.y * sizeof(uint))  , cudaMemcpyHostToDevice);
+    if( _settings.print > 2 )std::cout  << " OK " << std::endl;
+
+    if( _settings.print > 2 )std::cout << " \t> Threads & blocks" ;
+    _kernelParam->nb_threads = 32;
+    _kernelParam->blocks = ((_simParam.nbIndividual + (_kernelParam->nb_threads-1))/_kernelParam->nb_threads);
+    _kernelParam->threads = (_kernelParam->nb_threads);
+    if( _settings.print > 2 )std::cout  << " OK " << std::endl;
 }
 
 /*
@@ -255,10 +255,10 @@ void initCost( uint ** cost, int * map, uint2 simExit, uint2 simDim, uint settin
  |_____/ \___|\__|\__\___|_|   
                                
 */
-void setSimExit( uint ** simExit, uint posX, uint posY, uint settings_print){
+void setSimExit(simParam * _simParam, settings _settings){
     // TO DO
 }
-void setPopulationPositionMap( uint *** populationPosition, uint *** map, uint * simExit, uint2 simDim, uint settings_print){
+void setPopulationPositionMap(simParam * _simParam, settings _settings){
     // TO DO
 }
 
@@ -271,9 +271,9 @@ void setPopulationPositionMap( uint *** populationPosition, uint *** map, uint *
  |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
                                                      
 */
-void progressBar( uint progress, uint total, uint width, uint settings_print) {
+void progressBar(uint progress, uint total, uint width, settings _settings) {
     // From ChatGPT
-    if(settings_print >2)std::cout << "\t# progressBar  " ;
+    if(_settings.print >2)std::cout << "\t# progressBar  " ;
     float percentage = (float)progress / total;
    uint filledWidth = ( uint)(percentage * width);
     printf("[");
@@ -286,17 +286,17 @@ void progressBar( uint progress, uint total, uint width, uint settings_print) {
     }
     printf("] %.2f%%\r", percentage * 100);
     fflush(stdout);
-    if(settings_print >2)std::cout << "\tOK " << std::endl;
+    if(_settings.print >2)std::cout << "\tOK " << std::endl;
 }
-void shuffleIndex( uint ** PopulationIndex, uint simDimP, uint settings_print){
-    if(settings_print >2)std::cout << "\t# shuffleIndex  " ;
-    for ( uint i = simDimP - 1; i > 0; i--) {
+void shuffleIndex(simParam * _simParam, settings _settings){
+    if(_settings.print >2)std::cout << "\t# shuffleIndex  " ;
+    for ( uint i = _simParam->nbIndividual - 1; i > 0; i--) {
        uint j = rand() % (i + 1);
-       uint *temp = PopulationIndex[i];
-        PopulationIndex[i] = PopulationIndex[j];
-        PopulationIndex[j] = temp;
+       uint temp = _simParam->populationIndex[i];
+       _simParam->populationIndex[i] = _simParam->populationIndex[j];
+       _simParam->populationIndex[j] = temp;
     }
-    if(settings_print >2)std::cout << "\tOK " << std::endl;
+    if(_settings.print >2)std::cout << "\tOK " << std::endl;
 }
 
 /*
@@ -308,11 +308,13 @@ void shuffleIndex( uint ** PopulationIndex, uint simDimP, uint settings_print){
  |_|  |_|  \___|\___|
                      
 */
-void freeTab ( uint ** populationPosition, uint settings_print){
-    if(settings_print >2)std::cout << "\t# freeTab  " ;
-    free(*populationPosition);
-    *populationPosition = NULL;
-    if(settings_print >2)std::cout << "\tOK " << std::endl;
+void freeSimParam (simParam * _simParam, settings _settings){
+    if(_settings.print >2)std::cout << "\t# freeTab  " ;
+    free(_simParam->populationPosition);
+    free(_simParam->populationIndex);
+    free(_simParam->cost);
+    free(_simParam->map);
+    if(_settings.print >2)std::cout << "\tOK " << std::endl;
 }
 
 /*
@@ -324,24 +326,24 @@ void freeTab ( uint ** populationPosition, uint settings_print){
   \____/ \__|_|_|___/
                      
 */
-void printMap(int * map, uint2 simDim, uint settings_print){
-    if(settings_print > 2)std::cout << " # - Display map --- "<<std::endl;
+void printMap(simParam _simParam, settings _settings){
+    if(_settings.print > 2)std::cout << " # - Display map --- "<<std::endl;
 
     // Display column numbers
     std::cout<<"  ";
-        for (int x = 0; x < simDim.x; x++)
+        for (int x = 0; x < _simParam.dimension.x; x++)
         {
             printf(" %2d",x); 
         }
         std::cout<<"  "<<std::endl;
 
     // We browse the map and we display according to what the box contains
-    for (int y = 0; y < simDim.y; y++)
+    for (int y = 0; y < _simParam.dimension.y; y++)
     {
         printf("%2d ",y); 
-        for (int x = 0; x < simDim.x; x++)
+        for (int x = 0; x < _simParam.dimension.x; x++)
         {
-            switch (map[valueOfxy(x,y,simDim.x,simDim.y)])
+            switch (_simParam.map[valueOfxy(x,y,_simParam.dimension.x,_simParam.dimension.y)])
             {
             case -3:
                 std::cout<<"///";
@@ -359,7 +361,15 @@ void printMap(int * map, uint2 simDim, uint settings_print){
         }
         std::cout<<std::endl;
     }
-    if(settings_print < 2)std::cout << "                         --- DONE " << std::endl;
+    if(_settings.print < 2)std::cout << "                         --- DONE " << std::endl;
+}
+void printPopulationPosition(simParam _simParam, settings _settings){
+    std::cout << std::endl << "\t# printPopulationPosition"<< std::endl << "\t   Id \t x \t y " <<std::endl;
+    for (size_t i = 0; i < _simParam.nbIndividual; i++)
+    {
+        std::cout << "\t  - " << i << " )\t" << _simParam.populationPosition[i].x << "\t" << _simParam.populationPosition[i].y <<std::endl;
+    }
+    std::cout << "\t OK" <<std::endl; 
 }
 uint xPosof(uint value, uint dimX, uint dimY) {
     return value % dimX;
@@ -370,12 +380,3 @@ uint yPosof(uint value, uint dimX, uint dimY) {
 uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY) {
     return yPos * dimX + xPos;
 }
-void printPopulationPosition(uint2 * population, uint simDimP){
-    std::cout << std::endl << "\t# printPopulationPosition"<< std::endl << "\t   Id \t x \t y " <<std::endl;
-    for (size_t i = 0; i < simDimP; i++)
-    {
-        std::cout << "\t  - " << i << " )\t" << population[i].x << "\t" << population[i].y <<std::endl;
-    }
-    std::cout << "\t OK" <<std::endl; 
-}
-
