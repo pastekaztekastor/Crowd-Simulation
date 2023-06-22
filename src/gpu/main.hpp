@@ -14,7 +14,7 @@
 #include <time.h>
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
-
+#include <cuda_runtime.h>
 /*
   _____       _ _ 
  |_   _|     (_) |  
@@ -30,17 +30,16 @@
 void    initSimParam(
         int argc,
         char const *argv[],
-        unsigned int * simDimX,                     // (*) Because change
-        unsigned int * simDimY,                     // (*) Because change
-        unsigned int * simDimP,                     // (*) Because change
-        unsigned int * simPIn,                      // (*) Because change
-        unsigned int * simDimG,                     // (*) Because change
-        unsigned int * settings_print,              // (*) Because change
-        unsigned int * settings_debugMap,           // (*) Because change
-        unsigned int * settings_model,              // (*) Because change
-        unsigned int * settings_exportType,         // (*) Because change
-        unsigned int * settings_exportFormat,       // (*) Because change
-        unsigned int * settings_finishCondition,    // (*) Because change
+        uint2 * simDim,                     // (*) Because change
+        uint * simDimP,                     // (*) Because change
+        uint * simPIn,                      // (*) Because change
+        uint * simDimG,                     // (*) Because change
+        uint * settings_print,              // (*) Because change
+        uint * settings_debugMap,           // (*) Because change
+        uint * settings_model,              // (*) Because change
+        uint * settings_exportType,         // (*) Because change
+        uint * settings_exportFormat,       // (*) Because change
+        uint * settings_finishCondition,    // (*) Because change
         std::string * settings_dir,                 // (*) Because change
         std::string * settings_dirName,             // (*) Because change
         std::string * settings_fileName             // (*) Because change
@@ -50,8 +49,7 @@ void    initSimParam(
      * 
      * @param argc                                  ()
      * @param argv                                  ()
-     * @param simDimX                               ()
-     * @param simDimY                               ()
+     * @param simDim     ()
      * @param simDimP                               ()
      * @param simPIn                                ()
      * @param simDimG                               ()
@@ -67,13 +65,12 @@ void    initSimParam(
     */
 
 void initPopulationPositionMap(
-    unsigned int ** populationPosition,            // (*) Because change
-    unsigned int ** map,                           // (*) Because change
-    unsigned int * simExit,
-    unsigned int simDimX,
-    unsigned int simDimY,
-    unsigned int simDimP,
-    unsigned int settings_print
+    uint2        ** populationPosition,            // (*) Because change
+    int          ** map,                           // (*) Because change
+    uint2        simExit,
+    uint2 simDim,
+    uint simDimP,
+    uint settings_print
 );
     /**
      * @brief 
@@ -81,19 +78,17 @@ void initPopulationPositionMap(
      * @param populationPosition                    ()
      * @param map                                   ()
      * @param simExit                               ()
-     * @param simDimX                               ()
-     * @param simDimY                               ()
+     * @param simDim                               ()
      * @param simDimP                               ()
      * @param settings_print                        ()
     */
 
 void initCost(
-    unsigned int ** cost,                          // (*) Because change
-    unsigned int * map,
-    unsigned int * simExit,   
-    unsigned int simDimX,
-    unsigned int simDimY,
-    unsigned int settings_print
+    uint ** cost,                           // (*) Because change
+    int          * map,
+    uint2        simExit,   
+    uint2 simDim,
+    uint settings_print
 );
     /**
      * @brief 
@@ -101,30 +96,27 @@ void initCost(
      * @param cost                                  ()
      * @param map                                   ()
      * @param simExit                               ()
-     * @param simDimX                               ()
-     * @param simDimY                               ()
+     * @param simDim,                               ()
      * @param settings_print                        ()
     */
 
 void initSimExit(
-    unsigned int ** simExit,                        // (*) Because change
-    unsigned int simDimX,
-    unsigned int simDimY,
-    unsigned int settings_print
+    uint2        * simExit,                         // (*) Because change
+    uint2 simDim,
+    uint settings_print
 );
     /**
      * @brief 
      * 
      * @param simExit                               ()
-     * @param simDimX                               ()
-     * @param simDimY                               ()
+     * @param simDim()
      * @param settings_print                        ()
     */
 
 void initPopulationIndex(
-    unsigned int ** populationIndex,                // (*) Because change
-    unsigned int simDimP,
-    unsigned int settings_print
+    uint ** populationIndex,                // (*) Because change
+    uint simDimP,
+    uint settings_print
 );
     /**
      * @brief 
@@ -144,10 +136,10 @@ void initPopulationIndex(
 */
 
 void setSimExit(
-    unsigned int ** simExit,                        // (*) Because change
-    unsigned int posX,
-    unsigned int posY,
-    unsigned int settings_print
+    uint2        * simExit,                         // (*) Because change
+    uint posX,
+    uint posY,
+    uint settings_print
 );
     /**
      * @brief 
@@ -159,12 +151,11 @@ void setSimExit(
     */
 
 void setPopulationPositionMap(
-    unsigned int ** populationPosition,            // (*) Because change
-    unsigned int ** map,                           // (*) Because change
-    unsigned int * simExit,
-    unsigned int simDimX,
-    unsigned int simDimY,
-    unsigned int settings_print
+    uint2        ** populationPosition,              // (*) Because change
+    uint ** map,                            // (*) Because change
+    uint2        simExit,
+    uint2 simDim,
+    uint settings_print
 );
     /**
      * @brief 
@@ -172,8 +163,7 @@ void setPopulationPositionMap(
      * @param populationPosition                    ()
      * @param map                                   ()
      * @param simExit                               ()
-     * @param simDimX                               ()
-     * @param simDimY                               ()
+     * @param simDim                                ()
      * @param settings_print                        ()
     */
 
@@ -188,28 +178,27 @@ void setPopulationPositionMap(
 */
 
 void progressBar(
-    unsigned int progress, 
-    unsigned int total, 
-    unsigned int width,
-    unsigned int settings_print
+    uint progress, 
+    uint total, 
+    uint width,
+    uint settings_print
 );
 
 void shuffleIndex(
-    unsigned int ** PopulationIndex, // (*) Because change
-    unsigned int simDimP,
-    unsigned int settings_print
+    uint ** PopulationIndex,        // (*) Because change
+    uint simDimP,
+    uint settings_print
 );
 
 
-// unsigned int  lauchModel(
-//     unsigned int *** populationPosition, // (*) Because change
-//     unsigned int *** map,                // (*) Because change
-//     unsigned int * simPIn,               // (*) Because change
-//     unsigned int ** cost,
-//     unsigned int * simExit,   
-//     unsigned int simDimX,
-//     unsigned int simDimY,
-//     unsigned int settings_print
+// uint  lauchModel(
+//     uint *** populationPosition, // (*) Because change
+//     uint *** map,                // (*) Because change
+//     uint * simPIn,               // (*) Because change
+//     uint ** cost,
+//     uint * simExit,   
+//     uint2 simDim,
+//     uint settings_print
 // );
 
 /*
@@ -222,7 +211,7 @@ void shuffleIndex(
                      
 */
 
-void freeTab ( unsigned int ** populationPosition, unsigned int settings_print);
+void freeTab ( uint2 ** populationPosition, uint settings_print);
 
 /*
   _    _ _   _ _     
@@ -233,7 +222,8 @@ void freeTab ( unsigned int ** populationPosition, unsigned int settings_print);
   \____/ \__|_|_|___/
                      
 */
-void printMap(unsigned int * map, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print);
-unsigned int xPosof(unsigned int value, unsigned int dimX, unsigned int dimY);
-unsigned int yPosof(unsigned int value, unsigned int dimX, unsigned int dimY);
-unsigned int valueOfxy(unsigned int xPos, unsigned int yPos, unsigned int dimX, unsigned int dimY);
+void printMap(int * map, uint2 simDim, uint settings_print);
+uint xPosof(uint value, uint dimX, uint dimY);
+uint yPosof(uint value, uint dimX, uint dimY);
+uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY);
+void printPopulationPosition(uint2 * population, uint simDimP);

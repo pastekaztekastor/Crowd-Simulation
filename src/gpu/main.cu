@@ -11,37 +11,30 @@
 
 int main(int argc, char const *argv[])
 {
-    unsigned int *      populationPosition       = nullptr; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
-    unsigned int *      cost                     = nullptr; //
-    unsigned int *      map                      = nullptr; // 2D map composed of the unsigned int 0: empty, 1 humain, 2 wall, 3 exit on 1 line
-    unsigned int *      simExit                  = nullptr; // [x,y] coordinate of simulation output
-    unsigned int *      populationIndex          = nullptr; // List of individual indexes so as not to disturb the order of the individuals
-    unsigned int        simDimX                  = 10;      // Simulation x-dimension
-    unsigned int        simDimY                  = 10;      // Simulation y-dimension
-    unsigned int        simDimG                  = 10;      // Number of generation that the program will do before stopping the simulation
-    unsigned int        simDimP                  = 10;      // Number of individuals who must evolve during the simulation
-    unsigned int        simPIn                   = simDimP; //
-    unsigned int        simIsFinish              = 0;       //
-    unsigned int        settings_print           = 2;       // For display the debug [lvl to print]
-    unsigned int        settings_debugMap        = 0;       // For display map
-    unsigned int        settings_model           = 0;       //
-    unsigned int        settings_exportType      = 0;       //
-    unsigned int        settings_exportFormat    = 0;       //
-    unsigned int        settings_finishCondition = 0;       //
-    std::string         settings_dir             = "bin/";  // For chose the directory to exporte bin files
-    std::string         settings_dirName         = "";      //
-    std::string         settings_fileName        = "";      //
-
-    // 
-    //unsigned int (*pModel) (int *** ,enum _Element *** ,int * ,int ** ,int * ,int ,int ,int);
-    // 
-    //unsigned int (*pExport) ();
+    uint2 *         populationPosition       = nullptr;             // Position table of all the individuals in the simulation [[x,y],[x,y],...]
+    uint  *         cost                     = nullptr;             //
+    int   *         map                      = nullptr;             // 2D map composed of the uint 0: empty, 1 humain, 2 wall, 3 exit on 1 line
+    uint2           simExit                  = make_uint2(0, 0) ;   // [x,y] coordinate of simulation output
+    uint  *         populationIndex          = nullptr;             // List of individual indexes so as not to disturb the order of the individuals
+    uint2           simDim                   = make_uint2(0, 0);    // Simulation x-dimension
+    uint            simDimG                  = 10;                  // Number of generation that the program will do before stopping the simulation
+    uint            simDimP                  = 10;                  // Number of individuals who must evolve during the simulation
+    uint            simPIn                   = simDimP;             //
+    uint            simIsFinish              = 0;                   //
+    uint            settings_print           = 2;                   // For display the debug [lvl to print]
+    uint            settings_debugMap        = 0;                   // For display map
+    uint            settings_model           = 0;                   //
+    uint            settings_exportType      = 0;                   //
+    uint            settings_exportFormat    = 0;                   //
+    uint            settings_finishCondition = 0;                   //
+    std::string     settings_dir             = "bin/";              // For chose the directory to exporte bin files
+    std::string     settings_dirName         = "";                  //
+    std::string     settings_fileName        = "";                  //
 
     initSimParam(
         argc,
         argv,
-        &simDimX,
-        &simDimY,
+        &simDim,
         &simDimP,
         &simPIn,
         &simDimG,
@@ -58,20 +51,43 @@ int main(int argc, char const *argv[])
 
     if( settings_print > 2 )std::cout  << " ### Init simulation ###" << std::endl;
     srand(time(NULL));
-    initSimExit( &simExit, simDimX, simDimY, settings_print );
-    initPopulationPositionMap( &populationPosition, &map, simExit, simDimX, simDimY, simDimP, settings_print );
+    initSimExit( &simExit, simDim, settings_print );
+    initPopulationPositionMap( &populationPosition, &map, simExit, simDim, simDimP, settings_print );
     initPopulationIndex( &populationIndex, simDimP, settings_print );
-    initCost( &cost, map, simExit, simDimX, simDimY, settings_print );
-    
-    std::cout << simExit[0] << simExit[1] << std::endl;
+    initCost( &cost, map, simExit, simDim, settings_print );
 
-    printMap(map, simDimX, simDimY, settings_print);
+    printMap(map, simDim, settings_print);
+
+    if( settings_print > 2 )std::cout << std::endl << " ### Init kernel params ###" << std::endl;
+    if( settings_print > 2 )std::cout  << " \t> dev_ variable";
+    uint **     dev_populationPosition  = nullptr;
+    uint **     dev_map                 = nullptr;
+    uint *      dev_simPIn              = nullptr;
+    //uint *      dev_outMove             = nullptr;
+    //uint        outMove                 = 0;
+    if( settings_print > 2 )std::cout  << " OK " << std::endl;
+
+    if( settings_print > 2 )std::cout << " \t> Maloc";
+    cudaMalloc((void**) &dev_populationPosition , 2 * sizeof(uint) * simDimP); 
+    cudaMalloc((void**) &dev_map                , simDim.x * simDim.y * sizeof(uint ));
+    cudaMalloc((void**) &dev_simPIn             , sizeof(uint));
+    //cudaMalloc((void**) dev_outMove            , sizeof(uint));
+    cudaMemcpy(dev_populationPosition, populationPosition, (2 * sizeof(uint) * simDimP)         , cudaMemcpyHostToDevice);
+    cudaMemcpy(dev_map               , map               , (simDim.x * simDim.y * sizeof(uint ))  , cudaMemcpyHostToDevice);
+    //cudaMemcpy(dev_simPIn            , simPIn            , sizeof(uint)                         , cudaMemcpyHostToDevice);
+    if( settings_print > 2 )std::cout  << " OK " << std::endl;
+
+    if( settings_print > 2 )std::cout << " \t> Threads & blocks" ;
+    uint nb_threads = 32;
+    dim3 blocks((simDimP + (nb_threads-1))/nb_threads);
+    dim3 threads(nb_threads);
+    if( settings_print > 2 )std::cout  << " OK " << std::endl;
     
     if( settings_print > 2 )std::cout << std::endl << " ### Start simulation ###" << std::endl;
     while (simIsFinish == 0){
         if (simPIn == 0) simIsFinish = 1; 
         
-        progressBar(simDimP - simPIn, simDimP, 100, 0);
+        //progressBar(simDimP - simPIn, simDimP, 100, 0);
         shuffleIndex(&populationIndex, simDimP, 0);
         
         // MODEL
@@ -79,43 +95,32 @@ int main(int argc, char const *argv[])
             case 0: // MODEL : sage ignorant
                 // TO DO
                 simPIn--;
-                /*
+
+                // kernel_model1_GPU<<<blocks,threads>>>(dev_populationPosition, dev_map, dev_simPIn, cost, simExit, simDim, simDimP);
+                
                 for (size_t tid = 0; tid < simDimP; tid++)
                 {
                     // position de l'individue tid
-                    unsigned int x = (populationPosition)[tid][0];
-                    unsigned int y = (populationPosition)[tid][1];
-                    // Delta à ajouté à la position pour avoir la position next step
-                    int deltaX =  simExit[0]-x;
-                    int deltaY =  simExit[1]-y;
-                    int moovX = deltaX / max(abs(deltaX), abs(deltaY));
-                    int moovY = deltaY / max(abs(deltaX), abs(deltaY));
+                    uint2 pos    = make_uint2((populationPosition)[tid].x, (populationPosition)[tid].y);
+                    uint2 delta  = make_uint2(simExit.x-pos.x, simExit.y-pos.y);
+                    uint  maxDim = max(abs(delta.x), abs(delta.y));
+                    uint2 move   = make_uint2(delta.x / maxDim, delta.y / maxDim);
+                    std::cout <<"c "<<pos.x<<" "<<pos.y<<"\td "<<delta.x<<" "<<delta.y<<"\tm "<<move.x<<" "<<move.y;
 
-                    std::cout << "p" << x << "/" << y << " d" << deltaX << "/" << deltaY << " m" << moovX << "/" << moovY << " ~ ";
                     // on regarde si la case est disponible 
-                    if((map[y+moovY][x+moovX]) == 0){ // if is EMPTY
-                        (populationPosition)[tid][0] = x+moovX;
-                        (populationPosition)[tid][1] = y+moovY;
+                    if((map[ simDim.x * (pos.y+move.y) + (pos.x + move.x)]) == -1){ // if is EMPTY
+                        std::cout <<"-> moove" << std::endl;
+                        (populationPosition)[tid] = make_uint2(pos.x + move.x, pos.y + move.y);
+                    
     
                         // Temporaire
-                        (map)[y+moovY][x+moovX]  = 1;
-                        (map)[y][x]                = 0;
-                        //atomicExch( &(*dev_map)[y+deltaY][x+deltaX]  , 1); // HUMAN
-                        //atomicExch( &(*dev_map)[y][x]                , 0); // EMPTY
+                        (map)[simDim.x * (pos.y+move.y) + (pos.x + move.x)]    = tid;
+                        (map)[simDim.x * pos.y + pos.x]                        = -1;
+                        //atomicExch( (map)[y+deltaY][x+deltaX]  , 1); // HUMAN
+                        //atomicExch( (map)[y][x]                , 0); // EMPTY
                     }
-                }*/
-
-                model1_GPU(
-                    & populationPosition,
-                    & map,
-                    & simPIn,
-                    cost,
-                    simExit,
-                    simDimX,
-                    simDimY,
-                    simDimP,
-                    settings_print
-                );
+                    else std::cout << std::endl;
+                }
                 break;
 
             case 1: // MDOEL : Impatient ignorant
@@ -127,7 +132,7 @@ int main(int argc, char const *argv[])
                 simPIn--;
                 break;
         }
-        //printMap(map, simDimX, simDimY, settings_print);
+        //printMap(map, simDim, settings_print);
         // EXPORT 
         switch (settings_model){
             case 1:
@@ -139,14 +144,23 @@ int main(int argc, char const *argv[])
         }
     }
     
+    if( settings_print > 2 )std::cout << " \t> Cuda Copy ";
+    //cudaMemcpy(outMove           , dev_outMove           , sizeof(uint)                      , cudaMemcpyDeviceToHost);
+    cudaMemcpy(populationPosition, dev_populationPosition, 2 * sizeof(uint) * simDimP        , cudaMemcpyDeviceToHost);
+    cudaMemcpy(map               , dev_map               , simDim.x * simDim.y * sizeof(uint ) , cudaMemcpyDeviceToHost);
+    if( settings_print > 2 )std::cout  << " OK " << std::endl;
+
     std::cout << std::endl;
-    printMap(map, simDimX, simDimY, settings_print);
+    printMap(map, simDim, settings_print);
 
     if( settings_print > 2 )std::cout  << std::endl  << std::endl << "### Memory free ###" << std::endl;
-    freeTab(&populationPosition, settings_print);
-    freeTab(&populationIndex, settings_print);
-    // freeCost (&cost, simDimY, settings_print);
-    freeTab(&map, settings_print);
+    cudaFree(dev_populationPosition);
+    cudaFree(dev_map);
+    cudaFree(dev_simPIn);
+    // freeTab(&populationPosition, settings_print);
+    // freeTab(&populationIndex, settings_print); // passer a des uint2
+    // freeCost (&cost, simDim.y, settings_print);
+    // freeTab(&map, settings_print);
 
     return 0;
 }

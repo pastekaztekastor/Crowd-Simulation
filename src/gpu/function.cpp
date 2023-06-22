@@ -20,7 +20,7 @@
  |_____|_| |_|_|\__|
 
 */
-void initSimParam( int argc, char const *argv[], unsigned int * simDimX, unsigned int * simDimY, unsigned int * simDimP, unsigned int * simPIn, unsigned int * simDimG, unsigned int * settings_print, unsigned int * settings_debugMap, unsigned int * settings_model, unsigned int * settings_exportType, unsigned int * settings_exportFormat, unsigned int * settings_finishCondition,  std::string * settings_dir, std::string * settings_dirName, std::string * settings_fileName){
+void initSimParam( int argc, char const *argv[], uint2* simDim, uint * simDimP, uint * simPIn, uint * simDimG, uint * settings_print, uint * settings_debugMap, uint * settings_model, uint * settings_exportType, uint * settings_exportFormat, uint * settings_finishCondition,  std::string * settings_dir, std::string * settings_dirName, std::string * settings_fileName){
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
             if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
@@ -63,10 +63,10 @@ void initSimParam( int argc, char const *argv[], unsigned int * simDimX, unsigne
                 exit(0);
             } 
             else if (strcmp(argv[i], "-x") == 0) {
-                (* simDimX) = atoi(argv[i + 1]);
+                simDim->x = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-y") == 0) {
-                (* simDimY) = atoi(argv[i + 1]);
+                simDim->y = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-p") == 0) {
                 (* simDimP) = atoi(argv[i + 1]);
@@ -165,14 +165,14 @@ void initSimParam( int argc, char const *argv[], unsigned int * simDimX, unsigne
             }
         }  
     }
-    if((* simDimP) > ((* simDimX)*(* simDimY))*0.8){
+    if((* simDimP) > (simDim->x*simDim->y)*0.8){
         std::cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimensions.";
         exit(0);
     }
     
     if((*settings_print) > 1) std::cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << std::endl 
-        << "\t # simDimX = " << (*simDimX) <<std::endl
-        << "\t # simDimY = " << (*simDimY) <<std::endl
+        << "\t # simDimX = " << simDim->x <<std::endl
+        << "\t # simDimY = " << simDim->y <<std::endl
         << "\t # simDimG = " << (*simDimG) <<std::endl
         << "\t # simDimP = " << (*simDimP) <<std::endl
         << "\t # settings_print = " << (*settings_print) <<std::endl
@@ -185,19 +185,22 @@ void initSimParam( int argc, char const *argv[], unsigned int * simDimX, unsigne
         << "\t # settings_dirName = " << (*settings_dirName) <<std::endl
         << "\t # settings_fileName = " << (*settings_fileName) <<std::endl <<std::endl;
 }
-void initPopulationPositionMap( unsigned int ** populationPosition, unsigned int ** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int simDimP, unsigned int settings_print){
+void initPopulationPositionMap( uint2 ** populationPosition, int ** map, uint2 simExit, uint2 simDim, uint simDimP, uint settings_print){
     if(settings_print >2) std::cout << "\t# initPopulationPositionMap  " << std::endl;
-    unsigned int x = (rand() % simDimX);
-    unsigned int y = (rand() % simDimY);
+    uint2 coord = make_uint2((rand() % simDim.x),(rand() % simDim.y));
     
     // -1) Make memory allocations
     if(settings_print >2) std::cout << "\t -> Make memory allocations ";
 
     // ---- population
-    (*populationPosition) = ( unsigned int * ) calloc(simDimP * 2, sizeof( unsigned int));
+    (*populationPosition) = ( uint2 * ) calloc(simDimP, sizeof( uint2 ));
 
     // ---- map
-    (*map) = (unsigned int * ) calloc(simDimY * simDimX , sizeof(unsigned int * ));
+    (*map) = ( int * ) calloc(simDim.x * simDim.y , sizeof( int ));
+    for (size_t i = 0; i < simDim.x * simDim.y; i++){
+        (*map)[i]=-1;
+    }
+    
 
     if(settings_print >2) std::cout << "\tOK " << std::endl ;
     
@@ -209,41 +212,37 @@ void initPopulationPositionMap( unsigned int ** populationPosition, unsigned int
     // -3) Placing exit
     if(settings_print >2) std::cout << "\t -> Placing element"<< std::endl;
     if(settings_print >2) std::cout << "\t --> Wall " ;
-    (*map)[valueOfxy(simExit[1],simExit[0],simDimX, simDimY)] = 3;
+    (*map)[valueOfxy(simExit.x,simExit.y,simDim.x, simDim.y)] = -2;
     if(settings_print >2) std::cout << "\tOK " << std::endl ;
     
     // -4) Place individuals only if it is free.
     if(settings_print >2) std::cout << "\t --> People " ;
-    for (size_t i = 0; i < simDimP; i++)
-    {
-        x = (rand() % simDimX);
-        y = (rand() % simDimY);
+    for (size_t i = 0; i < simDimP; i++){
+        coord = make_uint2((rand() % simDim.x),(rand() % simDim.y));
 
-        while ((*map)[valueOfxy(x,y,simDimX,simDimY)] != 0){
-            x = (rand() % simDimX);
-            y = (rand() % simDimY);
+        while ((*map)[valueOfxy(coord.x,coord.y,simDim.x,simDim.y)] != -1){
+            coord = make_uint2((rand() % simDim.x),(rand() % simDim.y));
         }
         // ---- population
-        (*populationPosition)[valueOfxy(i,0,simDimP,2)] = x;
-        (*populationPosition)[valueOfxy(i,1,simDimP,2)] = y;
+        (*populationPosition)[i] = make_uint2(coord.x, coord.y) ;
         // ---- map
-        (*map)[valueOfxy(x,y,simDimX,simDimY)] = 1;
+        (*map)[valueOfxy(coord.x,coord.y,simDim.x,simDim.y)] = i;
     }
+    printPopulationPosition((*populationPosition), simDimP);
+
     if(settings_print >2)std::cout << "\tOK " << std::endl ;
 }
-void initPopulationIndex( unsigned int ** populationIndex, unsigned int simDimP, unsigned int settings_print){
+void initPopulationIndex( uint ** populationIndex, uint simDimP, uint settings_print){
     if(settings_print >2)std::cout << "\t# initPopulationIndex  " ;
-    (* populationIndex) = ( unsigned int * ) calloc(simDimP * 2, sizeof( unsigned int));
+    (* populationIndex) = ( uint * ) calloc(simDimP * 2, sizeof( uint));
     if(settings_print >2)std::cout << "\tOK " << std::endl;
 }
-void initSimExit( unsigned int ** simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print ){
+void initSimExit( uint2 * simExit, uint2 simDim, uint settings_print ){
     if(settings_print >2 ) std::cout << "\t# initSimExit  " ;
-    (*simExit) = ( unsigned int *) malloc( 2 * sizeof( unsigned int));
-    (*simExit)[0] = (rand() % simDimX);
-    (*simExit)[1] = (rand() % simDimY);
+    (*simExit) = make_uint2((rand() % simDim.x),(rand() % simDim.y));
     if(settings_print >2) std::cout << "\tOK "  << std::endl;
 }
-void initCost( unsigned int ** cost, unsigned int * map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
+void initCost( uint ** cost, int * map, uint2 simExit, uint2 simDim, uint settings_print){
     // TO DO
 }
 
@@ -256,11 +255,10 @@ void initCost( unsigned int ** cost, unsigned int * map, unsigned int * simExit,
  |_____/ \___|\__|\__\___|_|   
                                
 */
-
-void setSimExit( unsigned int ** simExit, unsigned int posX, unsigned int posY, unsigned int settings_print){
+void setSimExit( uint ** simExit, uint posX, uint posY, uint settings_print){
     // TO DO
 }
-void setPopulationPositionMap( unsigned int *** populationPosition, unsigned int *** map, unsigned int * simExit, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
+void setPopulationPositionMap( uint *** populationPosition, uint *** map, uint * simExit, uint2 simDim, uint settings_print){
     // TO DO
 }
 
@@ -273,14 +271,13 @@ void setPopulationPositionMap( unsigned int *** populationPosition, unsigned int
  |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
                                                      
 */
-
-void progressBar( unsigned int progress, unsigned int total, unsigned int width, unsigned int settings_print) {
+void progressBar( uint progress, uint total, uint width, uint settings_print) {
     // From ChatGPT
     if(settings_print >2)std::cout << "\t# progressBar  " ;
     float percentage = (float)progress / total;
-   unsigned int filledWidth = ( unsigned int)(percentage * width);
+   uint filledWidth = ( uint)(percentage * width);
     printf("[");
-    for ( unsigned int i = 0; i < width; i++) {
+    for ( uint i = 0; i < width; i++) {
         if (i < filledWidth) {
             printf("=");
         } else {
@@ -291,11 +288,11 @@ void progressBar( unsigned int progress, unsigned int total, unsigned int width,
     fflush(stdout);
     if(settings_print >2)std::cout << "\tOK " << std::endl;
 }
-void shuffleIndex( unsigned int ** PopulationIndex, unsigned int simDimP, unsigned int settings_print){
+void shuffleIndex( uint ** PopulationIndex, uint simDimP, uint settings_print){
     if(settings_print >2)std::cout << "\t# shuffleIndex  " ;
-    for ( unsigned int i = simDimP - 1; i > 0; i--) {
-       unsigned int j = rand() % (i + 1);
-       unsigned int *temp = PopulationIndex[i];
+    for ( uint i = simDimP - 1; i > 0; i--) {
+       uint j = rand() % (i + 1);
+       uint *temp = PopulationIndex[i];
         PopulationIndex[i] = PopulationIndex[j];
         PopulationIndex[j] = temp;
     }
@@ -311,7 +308,7 @@ void shuffleIndex( unsigned int ** PopulationIndex, unsigned int simDimP, unsign
  |_|  |_|  \___|\___|
                      
 */
-void freeTab ( unsigned int ** populationPosition, unsigned int settings_print){
+void freeTab ( uint ** populationPosition, uint settings_print){
     if(settings_print >2)std::cout << "\t# freeTab  " ;
     free(*populationPosition);
     *populationPosition = NULL;
@@ -327,38 +324,36 @@ void freeTab ( unsigned int ** populationPosition, unsigned int settings_print){
   \____/ \__|_|_|___/
                      
 */
-void printMap(unsigned int * map, unsigned int simDimX, unsigned int simDimY, unsigned int settings_print){
+void printMap(int * map, uint2 simDim, uint settings_print){
     if(settings_print > 2)std::cout << " # - Display map --- "<<std::endl;
 
     // Display column numbers
     std::cout<<"  ";
-        for (int x = 0; x < simDimX; x++)
+        for (int x = 0; x < simDim.x; x++)
         {
             printf(" %2d",x); 
         }
         std::cout<<"  "<<std::endl;
 
     // We browse the map and we display according to what the box contains
-    for (int y = 0; y < simDimY; y++)
+    for (int y = 0; y < simDim.y; y++)
     {
         printf("%2d ",y); 
-        for (int x = 0; x < simDimX; x++)
+        for (int x = 0; x < simDim.x; x++)
         {
-            switch (map[valueOfxy(x,y,simDimX,simDimY)])
+            switch (map[valueOfxy(x,y,simDim.x,simDim.y)])
             {
-            case 1:
-                std::cout<<"[H]";
+            case -3:
+                std::cout<<"///";
                 break;
-            case 2:
-                std::cout<<"[ ]";
-                break;
-            case 3:
+            case -2:
                 std::cout<<"(s)";
                 break;
-
-            default:
-            case 0:
+            case -1:
                 std::cout<<" . ";
+                break;
+            default:
+                std::cout<<"[H]";
                 break;
             }
         }
@@ -366,14 +361,21 @@ void printMap(unsigned int * map, unsigned int simDimX, unsigned int simDimY, un
     }
     if(settings_print < 2)std::cout << "                         --- DONE " << std::endl;
 }
-
-unsigned int xPosof(unsigned int value, unsigned int dimX, unsigned int dimY) {
+uint xPosof(uint value, uint dimX, uint dimY) {
     return value % dimX;
 }
-unsigned int yPosof(unsigned int value, unsigned int dimX, unsigned int dimY) {
+uint yPosof(uint value, uint dimX, uint dimY) {
     return value / dimX;
 }
-unsigned int valueOfxy(unsigned int xPos, unsigned int yPos, unsigned int dimX, unsigned int dimY) {
+uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY) {
     return yPos * dimX + xPos;
+}
+void printPopulationPosition(uint2 * population, uint simDimP){
+    std::cout << std::endl << "\t# printPopulationPosition"<< std::endl << "\t   Id \t x \t y " <<std::endl;
+    for (size_t i = 0; i < simDimP; i++)
+    {
+        std::cout << "\t  - " << i << " )\t" << population[i].x << "\t" << population[i].y <<std::endl;
+    }
+    std::cout << "\t OK" <<std::endl; 
 }
 

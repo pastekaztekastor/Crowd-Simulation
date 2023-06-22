@@ -117,3 +117,9 @@ Assurez-vous de vous trouver dans le répertoire racine du projet lors de l'exé
 Si l'option `-h` ou `-help` est spécifiée, le programme affiche cette liste d'arguments avec leurs descriptions, puis se termine.
 
 Actuellement la seule utilitée du programme est de faire des additions parralélisé sur GPU.
+
+## Gestion de la notion Atomic
+
+- mettre dans le tab map les index our le humains, -1 vide, -2 sortie.
+- Teste deplacement par atomic résultat
+- restructurer les kernel avec un init, launch, clear
