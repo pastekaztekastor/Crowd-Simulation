@@ -102,22 +102,18 @@ int main(int argc, char const *argv[])
                 {
                     // position de l'individue tid
                     uint2 pos    = make_uint2((populationPosition)[tid].x, (populationPosition)[tid].y);
-                    uint2 delta  = make_uint2(simExit.x-pos.x, simExit.y-pos.y);
+                    uint2 delta  = make_uint2(simExit.x - pos.x, simExit.y-pos.y);
                     uint  maxDim = max(abs(delta.x), abs(delta.y));
                     uint2 move   = make_uint2(delta.x / maxDim, delta.y / maxDim);
-                    std::cout <<"c "<<pos.x<<" "<<pos.y<<"\td "<<delta.x<<" "<<delta.y<<"\tm "<<move.x<<" "<<move.y;
+                    std::cout <<"c "<<pos.x<<" "<<pos.y<<"\te "<<simExit.x<<" "<<simExit.y<<"\td "<<delta.x<<" "<<delta.y<<"\tm "<<move.x<<" "<<move.y;
 
                     // on regarde si la case est disponible 
                     if((map[ simDim.x * (pos.y+move.y) + (pos.x + move.x)]) == -1){ // if is EMPTY
                         std::cout <<"-> moove" << std::endl;
                         (populationPosition)[tid] = make_uint2(pos.x + move.x, pos.y + move.y);
-                    
-    
                         // Temporaire
-                        (map)[simDim.x * (pos.y+move.y) + (pos.x + move.x)]    = tid;
                         (map)[simDim.x * pos.y + pos.x]                        = -1;
-                        //atomicExch( (map)[y+deltaY][x+deltaX]  , 1); // HUMAN
-                        //atomicExch( (map)[y][x]                , 0); // EMPTY
+                        (map)[simDim.x * (pos.y+move.y) + (pos.x + move.x)]    = tid;
                     }
                     else std::cout << std::endl;
                 }
@@ -132,7 +128,7 @@ int main(int argc, char const *argv[])
                 simPIn--;
                 break;
         }
-        //printMap(map, simDim, settings_print);
+        // printMap(map, simDim, settings_print);
         // EXPORT 
         switch (settings_model){
             case 1:
@@ -146,8 +142,8 @@ int main(int argc, char const *argv[])
     
     if( settings_print > 2 )std::cout << " \t> Cuda Copy ";
     //cudaMemcpy(outMove           , dev_outMove           , sizeof(uint)                      , cudaMemcpyDeviceToHost);
-    cudaMemcpy(populationPosition, dev_populationPosition, 2 * sizeof(uint) * simDimP        , cudaMemcpyDeviceToHost);
-    cudaMemcpy(map               , dev_map               , simDim.x * simDim.y * sizeof(uint ) , cudaMemcpyDeviceToHost);
+    //cudaMemcpy(populationPosition, dev_populationPosition, 2 * sizeof(uint) * simDimP        , cudaMemcpyDeviceToHost);
+    //cudaMemcpy(map               , dev_map               , simDim.x * simDim.y * sizeof(uint ) , cudaMemcpyDeviceToHost);
     if( settings_print > 2 )std::cout  << " OK " << std::endl;
 
     std::cout << std::endl;
