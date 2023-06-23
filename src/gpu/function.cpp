@@ -21,6 +21,26 @@
 
 */
 void initSimSettings( int argc, char const *argv[], simParam * _simParam, settings * _settings){
+    _simParam->populationPosition = nullptr;            
+    _simParam->cost               = nullptr;            
+    _simParam->map                = nullptr;            
+    _simParam->exit               = make_uint2(0, 0) ;  
+    _simParam->populationIndex    = nullptr;            
+    _simParam->dimension          = make_uint2(0, 0);   
+    _simParam->nbIndividual       = 10;                 
+    _simParam->pInSim             = _simParam->nbIndividual;            
+    _simParam->isFinish           = 0;     
+    _simParam->nbFrame            = 0;             
+    _settings->print              = 2;                  
+    _settings->debugMap           = 0;                  
+    _settings->model              = 0;                  
+    _settings->exportType         = 0;                  
+    _settings->exportFormat       = 0;                  
+    _settings->finishCondition    = 0;                  
+    _settings->dir                = "bin/";             
+    _settings->dirName            = "";                 
+    _settings->fileName           = "";    
+
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
             if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
@@ -167,7 +187,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     }
 
     // Calloc
-    _simParam->populationPosition = ( uint2 * ) calloc(_simParam->nbIndividual, sizeof( uint2 ));
+    _simParam->populationPosition = ( int2 * ) calloc(_simParam->nbIndividual, sizeof( int2 ));
     _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
         _simParam->map[i] = -1; // -1 for empty 
@@ -214,11 +234,11 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
             coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
         }
         // ---- population
-        _simParam->populationPosition[i] = make_uint2(coord.x, coord.y) ;
+        _simParam->populationPosition[i] = make_int2(coord.x, coord.y) ;
         // ---- map
         _simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] = i;
     }
-    printPopulationPosition((*_simParam), _settings);
+    // printPopulationPosition((*_simParam), _settings);
 
     if(_settings.print >2)std::cout << "\tOK " << std::endl ;
 }
@@ -271,11 +291,10 @@ void setPopulationPositionMap(simParam * _simParam, settings _settings){
  |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
                                                      
 */
-void progressBar(uint progress, uint total, uint width, settings _settings) {
+void progressBar(uint progress, uint total, uint width, uint iteration) {
     // From ChatGPT
-    if(_settings.print >2)std::cout << "\t# progressBar  " ;
     float percentage = (float)progress / total;
-   uint filledWidth = ( uint)(percentage * width);
+    uint filledWidth = ( uint)(percentage * width);
     printf("[");
     for ( uint i = 0; i < width; i++) {
         if (i < filledWidth) {
@@ -284,19 +303,16 @@ void progressBar(uint progress, uint total, uint width, settings _settings) {
             printf(" ");
         }
     }
-    printf("] %.2f%%\r", percentage * 100);
+    printf("] %.2f%% : %d frames\r", percentage * 100, iteration);
     fflush(stdout);
-    if(_settings.print >2)std::cout << "\tOK " << std::endl;
 }
 void shuffleIndex(simParam * _simParam, settings _settings){
-    if(_settings.print >2)std::cout << "\t# shuffleIndex  " ;
     for ( uint i = _simParam->nbIndividual - 1; i > 0; i--) {
        uint j = rand() % (i + 1);
        uint temp = _simParam->populationIndex[i];
        _simParam->populationIndex[i] = _simParam->populationIndex[j];
        _simParam->populationIndex[j] = temp;
     }
-    if(_settings.print >2)std::cout << "\tOK " << std::endl;
 }
 
 /*

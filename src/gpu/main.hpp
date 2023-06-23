@@ -18,7 +18,7 @@
 
 // Struct
 typedef struct {
-    uint2 * populationPosition          ; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
+    int2  * populationPosition          ; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
     uint  * cost                        ; //
     int   * map                         ; // 2D map composed of the uint 0: empty, 1 humain, 2 wall, 3 exit on 1 line
     uint2   exit                        ; // [x,y] coordinate of simulation output
@@ -27,6 +27,7 @@ typedef struct {
     uint    nbIndividual                ; // Number of individuals who must evolve during the simulation
     uint    pInSim                      ; //
     uint    isFinish                    ; //
+    uint    nbFrame                     ; // 
 } simParam;
 
 typedef struct {
@@ -86,7 +87,7 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
  |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
                                                      
 */
-void progressBar(uint progress, uint total, uint width, settings _settings);
+void progressBar(uint progress, uint total, uint width, uint iteration);
 void shuffleIndex(simParam * _simParam, settings _settings);
 
 /*

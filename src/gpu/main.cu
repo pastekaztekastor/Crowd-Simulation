@@ -9,51 +9,54 @@
 // Include necessary libraries here
 #include "kernel.hpp"
 
+using namespace std;
+
 int main(int argc, char const *argv[])
 {
     simParam _simParam;
     settings _settings;
     kernelParam _kernelParam;
 
-    if( _settings.print > 2 )std::cout  << " ### Init simulation ###" << std::endl;
+    if( _settings.print > 2 )cout  << " ### Init simulation ###" << endl;
     srand(time(NULL));
     initSimSettings(argc, argv, &_simParam, &_settings);
     initPopulationPositionMap(&_simParam, _settings);
-    initKernelParam(&_kernelParam, _simParam, _settings);
-    printMap(_simParam, _settings);
+    //initKernelParam(&_kernelParam, _simParam, _settings);
+    //printMap(_simParam, _settings);
 
     while (_simParam.isFinish == 0){
         if (_simParam.pInSim == 0) _simParam.isFinish = 1; 
-        
-        //progressBar(simDimP - simPIn, simDimP, 100, 0);
+
+        _simParam.nbFrame ++;
+        progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         shuffleIndex(&_simParam, _settings);
         
         // MODEL
         switch (_settings.model){
             case 0: // MODEL : sage ignorant
                 // TO DO
-                _simParam.pInSim --;
-
                 // kernel_model1_GPU<<<blocks,threads>>>(dev_populationPosition, dev_map, dev_simPIn, cost, simExit, simDim, simDimP);
                 
                 for (size_t tid = 0; tid < _simParam.nbIndividual; tid++)
                 {
-                    // position de l'individue tid
-                    uint2 pos    = make_uint2(_simParam.populationPosition[tid].x, _simParam.populationPosition[tid].y);
-                    uint2 delta  = make_uint2(_simParam.exit.x - pos.x, _simParam.exit.y-pos.y);
-                    uint  maxDim = max(abs(delta.x), abs(delta.y));
-                    uint2 move   = make_uint2(delta.x / maxDim, delta.y / maxDim);
-                    std::cout <<"c "<<pos.x<<" "<<pos.y<<"\te "<<_simParam.exit.x<<" "<<_simParam.exit.y<<"\td "<<delta.x<<" "<<delta.y<<"\tm "<<move.x<<" "<<move.y;
-
-                    // on regarde si la case est disponible 
-                    if(_simParam.map[ _simParam.dimension.x * (pos.y+move.y) + (pos.x + move.x)] == -1){ // if is EMPTY
-                        std::cout <<"-> moove" << std::endl;
-                        _simParam.populationPosition[tid] = make_uint2(pos.x + move.x, pos.y + move.y);
-                        // Temporaire
-                        _simParam.map[_simParam.dimension.x * pos.y + pos.x]                        = -1;
-                        _simParam.map[_simParam.dimension.x * (pos.y+move.y) + (pos.x + move.x)]    = tid;
+                    if (_simParam.populationPosition[tid].x > -1 && _simParam.populationPosition[tid].y > -1){
+                        // position de l'individue tid
+                        uint2 pos    = make_uint2(_simParam.populationPosition[tid].x, _simParam.populationPosition[tid].y);
+                        int2  delta  = make_int2(_simParam.exit.x - pos.x, _simParam.exit.y - pos.y);
+                        uint  maxDim = max(abs(delta.x), abs(delta.y));
+                        int2  move   = make_int2(delta.x / (int) maxDim, delta.y / (int) maxDim);
+                        // on regarde si la case est disponible 
+                        if(_simParam.map[ _simParam.dimension.x * (pos.y+move.y) + (pos.x + move.x)] == -1){ // if is EMPTY
+                            _simParam.populationPosition[tid] = make_int2(pos.x + move.x, pos.y + move.y);     // Position dans populationPosition
+                            _simParam.map[_simParam.dimension.x * pos.y + pos.x]                        = -1;  // Valeur de l'ancien position map
+                            _simParam.map[_simParam.dimension.x * (pos.y+move.y) + (pos.x + move.x)]    = tid; // Valeur de la nouvelle position map
+                        }
+                        else if(_simParam.map[ _simParam.dimension.x * (pos.y+move.y) + (pos.x + move.x)] == -2){ // Sorti
+                            _simParam.populationPosition[tid] = make_int2(-1,-1);                              // Position dans populationPosition
+                            _simParam.map[_simParam.dimension.x * pos.y + pos.x]                        = -1;  // Valeur de l'ancien position map
+                            _simParam.pInSim --;
+                        }
                     }
-                    else std::cout << std::endl;
                 }
                 break;
 
@@ -66,7 +69,6 @@ int main(int argc, char const *argv[])
                 _simParam.pInSim--;
                 break;
         }
-        // printMap(_simParam, _settings);
         // EXPORT 
         switch (_settings.exportType){
             case 1:
@@ -78,14 +80,15 @@ int main(int argc, char const *argv[])
         }
     }
     
-    if( _settings.print > 2 )std::cout << " \t> Cuda Copy ";
+    if( _settings.print > 2 )cout <<endl<< " \t> Cuda Copy ";
     //cudaMemcpy(outMove           , dev_outMove           , sizeof(uint)                      , cudaMemcpyDeviceToHost);
     //cudaMemcpy(populationPosition, dev_populationPosition, 2 * sizeof(uint) * simDimP        , cudaMemcpyDeviceToHost);
     //cudaMemcpy(map               , dev_map               , simDim.x * simDim.y * sizeof(uint ) , cudaMemcpyDeviceToHost);
-    if( _settings.print > 2 )std::cout  << " OK " << std::endl;
+    if( _settings.print > 2 )cout  << " OK " << endl;
 
-    std::cout << std::endl;
-    printMap(_simParam, _settings);
+    cout << endl;
+    cout << "solved on " << _simParam.nbFrame << " frames";
+    //printMap(_simParam, _settings);
 
     return 0;
 }
