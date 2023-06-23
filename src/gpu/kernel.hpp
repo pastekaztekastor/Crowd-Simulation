@@ -12,29 +12,50 @@
 #include "main.hpp"
 #include <cuda_runtime.h>
 
-void initKernel(
-    unsigned int **     populationPosition,         // (*) Because change
-    unsigned int **     map,                        // (*) Because change
-    unsigned int *      simPIn,                     // (*) Because change
-    unsigned int *      cost,                       // useless
-    unsigned int *      simExit, 
-    unsigned int        simDimX, 
-    unsigned int        simDimY, 
-    unsigned int        simDimP, 
-    unsigned int        settings_print 
-);
+/*
+  _____       _ _   
+ |_   _|     (_) |  
+   | |  _ __  _| |_ 
+   | | | '_ \| | __|
+  _| |_| | | | | |_ 
+ |_____|_| |_|_|\__|
+                    
+*/
+void            initKernelParam   (kernelParam * _kernelParam, simParam _simParam, settings _settings);
 
-__global__ void kernel_model1_GPU(
-    unsigned int **     dev_populationPosition,     // (*) Because change
-    unsigned int **     dev_map,                    // (*) Because change
-    unsigned int *      dev_simPIn,                 // (*) Because change
-    unsigned int *         cost,                    // useless
-    unsigned int *          simExit, 
-    unsigned int            simDimX, 
-    unsigned int            simDimY,
-    unsigned int            simDimP
-);
+/*
+  _  __                    _     
+ | |/ /                   | |    
+ | ' / ___ _ __ _ __   ___| |___ 
+ |  < / _ \ '__| '_ \ / _ \ / __|
+ | . \  __/ |  | | | |  __/ \__ \
+ |_|\_\___|_|  |_| |_|\___|_|___/
 
-void destroyKernel();
+*/
+__global__ void kernel_model1_GPU (kernelParam _kernelParam, simParam _simParam, settings _settings);
+
+/*
+  ______                       _    
+ |  ____|                     | |   
+ | |__  __  ___ __   ___  _ __| |_  
+ |  __| \ \/ / '_ \ / _ \| '__| __| 
+ | |____ >  <| |_) | (_) | |  | |_  
+ |______/_/\_\ .__/ \___/|_|   \__| 
+             | |                    
+             |_|                    
+*/
+void            mapKernelToSim    (kernelParam _kernelParam, simParam * _simParam, settings _settings);
+void            popKernelToSim    (kernelParam _kernelParam, simParam * _simParam, settings _settings);
+
+/*
+  ______             
+ |  ____|            
+ | |__ _ __ ___  ___ 
+ |  __| '__/ _ \/ _ \
+ | |  | | |  __/  __/
+ |_|  |_|  \___|\___|
+                     
+*/
+void            destroyKernel     (kernelParam * _kernelParam, settings _settings);
 
 #endif

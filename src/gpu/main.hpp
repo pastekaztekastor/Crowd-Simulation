@@ -16,6 +16,15 @@
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
 
+using namespace std;
+
+// Define
+#define __MAP_EMPTY__ -1
+#define __MAP_EXIT__ -2
+#define __MAP_WALL__ -3
+#define __MAP_HUMAN_QUITE__ make_int2(-1,-1)
+
+
 // Struct
 typedef struct {
     int2  * populationPosition          ; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
@@ -37,14 +46,14 @@ typedef struct {
     uint            exportType          ; //
     uint            exportFormat        ; //
     uint            finishCondition     ; //
-    std::string     dir                 ; // For chose the directory to exporte bin files
-    std::string     dirName             ; //
-    std::string     fileName            ; //
+    string          dir                 ; // For chose the directory to exporte bin files
+    string          dirName             ; //
+    string          fileName            ; //
 } settings;
 
 typedef struct {
-    uint **     populationPosition      ;
-    uint **     map                     ;
+    int2 **     populationPosition      ;
+    int  **     map                     ;
     uint *      simPIn                  ;
     uint        nb_threads              ;
     dim3        blocks                  ;
@@ -63,7 +72,6 @@ typedef struct {
 // Declare functions and classes here
 // Launch simulation
 void initSimSettings            ( int argc, char const *argv[], simParam * _simParam, settings * _settings);
-void initKernelParam            (kernelParam * _kernelParam, simParam _simParam, settings _settings);
 void initPopulationPositionMap  (simParam * _simParam, settings _settings);
 /*
    _____      _   _            
