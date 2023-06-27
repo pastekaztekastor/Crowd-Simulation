@@ -15,6 +15,7 @@
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
+#include <hdf5.h>
 
 using namespace std;
 
@@ -97,6 +98,14 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 */
 void progressBar(uint progress, uint total, uint width, uint iteration);
 void shuffleIndex(simParam * _simParam, settings _settings);
+
+void exportPopulationPositionHDF5(simParam _simParam, settings _settings);
+/**
+ * Exporte les positions de tout les individus dans le tableau _simParam.populationPosition.
+ * Il sont rangé dans le dossier dont le chemin est indiqué dans _settings.dir
+ * Le nom du dossier est indiqué dans _settings.dirName
+ * Le nom du fichier est la valeur de _simParam.nbFrame
+*/
 
 /*
   ______             

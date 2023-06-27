@@ -293,6 +293,45 @@ void shuffleIndex(simParam * _simParam, settings _settings){
     }
 }
 
+void exportPopulationPositionHDF5(simParam _simParam, settings _settings) {
+    // Création du nom du fichier
+    std::string filePath = _settings.dir + "/" + _settings.dirName + "/" + std::to_string(_simParam.nbFrame) + ".h5";
+    
+    // Création du fichier HDF5
+    hid_t file = H5Fcreate(filePath.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    if (file < 0) {
+        std::cerr << "Erreur lors de la création du fichier HDF5." << std::endl;
+        return;
+    }
+    
+    // Création de l'espace de données pour les positions
+    hsize_t dims[2] = {_simParam.nbIndividual, 2}; // Dimensions du tableau de positions
+    hid_t dataspace = H5Screate_simple(2, dims, NULL);
+    
+    // Création du dataset pour les positions
+    hid_t dataset = H5Dcreate(file, "populationPosition", H5T_NATIVE_INT, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    if (dataset < 0) {
+        std::cerr << "Erreur lors de la création du dataset HDF5." << std::endl;
+        H5Sclose(dataspace);
+        H5Fclose(file);
+        return;
+    }
+    
+    // Écriture des positions dans le dataset
+    herr_t status = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, _simParam.populationPosition);
+    if (status < 0) {
+        std::cerr << "Erreur lors de l'écriture des positions dans le dataset HDF5." << std::endl;
+    }
+    
+    // Fermeture des ressources HDF5
+    H5Dclose(dataset);
+    H5Sclose(dataspace);
+    H5Fclose(file);
+    
+    std::cout << "Exportation des positions terminée avec succès." << std::endl;
+}
+
+
 /*
   ______             
  |  ____|            
@@ -374,3 +413,4 @@ uint yPosof(uint value, uint dimX, uint dimY) {
 uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY) {
     return yPos * dimX + xPos;
 }
+

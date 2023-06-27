@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
         
         if (_simParam.pInSim == 0) _simParam.isFinish = 1; 
 
-        //progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
+        progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         //shuffleIndex(&_simParam, _settings);
         
         // MODEL
@@ -60,12 +60,11 @@ int main(int argc, char const *argv[])
             default:
                 break;
         }
-        mapKernelToSim(_kernelParam, &_simParam, _settings);
+        // mapKernelToSim(_kernelParam, &_simParam, _settings);
         // popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
-        cout << _simParam.pInSim << endl;
         // printPopulationPosition(_simParam, _settings);
-        printMap(_simParam, _settings);
+        // printMap(_simParam, _settings);
     }
     
     cout << "solved on " << _simParam.nbFrame << " frames";

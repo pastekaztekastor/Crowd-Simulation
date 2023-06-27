@@ -13,9 +13,9 @@ set(SOURCES
     src/gpu/function.cpp
     src/gpu/kernel.cu
     src/gpu/main.cu
-    )
-    
-    # Spécifier les fichiers d'en-tête
+)
+
+# Spécifier les fichiers d'en-tête
 set(HEADERS
     src/gpu/kernel.hpp
     src/gpu/main.hpp
@@ -29,11 +29,19 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/exe)
 find_package(CUDA REQUIRED)
 set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-arch=sm_30)
 
+# Activer le langage C
+enable_language(C)
+
+# Inclure les bibliothèques HDF5
+find_package(HDF5 REQUIRED COMPONENTS C HL)
+include_directories(${HDF5_INCLUDE_DIRS})
+link_directories(${HDF5_LIBRARY_DIRS})
+
 # Compiler les fichiers source avec g++
 add_executable(gpuSimulation ${SOURCES} ${HEADERS})
 
-# Lier les librairies CUDA
-target_link_libraries(gpuSimulation ${CUDA_LIBRARIES})
+# Lier les librairies CUDA et HDF5
+target_link_libraries(gpuSimulation ${CUDA_LIBRARIES} ${HDF5_LIBRARIES})
 ```
 
 Ensuite, à la racine du projet, exécutez les commandes suivantes :

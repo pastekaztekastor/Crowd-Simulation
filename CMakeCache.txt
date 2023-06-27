@@ -350,6 +350,36 @@ GPUSimulation_BINARY_DIR:STATIC=/home/cartron3/StageXLIM
 //Value Computed by CMake
 GPUSimulation_SOURCE_DIR:STATIC=/home/cartron3/StageXLIM
 
+//HDF5 C Wrapper compiler.  Used only to detect HDF5 compile flags.
+HDF5_C_COMPILER_EXECUTABLE:FILEPATH=/usr/bin/h5cc
+
+//Path to a library.
+HDF5_C_LIBRARY_dl:FILEPATH=/usr/lib/x86_64-linux-gnu/libdl.so
+
+//Path to a library.
+HDF5_C_LIBRARY_hdf5:FILEPATH=/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5.so
+
+//Path to a library.
+HDF5_C_LIBRARY_hdf5_hl:FILEPATH=/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5_hl.so
+
+//Path to a library.
+HDF5_C_LIBRARY_m:FILEPATH=/usr/lib/x86_64-linux-gnu/libm.so
+
+//Path to a library.
+HDF5_C_LIBRARY_pthread:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.so
+
+//Path to a library.
+HDF5_C_LIBRARY_sz:FILEPATH=/usr/lib/x86_64-linux-gnu/libsz.so
+
+//Path to a library.
+HDF5_C_LIBRARY_z:FILEPATH=/usr/lib/x86_64-linux-gnu/libz.so
+
+//HDF5 file differencing tool.
+HDF5_DIFF_EXECUTABLE:FILEPATH=HDF5_DIFF_EXECUTABLE-NOTFOUND
+
+//The directory containing a CMake configuration file for HDF5.
+HDF5_DIR:PATH=HDF5_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries
@@ -607,6 +637,16 @@ CUDA_parse_cubin:INTERNAL=/usr/share/cmake-3.10/Modules/FindCUDA/parse_cubin.cma
 CUDA_run_nvcc:INTERNAL=/usr/share/cmake-3.10/Modules/FindCUDA/run_nvcc.cmake
 //Details about finding CUDA
 FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr][/usr/bin/nvcc][/usr/include][/usr/lib/x86_64-linux-gnu/libcudart_static.a][v9.1()]
+//Details about finding HDF5
+FIND_PACKAGE_MESSAGE_DETAILS_HDF5:INTERNAL=[/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5.so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/lib/x86_64-linux-gnu/libsz.so;/usr/lib/x86_64-linux-gnu/libz.so;/usr/lib/x86_64-linux-gnu/libdl.so;/usr/lib/x86_64-linux-gnu/libm.so][/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5_hl.so][cfound components:  C HL ][v1.10.0.1()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
+//ADVANCED property for variable: HDF5_C_COMPILER_EXECUTABLE
+HDF5_C_COMPILER_EXECUTABLE-ADVANCED:INTERNAL=1
+//Result of TRY_COMPILE
+HDF5_C_COMPILER_NO_INTERROGATE:INTERNAL=FALSE
+//ADVANCED property for variable: HDF5_DIFF_EXECUTABLE
+HDF5_DIFF_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: HDF5_DIR
+HDF5_DIR-ADVANCED:INTERNAL=1
 

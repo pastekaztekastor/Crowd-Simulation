@@ -10,11 +10,9 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
   - [Introduction du sujet](#introduction-du-sujet)
   - [Structure du programme](#structure-du-programme)
     - [Rendu](#rendu)
-    - [Utilisation de CUDA](#utilisation-de-cuda)
-    - [Makefile](#makefile)
-    - [Pour aller plus loin](#pour-aller-plus-loin)
   - [Installation](#installation)
     - [Installation de CUDA](#installation-de-cuda)
+    - [Installation de HDF5](#installation-de-hdf5)
   - [Utilisation](#utilisation)
   - [Liste des tâches à effectuer](#liste-des-tâches-à-effectuer)
     - [Organisation](#organisation)
@@ -149,18 +147,6 @@ flowchart TB;
 
 Le rendu final n'est pas une priorité. Nous pourrions générer des fichiers binaires qui seront lus par un programme **Processing** pour produire des images ou des vidéos. Le programme doit être modifiable à l'aide de fichiers de configuration au format JSON. Nous devons également pouvoir récupérer des données de sortie (tableau de fichiers binaires).
 
-### Utilisation de CUDA
-
-Parallélisation des calculs pour chaque individu à l'aide de CUDA.
-
-### Makefile
-
-Je dois me renseigner sur le fonctionnement des fichiers Makefile.
-Je ne pense pas qu'un Makefile soit utile pour le moment. Dans le pire des cas un ficher `bach` sera amplement suffisant.
-
-### Pour aller plus loin
-
-Nous avons un objectif de rendu.
 
 ## Installation
 
@@ -175,7 +161,7 @@ apt install nvidia-cuda-toolkit
 Puis avec CMake nous allons généré le projet.
 
 ```bash
-cmake CMakeLists.txt
+cmake .
 make
 ```
 
@@ -183,9 +169,35 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 
 Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur votre propre machine. Elle doit néanmoins être équipé d'un terminal et de bach.
 
+### Installation de HDF5
+
+La bibliothèque HDF5 (Hierarchical Data Format 5) est utilisée pour stocker et organiser de grandes quantités de données de manière efficace et structurée. Elle offre des fonctionnalités avancées telles que la compression des données, l'indexation, la gestion des métadonnées et la possibilité de travailler avec des ensembles de données hiérarchiques. HDF5 est largement utilisée dans le domaine de la science, de la recherche et de l'analyse de données pour gérer et échanger des données complexes, volumineuses et multidimensionnelles, offrant une solution flexible et performante pour le stockage et la manipulation de données. Elle est utilisé dans ce projet pour exporter chaque frames de la simulation en perdant le moins de temps possible.
+
+Pour installer HDF5 sur Ubuntu, vous pouvez suivre les étapes suivantes :
+
+1. Mettez à jour les référentiels de packages en exécutant la commande suivante :
+   ```
+   sudo apt update
+   ```
+
+2. Installez le package HDF5 en utilisant la commande suivante :
+   ```
+   sudo apt install libhdf5-dev
+   ```
+
+3. Une fois l'installation terminée, vous pouvez vérifier la version installée en exécutant la commande suivante :
+   ```
+   h5cc -showconfig
+   ```
+
+   Cette commande affichera les informations sur la bibliothèque HDF5 installée, y compris sa version. La version minimale requise est la 1.10.x.
+
 ## Utilisation
 
-> À faire
+Documenté dans les dossier :
+
+- [Programme CPU](src/cpu)
+- [Programme GPU](src/gpu)
 
 ## Liste des tâches à effectuer
 
