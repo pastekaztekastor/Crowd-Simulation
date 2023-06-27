@@ -46,6 +46,7 @@ __global__ void kernel_model1_GPU (kernelParam _kernelParam, simParam _simParam,
 */
 void            mapKernelToSim    (kernelParam _kernelParam, simParam * _simParam, settings _settings);
 void            popKernelToSim    (kernelParam _kernelParam, simParam * _simParam, settings _settings);
+void            pInKernelToSim    (kernelParam _kernelParam, simParam * _simParam, settings _settings);
 
 /*
   ______             

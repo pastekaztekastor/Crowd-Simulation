@@ -54,7 +54,7 @@ typedef struct {
 typedef struct {
     int2  *     populationPosition      ;
     int   *     map                     ;
-    uint  *     simPIn                  ;
+    uint  *     pInSim                  ;
     uint        nb_threads              ;
     dim3        blocks                  ;
     dim3        threads                 ;

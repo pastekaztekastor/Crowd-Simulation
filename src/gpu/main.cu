@@ -27,10 +27,11 @@ int main(int argc, char const *argv[])
     initKernelParam(&_kernelParam, _simParam, _settings);
     
 
-    while (_simParam.isFinish == 0 && _simParam.nbFrame < 3){
+    while (_simParam.isFinish == 0 && _simParam.nbFrame < pow(_simParam.nbIndividual,2)){
         _simParam.nbFrame ++;
         
-        cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
+        //cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
+        
         if (_simParam.pInSim == 0) _simParam.isFinish = 1; 
 
         //progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
@@ -48,7 +49,6 @@ int main(int argc, char const *argv[])
             case 4: // MDOEL : Meilleur coût
             case 5: // MDOEL : Meilleur déplacement 
             default:
-                _simParam.pInSim--;
                 break;
         }
         // EXPORT 
@@ -61,8 +61,10 @@ int main(int argc, char const *argv[])
                 break;
         }
         mapKernelToSim(_kernelParam, &_simParam, _settings);
-        popKernelToSim(_kernelParam, &_simParam, _settings);
-        printPopulationPosition(_simParam, _settings);
+        // popKernelToSim(_kernelParam, &_simParam, _settings);
+        pInKernelToSim(_kernelParam, &_simParam, _settings);
+        cout << _simParam.pInSim << endl;
+        // printPopulationPosition(_simParam, _settings);
         printMap(_simParam, _settings);
     }
     
