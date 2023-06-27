@@ -52,9 +52,9 @@ typedef struct {
 } settings;
 
 typedef struct {
-    int2 **     populationPosition      ;
-    int  **     map                     ;
-    uint *      simPIn                  ;
+    int2  *     populationPosition      ;
+    int   *     map                     ;
+    uint  *     simPIn                  ;
     uint        nb_threads              ;
     dim3        blocks                  ;
     dim3        threads                 ;

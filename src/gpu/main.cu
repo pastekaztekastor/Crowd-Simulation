@@ -20,14 +20,19 @@ int main(int argc, char const *argv[])
     srand(time(NULL));
     initSimSettings(argc, argv, &_simParam, &_settings);
     initPopulationPositionMap(&_simParam, _settings);
+    
+    printMap(_simParam, _settings);
+    printPopulationPosition(_simParam, _settings);
+   
     initKernelParam(&_kernelParam, _simParam, _settings);
     
-    //printMap(_simParam, _settings);
 
-    while (_simParam.isFinish == 0 && _simParam.nbFrame < 10){
+    while (_simParam.isFinish == 0 && _simParam.nbFrame < 3){
+        _simParam.nbFrame ++;
+        
+        cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
         if (_simParam.pInSim == 0) _simParam.isFinish = 1; 
 
-        _simParam.nbFrame ++;
         //progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         //shuffleIndex(&_simParam, _settings);
         
@@ -56,6 +61,8 @@ int main(int argc, char const *argv[])
                 break;
         }
         mapKernelToSim(_kernelParam, &_simParam, _settings);
+        popKernelToSim(_kernelParam, &_simParam, _settings);
+        printPopulationPosition(_simParam, _settings);
         printMap(_simParam, _settings);
     }
     
