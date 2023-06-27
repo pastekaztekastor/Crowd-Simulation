@@ -8,6 +8,8 @@
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
+CMakeFiles/
+build/
 CMakeScripts
 Testing
 Makefile
