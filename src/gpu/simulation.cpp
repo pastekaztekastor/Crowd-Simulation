@@ -301,6 +301,7 @@ void shuffleIndex(simParam * _simParam, settings _settings){
     }
 }
 
+<<<<<<< HEAD:src/gpu/simulation.cpp
 /*
 void exportSimParam2Json(simParam _simParam, settings _settings) {
     // Création du chemin complet du fichier JSON
@@ -375,6 +376,8 @@ void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
 }
 
 
+=======
+>>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE:src/gpu/function.cpp
 /*
   ______             
  |  ____|            
@@ -456,4 +459,3 @@ uint yPosof(uint value, uint dimX, uint dimY) {
 uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY) {
     return yPos * dimX + xPos;
 }
-

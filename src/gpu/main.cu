@@ -59,12 +59,22 @@ int main(int argc, char const *argv[])
             default:
                 break;
         }
+<<<<<<< HEAD
         // mapKernelToSim(_kernelParam, &_simParam, _settings);
         popKernelToSim(_kernelParam, &_simParam, _settings);
+=======
+        mapKernelToSim(_kernelParam, &_simParam, _settings);
+        // popKernelToSim(_kernelParam, &_simParam, _settings);
+>>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE
         pInKernelToSim(_kernelParam, &_simParam, _settings);
+        cout << _simParam.pInSim << endl;
         // printPopulationPosition(_simParam, _settings);
+<<<<<<< HEAD
         // printMap(_simParam, _settings);
         exportPopulationPosition2HDF5(_simParam, _settings);
+=======
+        printMap(_simParam, _settings);
+>>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE
     }
     
     cout << endl << "solved on " << _simParam.nbFrame << " frames" << endl << endl;

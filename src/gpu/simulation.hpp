@@ -15,8 +15,11 @@
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
+<<<<<<< HEAD:src/gpu/simulation.hpp
 #include <hdf5.h>
 //#include <nlohmann/json.hpp>
+=======
+>>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE:src/gpu/main.hpp
 
 //using json = nlohmann::json;
 using namespace std;
@@ -101,6 +104,7 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 void progressBar(uint progress, uint total, uint width, uint iteration);
 void shuffleIndex(simParam * _simParam, settings _settings);
 
+<<<<<<< HEAD:src/gpu/simulation.hpp
 void exportSimParam2Json(simParam _simParam);
 /**
  * Exporte le contenue de la struct _simParam au format JSON
@@ -117,6 +121,8 @@ void exportPopulationPosition2HDF5(simParam _simParam, settings _settings);
  * Le nom du fichier est la valeur de _simParam.nbFrame
 */
 
+=======
+>>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE:src/gpu/main.hpp
 /*
   ______             
  |  ____|            
