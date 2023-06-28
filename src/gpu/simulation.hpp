@@ -16,9 +16,9 @@
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
 #include <hdf5.h>
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 using namespace std;
 
 // Define

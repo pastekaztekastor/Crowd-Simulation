@@ -370,8 +370,7 @@ void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
             H5Sclose(dataspace);
             H5Fclose(file);
         }
-    }
-    
+    }  
     if(_settings.print >2) cout << "Exportation des positions terminée avec succès." << endl;
 }
 

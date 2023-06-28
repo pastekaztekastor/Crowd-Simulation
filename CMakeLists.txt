@@ -9,6 +9,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_PREFIX_PATH "/home/cartron3/StageXLIM/extern/nlohmann_json" CACHE PATH "Path to nlohmann_json installation")
 find_package(nlohmann_json 3.2.0 REQUIRED)
 
+# Activer le langage C
+enable_language(C)
+
+# Inclure les bibliothèques HDF5
+find_package(HDF5 REQUIRED COMPONENTS C HL)
+include_directories(${HDF5_INCLUDE_DIRS})
+link_directories(${HDF5_LIBRARY_DIRS})
+
+
 # Spécifier les fichiers source
 set(SOURCES
     src/gpu/simulation.cpp
