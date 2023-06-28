@@ -147,7 +147,6 @@ flowchart TB;
 
 Le rendu final n'est pas une priorité. Nous pourrions générer des fichiers binaires qui seront lus par un programme **Processing** pour produire des images ou des vidéos. Le programme doit être modifiable à l'aide de fichiers de configuration au format JSON. Nous devons également pouvoir récupérer des données de sortie (tableau de fichiers binaires).
 
-
 ## Installation
 
 ### Installation de CUDA
@@ -176,19 +175,22 @@ La bibliothèque HDF5 (Hierarchical Data Format 5) est utilisée pour stocker et
 Pour installer HDF5 sur Ubuntu, vous pouvez suivre les étapes suivantes :
 
 1. Mettez à jour les référentiels de packages en exécutant la commande suivante :
-   ```
+
+   ```bash
    sudo apt update
    ```
 
 2. Installez le package HDF5 en utilisant la commande suivante :
-   ```
+
+   ```bash
    sudo apt install libhdf5-dev
    ```
 
 3. Une fois l'installation terminée, vous pouvez vérifier la version installée en exécutant la commande suivante :
-   ```
-   h5cc -showconfig
-   ```
+
+    ```bash
+    h5cc -showconfig
+    ```
 
    Cette commande affichera les informations sur la bibliothèque HDF5 installée, y compris sa version. La version minimale requise est la 1.10.x.
 

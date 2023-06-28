@@ -14,6 +14,19 @@
 # EXTERNAL cache entries
 ########################
 
+//Build both shared and static libraries
+BUILD_SHARED_AND_STATIC_LIBS:BOOL=OFF
+
+//Build shared libraries
+BUILD_SHARED_LIBS:BOOL=ON
+
+//Overrides BUILD_SHARED_LIBS if CJSON_OVERRIDE_BUILD_SHARED_LIBS
+// is enabled
+CJSON_BUILD_SHARED_LIBS:BOOL=ON
+
+//Override BUILD_SHARED_LIBS with CJSON_BUILD_SHARED_LIBS
+CJSON_OVERRIDE_BUILD_SHARED_LIBS:BOOL=OFF
+
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
@@ -118,8 +131,56 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Enable/Disable output of compile commands during generation.
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
 
+//User executables (bin)
+CMAKE_INSTALL_BINDIR:PATH=bin
+
+//Read-only architecture-independent data (DATAROOTDIR)
+CMAKE_INSTALL_DATADIR:PATH=
+
+//Read-only architecture-independent data root (share)
+CMAKE_INSTALL_DATAROOTDIR:PATH=share
+
+//Documentation root (DATAROOTDIR/doc/PROJECT_NAME)
+CMAKE_INSTALL_DOCDIR:PATH=
+
+//C header files (include)
+CMAKE_INSTALL_INCLUDEDIR:PATH=include
+
+//Info documentation (DATAROOTDIR/info)
+CMAKE_INSTALL_INFODIR:PATH=
+
+//Object code libraries (lib)
+CMAKE_INSTALL_LIBDIR:PATH=lib
+
+//Program executables (libexec)
+CMAKE_INSTALL_LIBEXECDIR:PATH=libexec
+
+//Locale-dependent data (DATAROOTDIR/locale)
+CMAKE_INSTALL_LOCALEDIR:PATH=
+
+//Modifiable single-machine data (var)
+CMAKE_INSTALL_LOCALSTATEDIR:PATH=var
+
+//Man documentation (DATAROOTDIR/man)
+CMAKE_INSTALL_MANDIR:PATH=
+
+//C header files for non-gcc (/usr/include)
+CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
+
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
+
+//Run-time variable data (LOCALSTATEDIR/run)
+CMAKE_INSTALL_RUNSTATEDIR:PATH=
+
+//System admin executables (sbin)
+CMAKE_INSTALL_SBINDIR:PATH=sbin
+
+//Modifiable architecture-independent data (com)
+CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
+
+//Read-only single-machine data (etc)
+CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=/usr/bin/ld
@@ -150,6 +211,9 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 
 //Path to a program.
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
+
+//Path to nlohmann_json installation
+CMAKE_PREFIX_PATH:PATH=/home/cartron3/StageXLIM/extern/nlohmann_json
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=GPUSimulation
@@ -344,6 +408,46 @@ CUDA_npps_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libnpps.so
 //Path to a library.
 CUDA_rt_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
 
+//Enable building cJSON test
+ENABLE_CJSON_TEST:BOOL=ON
+
+//Enable creating uninstall target
+ENABLE_CJSON_UNINSTALL:BOOL=ON
+
+//Enable building the cJSON_Utils library.
+ENABLE_CJSON_UTILS:BOOL=OFF
+
+//Enables cJSON so version
+ENABLE_CJSON_VERSION_SO:BOOL=ON
+
+//Enables custom compiler flags
+ENABLE_CUSTOM_COMPILER_FLAGS:BOOL=ON
+
+//Create executables and targets for fuzzing cJSON with afl.
+ENABLE_FUZZING:BOOL=OFF
+
+//Hide library symbols.
+ENABLE_HIDDEN_SYMBOLS:BOOL=OFF
+
+//Enable the use of locales
+ENABLE_LOCALES:BOOL=ON
+
+//Export library symbols.
+ENABLE_PUBLIC_SYMBOLS:BOOL=ON
+
+//Enables the SafeStack instrumentation pass by the Code Pointer
+// Integrity Project
+ENABLE_SAFE_STACK:BOOL=OFF
+
+//Enables AddressSanitizer and UndefinedBehaviorSanitizer.
+ENABLE_SANITIZERS:BOOL=OFF
+
+//Enable exporting of CMake targets. Disable when it causes problems!
+ENABLE_TARGET_EXPORT:BOOL=ON
+
+//OFF
+ENABLE_VALGRIND:BOOL=OFF
+
 //Value Computed by CMake
 GPUSimulation_BINARY_DIR:STATIC=/home/cartron3/StageXLIM
 
@@ -379,6 +483,57 @@ HDF5_DIFF_EXECUTABLE:FILEPATH=HDF5_DIFF_EXECUTABLE-NOTFOUND
 
 //The directory containing a CMake configuration file for HDF5.
 HDF5_DIR:PATH=HDF5_DIR-NOTFOUND
+
+//Build the unit tests when BUILD_TESTING is enabled.
+JSON_BuildTests:BOOL=OFF
+
+//Enable CI build targets.
+JSON_CI:BOOL=OFF
+
+//Use extended diagnostic messages.
+JSON_Diagnostics:BOOL=OFF
+
+//Disable default integer enum serialization.
+JSON_DisableEnumSerialization:BOOL=OFF
+
+//Place use-defined string literals in the global namespace.
+JSON_GlobalUDLs:BOOL=ON
+
+//Enable implicit conversions.
+JSON_ImplicitConversions:BOOL=ON
+
+//Install CMake targets during install step.
+JSON_Install:BOOL=OFF
+
+//Enable legacy discarded value comparison.
+JSON_LegacyDiscardedValueComparison:BOOL=OFF
+
+//Use non-amalgamated version of the library.
+JSON_MultipleHeaders:BOOL=ON
+
+//Include as system headers (skip for clang-tidy).
+JSON_SystemInclude:BOOL=OFF
+
+//Value Computed by CMake
+cJSON_BINARY_DIR:STATIC=/home/cartron3/StageXLIM/lib/cJSON
+
+//Value Computed by CMake
+cJSON_SOURCE_DIR:STATIC=/home/cartron3/StageXLIM/lib/cJSON
+
+//Dependencies for the target
+cjson_LIB_DEPENDS:STATIC=general;m;
+
+//Value Computed by CMake
+nlohmann_json_BINARY_DIR:STATIC=/home/cartron3/StageXLIM/extern/nlohmann_json
+
+//The directory containing a CMake configuration file for nlohmann_json.
+nlohmann_json_DIR:PATH=/home/cartron3/StageXLIM/extern/nlohmann_json
+
+//Value Computed by CMake
+nlohmann_json_SOURCE_DIR:STATIC=/home/cartron3/StageXLIM/extern/nlohmann_json
+
+//Dependencies for target
+unity_LIB_DEPENDS:STATIC=
 
 
 ########################
@@ -480,8 +635,40 @@ CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/cartron3/StageXLIM
+//ADVANCED property for variable: CMAKE_INSTALL_BINDIR
+CMAKE_INSTALL_BINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATADIR
+CMAKE_INSTALL_DATADIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATAROOTDIR
+CMAKE_INSTALL_DATAROOTDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DOCDIR
+CMAKE_INSTALL_DOCDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INCLUDEDIR
+CMAKE_INSTALL_INCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INFODIR
+CMAKE_INSTALL_INFODIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBDIR
+CMAKE_INSTALL_LIBDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBEXECDIR
+CMAKE_INSTALL_LIBEXECDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALEDIR
+CMAKE_INSTALL_LOCALEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALSTATEDIR
+CMAKE_INSTALL_LOCALSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_MANDIR
+CMAKE_INSTALL_MANDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_OLDINCLUDEDIR
+CMAKE_INSTALL_OLDINCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_RUNSTATEDIR
+CMAKE_INSTALL_RUNSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SBINDIR
+CMAKE_INSTALL_SBINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SHAREDSTATEDIR
+CMAKE_INSTALL_SHAREDSTATEDIR-ADVANCED:INTERNAL=1
 //Install .so files without execute permission.
 CMAKE_INSTALL_SO_NO_EXE:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SYSCONFDIR
+CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MAKE_PROGRAM
@@ -641,6 +828,64 @@ FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr][/usr/bin/nvcc][/usr/include][/
 FIND_PACKAGE_MESSAGE_DETAILS_HDF5:INTERNAL=[/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5.so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/lib/x86_64-linux-gnu/libsz.so;/usr/lib/x86_64-linux-gnu/libz.so;/usr/lib/x86_64-linux-gnu/libdl.so;/usr/lib/x86_64-linux-gnu/libm.so][/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5_hl.so][cfound components:  C HL ][v1.10.0.1()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
+//Details about finding nlohmann_json
+FIND_PACKAGE_MESSAGE_DETAILS_nlohmann_json:INTERNAL=[/home/cartron3/StageXLIM/extern/nlohmann_json/nlohmann_jsonConfig.cmake][v3.11.2(3.2.0)]
+//Test FLAG_SUPPORTED_Wall
+FLAG_SUPPORTED_Wall:INTERNAL=1
+//Test FLAG_SUPPORTED_Wcastalign
+FLAG_SUPPORTED_Wcastalign:INTERNAL=1
+//Test FLAG_SUPPORTED_Wcastqual
+FLAG_SUPPORTED_Wcastqual:INTERNAL=1
+//Test FLAG_SUPPORTED_Wccompat
+FLAG_SUPPORTED_Wccompat:INTERNAL=1
+//Test FLAG_SUPPORTED_Wcomma
+FLAG_SUPPORTED_Wcomma:INTERNAL=
+//Test FLAG_SUPPORTED_Wconversion
+FLAG_SUPPORTED_Wconversion:INTERNAL=1
+//Test FLAG_SUPPORTED_Wdoublepromotion
+FLAG_SUPPORTED_Wdoublepromotion:INTERNAL=1
+//Test FLAG_SUPPORTED_Werror
+FLAG_SUPPORTED_Werror:INTERNAL=1
+//Test FLAG_SUPPORTED_Wextra
+FLAG_SUPPORTED_Wextra:INTERNAL=1
+//Test FLAG_SUPPORTED_Wformat2
+FLAG_SUPPORTED_Wformat2:INTERNAL=1
+//Test FLAG_SUPPORTED_Wformatoverflow
+FLAG_SUPPORTED_Wformatoverflow:INTERNAL=1
+//Test FLAG_SUPPORTED_Winitself
+FLAG_SUPPORTED_Winitself:INTERNAL=1
+//Test FLAG_SUPPORTED_Wmissingprototypes
+FLAG_SUPPORTED_Wmissingprototypes:INTERNAL=1
+//Test FLAG_SUPPORTED_Wmissingvariabledeclarations
+FLAG_SUPPORTED_Wmissingvariabledeclarations:INTERNAL=
+//Test FLAG_SUPPORTED_Wparentheses
+FLAG_SUPPORTED_Wparentheses:INTERNAL=1
+//Test FLAG_SUPPORTED_Wshadow
+FLAG_SUPPORTED_Wshadow:INTERNAL=1
+//Test FLAG_SUPPORTED_Wstrictoverflow2
+FLAG_SUPPORTED_Wstrictoverflow2:INTERNAL=1
+//Test FLAG_SUPPORTED_Wstrictprototypes
+FLAG_SUPPORTED_Wstrictprototypes:INTERNAL=1
+//Test FLAG_SUPPORTED_Wswitchdefault
+FLAG_SUPPORTED_Wswitchdefault:INTERNAL=1
+//Test FLAG_SUPPORTED_Wswitchenum
+FLAG_SUPPORTED_Wswitchenum:INTERNAL=1
+//Test FLAG_SUPPORTED_Wundef
+FLAG_SUPPORTED_Wundef:INTERNAL=1
+//Test FLAG_SUPPORTED_Wunusedmacros
+FLAG_SUPPORTED_Wunusedmacros:INTERNAL=1
+//Test FLAG_SUPPORTED_Wusedbutmarkedunused
+FLAG_SUPPORTED_Wusedbutmarkedunused:INTERNAL=
+//Test FLAG_SUPPORTED_Wwritestrings
+FLAG_SUPPORTED_Wwritestrings:INTERNAL=1
+//Test FLAG_SUPPORTED_fstackprotectorstrong
+FLAG_SUPPORTED_fstackprotectorstrong:INTERNAL=1
+//Test FLAG_SUPPORTED_fvisibilityhidden
+FLAG_SUPPORTED_fvisibilityhidden:INTERNAL=1
+//Test FLAG_SUPPORTED_pedantic
+FLAG_SUPPORTED_pedantic:INTERNAL=1
+//Test FLAG_SUPPORTED_stdc89
+FLAG_SUPPORTED_stdc89:INTERNAL=1
 //ADVANCED property for variable: HDF5_C_COMPILER_EXECUTABLE
 HDF5_C_COMPILER_EXECUTABLE-ADVANCED:INTERNAL=1
 //Result of TRY_COMPILE
@@ -649,4 +894,7 @@ HDF5_C_COMPILER_NO_INTERROGATE:INTERNAL=FALSE
 HDF5_DIFF_EXECUTABLE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: HDF5_DIR
 HDF5_DIR-ADVANCED:INTERNAL=1
+NLOHMANN_JSON_CONFIG_INSTALL_DIR:INTERNAL=share/cmake/nlohmann_json
+//CMAKE_INSTALL_PREFIX during last run
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
 

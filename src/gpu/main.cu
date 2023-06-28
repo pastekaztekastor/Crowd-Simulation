@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
         
         if (_simParam.pInSim == 0) _simParam.isFinish = 1; 
 
-        progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
+        //progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         //shuffleIndex(&_simParam, _settings);
         
         // MODEL
@@ -42,7 +42,6 @@ int main(int argc, char const *argv[])
             case 0: // MODEL : sage ignorant
                 kernel_model1_GPU<<<_kernelParam.blocks,_kernelParam.threads>>>(_kernelParam, _simParam, _settings);
                 break;
-
             case 1: // MDOEL : Impatient ignorant
             case 2: // MDOEL : Forcée
             case 3: // MDOEL : Conne de vision
@@ -61,14 +60,17 @@ int main(int argc, char const *argv[])
                 break;
         }
         // mapKernelToSim(_kernelParam, &_simParam, _settings);
-        // popKernelToSim(_kernelParam, &_simParam, _settings);
+        popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
         // printPopulationPosition(_simParam, _settings);
         // printMap(_simParam, _settings);
+        exportPopulationPosition2HDF5(_simParam, _settings);
     }
     
-    cout << "solved on " << _simParam.nbFrame << " frames";
+    cout << endl << "solved on " << _simParam.nbFrame << " frames" << endl << endl;
     //printMap(_simParam, _settings);
+
+    
 
     return 0;
 }

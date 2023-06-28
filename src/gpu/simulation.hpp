@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name: main.hpp
+* File Name: simulation.hpp var @VERSION@
 * Author: Mathurin Champemont
 * Created Date: 2023-06-14
 * Last Modified: 2023-06-14
@@ -16,7 +16,9 @@
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
 #include <hdf5.h>
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 using namespace std;
 
 // Define
@@ -99,7 +101,15 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 void progressBar(uint progress, uint total, uint width, uint iteration);
 void shuffleIndex(simParam * _simParam, settings _settings);
 
-void exportPopulationPositionHDF5(simParam _simParam, settings _settings);
+void exportSimParam2Json(simParam _simParam);
+/**
+ * Exporte le contenue de la struct _simParam au format JSON
+ * Le fichier est rangé dans le dossier dont le chemin est indiqué dans _settings.dir
+ * Le nom du dossier est indiqué dans _settings.dirName
+ * Le nom du fichier est la valeur de start.json
+*/
+
+void exportPopulationPosition2HDF5(simParam _simParam, settings _settings);
 /**
  * Exporte les positions de tout les individus dans le tableau _simParam.populationPosition.
  * Il sont rangé dans le dossier dont le chemin est indiqué dans _settings.dir

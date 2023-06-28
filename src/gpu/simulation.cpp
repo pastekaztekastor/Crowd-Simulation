@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 // Include necessary libraries here
-#include "main.hpp"
+#include "simulation.hpp"
 
 // Declare functions and classes here
 
@@ -26,7 +26,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->map                = nullptr;            
     _simParam->exit               = make_uint2(0, 0) ;  
     _simParam->populationIndex    = nullptr;            
-    _simParam->dimension          = make_uint2(0, 0);   
+    _simParam->dimension          = make_uint2(5, 5);   
     _simParam->nbIndividual       = 10;                 
     _simParam->pInSim             = _simParam->nbIndividual;            
     _simParam->isFinish           = 0;     
@@ -37,7 +37,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _settings->exportType         = 0;                  
     _settings->exportFormat       = 0;                  
     _settings->finishCondition    = 0;                  
-    _settings->dir                = "bin/";             
+    _settings->dir                = "exe/bin";             
     _settings->dirName            = "";                 
     _settings->fileName           = "";    
 
@@ -186,6 +186,14 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
         exit(0);
     }
 
+    // Concaténer les valeurs des variables en chaînes de caractères
+    string dimensionXStr = to_string(_simParam->dimension.x);
+    string dimensionYStr = to_string(_simParam->dimension.y);
+    string nbIndividualStr = to_string(_simParam->nbIndividual);
+
+    // Concaténer les chaînes pour former le nom du dossier
+    _settings->dirName = "X" + dimensionXStr + "_Y" + dimensionYStr + "_P" + nbIndividualStr;
+
     // Calloc
     _simParam->populationPosition = ( int2 * ) calloc(_simParam->nbIndividual, sizeof( int2 ));
     _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
@@ -197,18 +205,18 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     
     
     if(_settings->print > 1) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
-        << "\t # simDimX = " << _simParam->dimension.x <<endl
-        << "\t # simDimY = " << _simParam->dimension.y <<endl
-        << "\t # simDimP = " << _simParam->nbIndividual <<endl
-        << "\t # _settings.print = " << _settings->print <<endl
-        << "\t # settings_debugMap = " << _settings->debugMap <<endl
-        << "\t # settings_model = " << _settings->model <<endl
-        << "\t # settings_exportType = " << _settings->exportType <<endl
-        << "\t # settings_exportFormat = " << _settings->exportFormat <<endl
-        << "\t # settings_finishCondition = " << _settings->finishCondition <<endl
-        << "\t # settings_dir = " << _settings->dir <<endl
-        << "\t # settings_dirName = " << _settings->dirName <<endl
-        << "\t # settings_fileName = " << _settings->fileName <<endl <<endl;
+        << "\t # simDimX                    = " << _simParam->dimension.x <<endl
+        << "\t # simDimY                    = " << _simParam->dimension.y <<endl
+        << "\t # simDimP                    = " << _simParam->nbIndividual <<endl
+        << "\t # _settings.print            = " << _settings->print <<endl
+        << "\t # settings_debugMap          = " << _settings->debugMap <<endl
+        << "\t # settings_model             = " << _settings->model <<endl
+        << "\t # settings_exportType        = " << _settings->exportType <<endl
+        << "\t # settings_exportFormat      = " << _settings->exportFormat <<endl
+        << "\t # settings_finishCondition   = " << _settings->finishCondition <<endl
+        << "\t # settings_dir               = " << _settings->dir <<endl
+        << "\t # settings_dirName           = " << _settings->dirName <<endl
+        << "\t # settings_fileName          = " << _settings->fileName <<endl <<endl;
 }
 void initPopulationPositionMap(simParam * _simParam, settings _settings){
     if(_settings.print >2) cout << "\t# initPopulationPositionMap  " << endl;
@@ -293,42 +301,78 @@ void shuffleIndex(simParam * _simParam, settings _settings){
     }
 }
 
-void exportPopulationPositionHDF5(simParam _simParam, settings _settings) {
+/*
+void exportSimParam2Json(simParam _simParam, settings _settings) {
+    // Création du chemin complet du fichier JSON
+    string filePath = _settings.dir + "/" + _settings.dirName + "/start.json";
+
+    // Création d'un objet JSON
+    json jsonData;
+
+    // Ajout des valeurs de la structure _simParam à l'objet JSON
+    jsonData["dimension"]["x"] = _simParam.dimension.x;
+    jsonData["dimension"]["y"] = _simParam.dimension.y;
+    jsonData["nbIndividual"] = _simParam.nbIndividual;
+    jsonData["pInSim"] = _simParam.pInSim;
+    jsonData["isFinish"] = _simParam.isFinish;
+    jsonData["nbFrame"] = _simParam.nbFrame;
+
+    // Conversion de l'objet JSON en une chaîne de caractères
+    string jsonString = jsonData.dump();
+
+    // Création du fichier JSON et écriture des données
+    ofstream file(filePath);
+    if (file.is_open()) {
+        file << jsonString;
+        file.close();
+        cout << "Exportation des paramètres de simulation au format JSON terminée avec succès." << endl;
+    } else {
+        cerr << "Erreur lors de la création du fichier JSON." << endl;
+    }
+}
+*/ 
+
+void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
     // Création du nom du fichier
-    std::string filePath = _settings.dir + "/" + _settings.dirName + "/" + std::to_string(_simParam.nbFrame) + ".h5";
-    
-    // Création du fichier HDF5
-    hid_t file = H5Fcreate(filePath.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-    if (file < 0) {
-        std::cerr << "Erreur lors de la création du fichier HDF5." << std::endl;
-        return;
+    string filePath = _settings.dir + "/" + _settings.dirName + "/";
+    string fileName = filePath + to_string(_simParam.nbFrame) + ".h5";
+    // Vérifier si le répertoire existe et le créer si nécessaire
+    if (mkdir(_settings.dir.c_str(), 0777) != 0) {
+        if (mkdir(filePath.c_str(), 0777) != 0) {
+            // Création du fichier HDF5
+            hid_t file = H5Fcreate(fileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+            if (file < 0) {
+                cerr << "Erreur lors de la création du fichier HDF5." << endl;
+                return;
+            }
+
+            // Création de l'espace de données pour les positions
+            hsize_t dims[2] = {_simParam.nbIndividual, 2}; // Dimensions du tableau de positions
+            hid_t dataspace = H5Screate_simple(2, dims, NULL);
+
+            // Création du dataset pour les positions
+            hid_t dataset = H5Dcreate(file, "populationPosition", H5T_NATIVE_INT, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+            if (dataset < 0) {
+                cerr << "Erreur lors de la création du dataset HDF5." << endl;
+                H5Sclose(dataspace);
+                H5Fclose(file);
+                return;
+            }
+
+            // Écriture des positions dans le dataset
+            herr_t status = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, _simParam.populationPosition);
+            if (status < 0) {
+                cerr << "Erreur lors de l'écriture des positions dans le dataset HDF5." << endl;
+            }
+
+            // Fermeture des ressources HDF5
+            H5Dclose(dataset);
+            H5Sclose(dataspace);
+            H5Fclose(file);
+        }
     }
     
-    // Création de l'espace de données pour les positions
-    hsize_t dims[2] = {_simParam.nbIndividual, 2}; // Dimensions du tableau de positions
-    hid_t dataspace = H5Screate_simple(2, dims, NULL);
-    
-    // Création du dataset pour les positions
-    hid_t dataset = H5Dcreate(file, "populationPosition", H5T_NATIVE_INT, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    if (dataset < 0) {
-        std::cerr << "Erreur lors de la création du dataset HDF5." << std::endl;
-        H5Sclose(dataspace);
-        H5Fclose(file);
-        return;
-    }
-    
-    // Écriture des positions dans le dataset
-    herr_t status = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, _simParam.populationPosition);
-    if (status < 0) {
-        std::cerr << "Erreur lors de l'écriture des positions dans le dataset HDF5." << std::endl;
-    }
-    
-    // Fermeture des ressources HDF5
-    H5Dclose(dataset);
-    H5Sclose(dataspace);
-    H5Fclose(file);
-    
-    std::cout << "Exportation des positions terminée avec succès." << std::endl;
+    if(_settings.print >2) cout << "Exportation des positions terminée avec succès." << endl;
 }
 
 
