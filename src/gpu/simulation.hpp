@@ -25,6 +25,8 @@ using namespace std;
 #define __MAP_EXIT__   -2
 #define __MAP_WALL__   -3
 #define __MAP_HUMAN_QUITE__ make_int2(-1,-1)
+#define __MAX_X_DIM_JPEG__ 1920
+#define __MAX_Y_DIM_JPEG__ 1080
 
 
 // Struct
@@ -106,6 +108,17 @@ void exportPopulationPosition2HDF5(simParam _simParam, settings _settings);
  * Il sont rangé dans le dossier dont le chemin est indiqué dans _settings.dir
  * Le nom du dossier est indiqué dans _settings.dirName
  * Le nom du fichier est la valeur de _simParam.nbFrame
+*/
+void exportFrameJpeg(simParam _simParam, settings _settings);
+/**
+ * Créer un image de taille _simParam.dimension.x et _simParam.dimension.y
+ * Tout les pixels sont noire
+ * le pixel de coordonnée _simParam.exit.x et _simParam.exit.y en vert
+ * pour chaque élément du tableau _simParam.populationPosition mettre le pixel de coordonée _simParam.populationPosition[i].x et _simParam.populationPosition[i].y en blanc
+ *
+ * L'image est rangé dans le dossier dont le chemin est indiqué dans _settings.dir
+ * Le nom du dossier est indiqué dans _settings.dirName
+ * Le nom de l'image est la valeur de _simParam.nbFrame
 */
 
 /*

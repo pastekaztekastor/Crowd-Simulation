@@ -27,12 +27,12 @@ int main(int argc, char const *argv[])
     initKernelParam(&_kernelParam, _simParam, _settings);
     
 
-    while (_simParam.isFinish == 0 && _simParam.nbFrame < pow(_simParam.nbIndividual,2)){
+    while (_simParam.isFinish == 0 && _simParam.nbFrame < _simParam.nbIndividual*2){
         _simParam.nbFrame ++;
         
         //cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
         
-        if (_simParam.pInSim == 0) _simParam.isFinish = 1; 
+        if (_simParam.pInSim <= 1) _simParam.isFinish = 1; 
 
         progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         //shuffleIndex(&_simParam, _settings);
@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
         popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
 
-        exportPopulationPosition2HDF5(_simParam, _settings);
+        exportFrameJpeg(_simParam, _settings);
         // printPopulationPosition(_simParam, _settings);
         // printMap(_simParam, _settings);
     }

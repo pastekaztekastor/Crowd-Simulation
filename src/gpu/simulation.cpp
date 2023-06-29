@@ -186,6 +186,14 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
         exit(0);
     }
 
+    // Concaténer les valeurs des variables en chaînes de caractères
+    string dimensionXStr = to_string(_simParam->dimension.x);
+    string dimensionYStr = to_string(_simParam->dimension.y);
+    string nbIndividualStr = to_string(_simParam->nbIndividual);
+
+    // Concaténer les chaînes pour former le nom du dossier
+    _settings->dirName = "X" + dimensionXStr + "_Y" + dimensionYStr + "_P" + nbIndividualStr;
+
     // Calloc
     _simParam->populationPosition = ( int2 * ) calloc(_simParam->nbIndividual, sizeof( int2 ));
     _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
@@ -335,6 +343,49 @@ void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
     }  
     if(_settings.print >2) cout << "Exportation des positions terminée avec succès." << endl;
 }
+
+void exportFrameJpeg(simParam _simParam, settings _settings) {
+    // cout << "oui oui " << endl;
+    // Créer une image noire de taille _simParam.dimension.x et _simParam.dimension.y
+    // Création du nom du fichier
+    string imagePath = _settings.dir + _settings.dirName + "/";
+    string imageName = imagePath + to_string(_simParam.nbFrame) + ".jpg";
+    // Vérifier si le répertoire existe et le créer si nécessaire
+
+    int sizeFactor = 1;
+    if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__) {
+        int xFactor = __MAX_X_DIM_JPEG__ / _simParam.dimension.x;
+        int yFactor = __MAX_Y_DIM_JPEG__ / _simParam.dimension.y;
+        sizeFactor = (min(xFactor, yFactor));
+    }
+    if (mkdir(_settings.dir.c_str(), 0777) != 0) {
+        if (mkdir(imagePath.c_str(), 0777) != 0) {
+            cv::Mat frame(_simParam.dimension.x * sizeFactor, _simParam.dimension.y * sizeFactor, CV_8UC3, cv::Scalar(0, 0, 0));
+
+            // Dessiner le pixel de sortie en vert
+            cv::Vec3b green(0, 0, 255);
+            cv::Point TL(_simParam.exit.x*sizeFactor, _simParam.exit.y*sizeFactor);
+            cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
+            cv::Rect rectangle(TL, BR);
+            cv::rectangle(frame, rectangle, green, -1);
+
+            // Dessiner les pixels de la population en blanc
+            cv::Vec3b white(255, 255, 255);
+
+            for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
+                cv::Point TL(_simParam.populationPosition[i].x*sizeFactor, _simParam.populationPosition[i].y*sizeFactor);
+                cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
+                cv::Rect rectangle(TL, BR);
+                cv::rectangle(frame, rectangle, white, -1);
+            }
+
+            imagePath = to_string(_simParam.nbFrame) + ".jpg";
+            // cout << imagePath << endl;
+            cv::imwrite(imagePath, frame);
+        }
+    }
+}
+
 
 /*
   ______             
