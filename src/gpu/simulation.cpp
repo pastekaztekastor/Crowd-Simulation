@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 // Include necessary libraries here
-#include "main.hpp"
+#include "simulation.hpp"
 
 // Declare functions and classes here
 
@@ -26,7 +26,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->map                = nullptr;            
     _simParam->exit               = make_uint2(0, 0) ;  
     _simParam->populationIndex    = nullptr;            
-    _simParam->dimension          = make_uint2(0, 0);   
+    _simParam->dimension          = make_uint2(5, 5);   
     _simParam->nbIndividual       = 10;                 
     _simParam->pInSim             = _simParam->nbIndividual;            
     _simParam->isFinish           = 0;     
@@ -293,44 +293,48 @@ void shuffleIndex(simParam * _simParam, settings _settings){
     }
 }
 
-void exportPopulationPositionHDF5(simParam _simParam, settings _settings) {
+void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
     // Création du nom du fichier
-    std::string filePath = _settings.dir + "/" + _settings.dirName + "/" + std::to_string(_simParam.nbFrame) + ".h5";
-    
-    // Création du fichier HDF5
-    hid_t file = H5Fcreate(filePath.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-    if (file < 0) {
-        std::cerr << "Erreur lors de la création du fichier HDF5." << std::endl;
-        return;
-    }
-    
-    // Création de l'espace de données pour les positions
-    hsize_t dims[2] = {_simParam.nbIndividual, 2}; // Dimensions du tableau de positions
-    hid_t dataspace = H5Screate_simple(2, dims, NULL);
-    
-    // Création du dataset pour les positions
-    hid_t dataset = H5Dcreate(file, "populationPosition", H5T_NATIVE_INT, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    if (dataset < 0) {
-        std::cerr << "Erreur lors de la création du dataset HDF5." << std::endl;
-        H5Sclose(dataspace);
-        H5Fclose(file);
-        return;
-    }
-    
-    // Écriture des positions dans le dataset
-    herr_t status = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, _simParam.populationPosition);
-    if (status < 0) {
-        std::cerr << "Erreur lors de l'écriture des positions dans le dataset HDF5." << std::endl;
-    }
-    
-    // Fermeture des ressources HDF5
-    H5Dclose(dataset);
-    H5Sclose(dataspace);
-    H5Fclose(file);
-    
-    std::cout << "Exportation des positions terminée avec succès." << std::endl;
-}
+    cout << "fdp" ;
+    string filePath = _settings.dir + "/" + _settings.dirName + "/";
+    string fileName = filePath + to_string(_simParam.nbFrame) + ".h5";
+    // Vérifier si le répertoire existe et le créer si nécessaire
+    if (mkdir(_settings.dir.c_str(), 0777) != 0) {
+        if (mkdir(filePath.c_str(), 0777) != 0) {
+            // Création du fichier HDF5
+            hid_t file = H5Fcreate(fileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+            if (file < 0) {
+                cerr << "Erreur lors de la création du fichier HDF5." << endl;
+                return;
+            }
 
+            // Création de l'espace de données pour les positions
+            hsize_t dims[2] = {_simParam.nbIndividual, 2}; // Dimensions du tableau de positions
+            hid_t dataspace = H5Screate_simple(2, dims, NULL);
+
+            // Création du dataset pour les positions
+            hid_t dataset = H5Dcreate(file, "populationPosition", H5T_NATIVE_INT, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+            if (dataset < 0) {
+                cerr << "Erreur lors de la création du dataset HDF5." << endl;
+                H5Sclose(dataspace);
+                H5Fclose(file);
+                return;
+            }
+
+            // Écriture des positions dans le dataset
+            herr_t status = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, _simParam.populationPosition);
+            if (status < 0) {
+                cerr << "Erreur lors de l'écriture des positions dans le dataset HDF5." << endl;
+            }
+
+            // Fermeture des ressources HDF5
+            H5Dclose(dataset);
+            H5Sclose(dataspace);
+            H5Fclose(file);
+        }
+    }  
+    if(_settings.print >2) cout << "Exportation des positions terminée avec succès." << endl;
+}
 
 /*
   ______             

@@ -16,13 +16,14 @@
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
 #include <hdf5.h>
+#include <opencv2/opencv.hpp>
 
 using namespace std;
 
 // Define
-#define __MAP_EMPTY__ -1
-#define __MAP_EXIT__ -2
-#define __MAP_WALL__ -3
+#define __MAP_EMPTY__  -1
+#define __MAP_EXIT__   -2
+#define __MAP_WALL__   -3
 #define __MAP_HUMAN_QUITE__ make_int2(-1,-1)
 
 
@@ -99,7 +100,7 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 void progressBar(uint progress, uint total, uint width, uint iteration);
 void shuffleIndex(simParam * _simParam, settings _settings);
 
-void exportPopulationPositionHDF5(simParam _simParam, settings _settings);
+void exportPopulationPosition2HDF5(simParam _simParam, settings _settings);
 /**
  * Exporte les positions de tout les individus dans le tableau _simParam.populationPosition.
  * Il sont rangé dans le dossier dont le chemin est indiqué dans _settings.dir

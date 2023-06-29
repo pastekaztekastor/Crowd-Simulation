@@ -61,13 +61,15 @@ int main(int argc, char const *argv[])
                 break;
         }
         // mapKernelToSim(_kernelParam, &_simParam, _settings);
-        // popKernelToSim(_kernelParam, &_simParam, _settings);
+        popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
+
+        exportPopulationPosition2HDF5(_simParam, _settings);
         // printPopulationPosition(_simParam, _settings);
         // printMap(_simParam, _settings);
     }
     
-    cout << "solved on " << _simParam.nbFrame << " frames";
+    cout << "solved on " << _simParam.nbFrame << " frames" << endl << endl;
     //printMap(_simParam, _settings);
 
     return 0;

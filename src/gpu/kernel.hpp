@@ -9,7 +9,7 @@
 #ifndef __KERNEL_CUH__
 #define __KERNEL_CUH__
 
-#include "main.hpp"
+#include "simulation.hpp"
 #include <cuda_runtime.h>
 
 /*

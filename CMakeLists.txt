@@ -3,7 +3,7 @@ project(GPUSimulation VERSION 0.1.0 LANGUAGES CXX CUDA)
 
 # Spécifier les fichiers source
 set(SOURCES
-    src/gpu/function.cpp
+    src/gpu/simulation.cpp
     src/gpu/kernel.cu
     src/gpu/main.cu
 )
@@ -11,9 +11,13 @@ set(SOURCES
 # Spécifier les fichiers d'en-tête
 set(HEADERS
     src/gpu/kernel.hpp
-    src/gpu/main.hpp
+    src/gpu/simulation.hpp
     src/gpu/utils/commonCUDA.hpp
 )
+
+# Recherchez le package OpenCV
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Spécifier le répertoire de sortie pour l'exécutable
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/exe)
@@ -34,4 +38,6 @@ link_directories(${HDF5_LIBRARY_DIRS})
 add_executable(gpuSimulation ${SOURCES} ${HEADERS})
 
 # Lier les librairies CUDA et HDF5
-target_link_libraries(gpuSimulation ${CUDA_LIBRARIES} ${HDF5_LIBRARIES})
+target_link_libraries(gpuSimulation PRIVATE ${CUDA_LIBRARIES} ${HDF5_LIBRARIES})
+target_link_libraries(gpuSimulation PRIVATE opencv_core opencv_highgui opencv_imgproc)
+target_link_libraries(gpuSimulation PRIVATE ${OpenCV_LIBS})

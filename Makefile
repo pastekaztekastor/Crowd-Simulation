@@ -123,33 +123,6 @@ gpuSimulation/fast:
 	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/build
 .PHONY : gpuSimulation/fast
 
-src/gpu/function.o: src/gpu/function.cpp.o
-
-.PHONY : src/gpu/function.o
-
-# target to build an object file
-src/gpu/function.cpp.o:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.o
-.PHONY : src/gpu/function.cpp.o
-
-src/gpu/function.i: src/gpu/function.cpp.i
-
-.PHONY : src/gpu/function.i
-
-# target to preprocess a source file
-src/gpu/function.cpp.i:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.i
-.PHONY : src/gpu/function.cpp.i
-
-src/gpu/function.s: src/gpu/function.cpp.s
-
-.PHONY : src/gpu/function.s
-
-# target to generate assembly for a file
-src/gpu/function.cpp.s:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/function.cpp.s
-.PHONY : src/gpu/function.cpp.s
-
 src/gpu/kernel.o: src/gpu/kernel.cu.o
 
 .PHONY : src/gpu/kernel.o
@@ -204,6 +177,33 @@ src/gpu/main.cu.s:
 	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.s
 .PHONY : src/gpu/main.cu.s
 
+src/gpu/simulation.o: src/gpu/simulation.cpp.o
+
+.PHONY : src/gpu/simulation.o
+
+# target to build an object file
+src/gpu/simulation.cpp.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/simulation.cpp.o
+.PHONY : src/gpu/simulation.cpp.o
+
+src/gpu/simulation.i: src/gpu/simulation.cpp.i
+
+.PHONY : src/gpu/simulation.i
+
+# target to preprocess a source file
+src/gpu/simulation.cpp.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/simulation.cpp.i
+.PHONY : src/gpu/simulation.cpp.i
+
+src/gpu/simulation.s: src/gpu/simulation.cpp.s
+
+.PHONY : src/gpu/simulation.s
+
+# target to generate assembly for a file
+src/gpu/simulation.cpp.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/simulation.cpp.s
+.PHONY : src/gpu/simulation.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -213,15 +213,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... gpuSimulation"
 	@echo "... edit_cache"
-	@echo "... src/gpu/function.o"
-	@echo "... src/gpu/function.i"
-	@echo "... src/gpu/function.s"
 	@echo "... src/gpu/kernel.o"
 	@echo "... src/gpu/kernel.i"
 	@echo "... src/gpu/kernel.s"
 	@echo "... src/gpu/main.o"
 	@echo "... src/gpu/main.i"
 	@echo "... src/gpu/main.s"
+	@echo "... src/gpu/simulation.o"
+	@echo "... src/gpu/simulation.i"
+	@echo "... src/gpu/simulation.s"
 .PHONY : help
 
 

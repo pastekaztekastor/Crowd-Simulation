@@ -13,6 +13,7 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
   - [Installation](#installation)
     - [Installation de CUDA](#installation-de-cuda)
     - [Installation de HDF5](#installation-de-hdf5)
+    - [OpenCV](#opencv)
   - [Utilisation](#utilisation)
   - [Liste des tâches à effectuer](#liste-des-tâches-à-effectuer)
     - [Organisation](#organisation)
@@ -147,7 +148,6 @@ flowchart TB;
 
 Le rendu final n'est pas une priorité. Nous pourrions générer des fichiers binaires qui seront lus par un programme **Processing** pour produire des images ou des vidéos. Le programme doit être modifiable à l'aide de fichiers de configuration au format JSON. Nous devons également pouvoir récupérer des données de sortie (tableau de fichiers binaires).
 
-
 ## Installation
 
 ### Installation de CUDA
@@ -176,21 +176,75 @@ La bibliothèque HDF5 (Hierarchical Data Format 5) est utilisée pour stocker et
 Pour installer HDF5 sur Ubuntu, vous pouvez suivre les étapes suivantes :
 
 1. Mettez à jour les référentiels de packages en exécutant la commande suivante :
-   ```
+  
+  ```bash
+  sudo apt update
+  ```
+
+2. Installez le package HDF5 en utilisant la commande suivante :
+  
+  ```bash
+  sudo apt install libhdf5-dev
+  ```
+
+3. Une fois l'installation terminée, vous pouvez vérifier la version installée en exécutant la commande suivante :
+  
+  ```bash
+  h5cc -showconfig
+  ```
+
+   Cette commande affichera les informations sur la bibliothèque HDF5 installée, y compris sa version. La version minimale requise est la 1.10.x.
+
+### OpenCV
+
+Pour installer OpenCV sur Ubuntu, vous pouvez suivre les étapes suivantes :
+
+1. Mettre à jour les paquets existants :
+
+   ```bash
    sudo apt update
    ```
 
-2. Installez le package HDF5 en utilisant la commande suivante :
-   ```
-   sudo apt install libhdf5-dev
+2. Installer les dépendances nécessaires à OpenCV :
+
+   ```bash
+   sudo apt install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
    ```
 
-3. Une fois l'installation terminée, vous pouvez vérifier la version installée en exécutant la commande suivante :
-   ```
-   h5cc -showconfig
+3. Installer les bibliothèques et les outils de développement spécifiques à l'image et à la vidéo :
+
+   ```bash
+   sudo apt install libjpeg-dev libpng-dev libtiff-dev libv4l-dev libxvidcore-dev libx264-dev libatlas-base-dev
    ```
 
-   Cette commande affichera les informations sur la bibliothèque HDF5 installée, y compris sa version. La version minimale requise est la 1.10.x.
+4. Accéder au répertoire OpenCV du projet:
+
+5. Créer un répertoire de construction :
+
+   ```bash
+   mkdir build
+   cd build
+   ```
+
+6. Générer les fichiers de configuration CMake :
+
+   ```bash
+   cmake ..
+   ```
+
+7. Compiler les sources :
+
+   ```bash
+   make -j$(nproc)
+   ```
+
+8. Installer OpenCV sur votre système :
+
+   ```bash
+   sudo make install
+   ```
+
+Une fois ces étapes terminées, OpenCV sera installé sur votre système Ubuntu. Vous pouvez maintenant utiliser la bibliothèque OpenCV dans vos projets C++ en incluant les en-têtes nécessaires et en liant les bibliothèques lors de la compilation.
 
 ## Utilisation
 
