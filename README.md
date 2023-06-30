@@ -176,18 +176,18 @@ Pour installer HDF5 sur Ubuntu, vous pouvez suivre les étapes suivantes :
 
 1. Mettez à jour les référentiels de packages en exécutant la commande suivante :
   
-  ```bash
-  sudo apt update
-  ```
+   ```bash
+   sudo apt update
+   ```
 
 2. Installez le package HDF5 en utilisant la commande suivante :
-  
-  ```bash
-  sudo apt install libhdf5-dev
-  ```
+
+   ```bash
+   sudo apt install libhdf5-dev
+   ```
 
 3. Une fois l'installation terminée, vous pouvez vérifier la version installée en exécutant la commande suivante :
-  
+
   ```bash
   h5cc -showconfig
   ```
@@ -250,22 +250,18 @@ Attention il faut le codec gif :
 1. Ouvrez un terminal.
 
 2. Mettez à jour les packages disponibles en exécutant la commande suivante :
+
    ```bash
    sudo apt update
    ```
 
 3. Installez le paquet `ffmpeg` qui contient le codec nécessaire pour le format GIF :
+
    ```bash
    sudo apt install ffmpeg
    ```
 
-4. Confirmez l'installation en saisissant "Y" ou "Yes" si cela vous est demandé.
-
 Une fois l'installation terminée, le codec GIF devrait être installé sur votre système Ubuntu, et OpenCV devrait être capable d'encoder les fichiers GIF correctement.
-
-N'hésitez pas à redémarrer votre application OpenCV après avoir installé le codec pour vous assurer que les modifications sont prises en compte.
-
-Notez que l'installation du codec peut nécessiter des privilèges d'administration (sudo). Assurez-vous d'avoir les droits nécessaires ou demandez l'assistance d'un administrateur système si nécessaire.
 
 ## Utilisation
 
