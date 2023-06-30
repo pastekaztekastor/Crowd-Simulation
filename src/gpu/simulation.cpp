@@ -250,6 +250,15 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
 
     if(_settings.print >2)cout << "\tOK " << endl ;
 }
+void initGif(simParam _simParam, gif * _gif, settings _settings){
+    _gif->outputFilename  = "animation" + _settings.dirName + ".gif";
+    _gif->sizeFactor      = 1;
+    if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__){ 
+        _gif->sizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
+    }
+    _gif->imagePath       = _settings.dir + _settings.dirName + "/";
+    cout << "La structur GIF a été initialisé avec succes." << endl;
+}
 
 /*
    _____      _   _            
@@ -301,7 +310,7 @@ void shuffleIndex(simParam * _simParam, settings _settings){
     }
 }
 
-void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
+void exportPopPos2HDF5(simParam _simParam, settings _settings) {
     // Création du nom du fichier
     cout << "fdp" ;
     string filePath = _settings.dir + "/" + _settings.dirName + "/";
@@ -344,48 +353,75 @@ void exportPopulationPosition2HDF5(simParam _simParam, settings _settings) {
     if(_settings.print >2) cout << "Exportation des positions terminée avec succès." << endl;
 }
 
-void exportFrameJpeg(simParam _simParam, settings _settings) {
-    // cout << "oui oui " << endl;
-    // Créer une image noire de taille _simParam.dimension.x et _simParam.dimension.y
+void exportFrameJpeg(simParam _simParam, gif _gif, settings _settings) {
     // Création du nom du fichier
-    string imagePath = _settings.dir + _settings.dirName + "/";
-    string imageName = imagePath + to_string(_simParam.nbFrame) + ".jpg";
-    // Vérifier si le répertoire existe et le créer si nécessaire
 
-    int sizeFactor = 1;
-    if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__) {
-        int xFactor = __MAX_X_DIM_JPEG__ / _simParam.dimension.x;
-        int yFactor = __MAX_Y_DIM_JPEG__ / _simParam.dimension.y;
-        sizeFactor = (min(xFactor, yFactor));
-    }
-    if (mkdir(_settings.dir.c_str(), 0777) != 0) {
-        if (mkdir(imagePath.c_str(), 0777) != 0) {
-            cv::Mat frame(_simParam.dimension.x * sizeFactor, _simParam.dimension.y * sizeFactor, CV_8UC3, cv::Scalar(0, 0, 0));
+    // Vérifier si le répertoire existe et le créer si nécessaire
+    //if (mkdir(_settings.dir.c_str(), 0777) != 0) {
+    //    if (mkdir(imagePath.c_str(), 0777) != 0) {
+            cv::Mat frame(_simParam.dimension.x * _gif.sizeFactor, _simParam.dimension.y * _gif.sizeFactor, CV_8UC3, cv::Scalar(0, 0, 0));
 
             // Dessiner le pixel de sortie en vert
-            cv::Vec3b green(0, 0, 255);
-            cv::Point TL(_simParam.exit.x*sizeFactor, _simParam.exit.y*sizeFactor);
-            cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
+            cv::Point TL(_simParam.exit.x*_gif.sizeFactor, _simParam.exit.y*_gif.sizeFactor);
+            cv::Point BR(TL.x+_gif.sizeFactor, TL.y+_gif.sizeFactor);
             cv::Rect rectangle(TL, BR);
-            cv::rectangle(frame, rectangle, green, -1);
+            cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
 
             // Dessiner les pixels de la population en blanc
-            cv::Vec3b white(255, 255, 255);
-
             for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
-                cv::Point TL(_simParam.populationPosition[i].x*sizeFactor, _simParam.populationPosition[i].y*sizeFactor);
-                cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
+                cv::Point TL(_simParam.populationPosition[i].x*_gif.sizeFactor, _simParam.populationPosition[i].y*_gif.sizeFactor);
+                cv::Point BR(TL.x+_gif.sizeFactor, TL.y+_gif.sizeFactor);
                 cv::Rect rectangle(TL, BR);
-                cv::rectangle(frame, rectangle, white, -1);
+                cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
             }
 
-            imagePath = to_string(_simParam.nbFrame) + ".jpg";
+            string tmp = to_string(_simParam.nbFrame) + ".jpg";
             // cout << imagePath << endl;
-            cv::imwrite(imagePath, frame);
-        }
+            cv::imwrite(tmp, frame);
+    //    }
+    //}
+}
+/*
+
+void exportFrameGif(simParam _simParam, gif * _gif, settings _settings){
+    cv::Mat frame(_simParam.dimension.x * _gif->sizeFactor, _simParam.dimension.y * _gif->sizeFactor, CV_8UC3, __COLOR_BLACK__);
+
+    // Dessiner le pixel de sortie en vert
+    cv::Point TL(_simParam.exit.x*sizeFactor, _simParam.exit.y*sizeFactor);
+    cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
+    cv::Rect rectangle(TL, BR);
+    cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
+
+    // Dessiner les pixels de la population en blanc
+    for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
+        cv::Point TL(_simParam.populationPosition[i].x*sizeFactor, _simParam.populationPosition[i].y*sizeFactor);
+        cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
+        cv::Rect rectangle(TL, BR);
+        cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
     }
+    _gif->frames.push_back(frame);
 }
 
+void saveFrameGif(simParam _simParam, gif _gif, settings _settings){
+    // Créer un objet VideoWriter pour écrire le fichier GIF
+    cv::VideoWriter writer(_gif.outputFilename, cv::VideoWriter::fourcc('G', 'I', 'F', 'S'), __GIF_FPS__, _gif.frames[0].size());
+
+    // Vérifier si le VideoWriter a été correctement initialisé
+    if (!writer.isOpened()) {
+        cout << "Erreur lors de l'ouverture du fichier GIF de sortie" << endl;
+        return -1;
+    }
+
+    // Écrire chaque image dans le fichier GIF
+    for (const cv::Mat& frame : _gif.frames) {
+        writer.write(frame);
+    }
+
+    // Fermer le fichier GIF
+    writer.release();
+    cout << "Le fichier GIF a été créé avec succès." << endl;
+}
+*/
 
 /*
   ______             

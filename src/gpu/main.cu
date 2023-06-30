@@ -12,17 +12,19 @@
 
 int main(int argc, char const *argv[])
 {
-    simParam _simParam;
-    settings _settings;
-    kernelParam _kernelParam;
+    simParam        _simParam;
+    settings        _settings;
+    kernelParam     _kernelParam;
+    gif             _gif;
 
     if( _settings.print > 2 )cout  << " ### Init simulation ###" << endl;
     srand(time(NULL));
     initSimSettings(argc, argv, &_simParam, &_settings);
     initPopulationPositionMap(&_simParam, _settings);
+    initGif(_simParam, &_gif, _settings);
     
-    printMap(_simParam, _settings);
-    printPopulationPosition(_simParam, _settings);
+    // printMap(_simParam, _settings);
+    // printPopulationPosition(_simParam, _settings);
    
     initKernelParam(&_kernelParam, _simParam, _settings);
     
@@ -64,7 +66,7 @@ int main(int argc, char const *argv[])
         popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
 
-        exportFrameJpeg(_simParam, _settings);
+        exportFrameJpeg(_simParam, _gif, _settings);
         // printPopulationPosition(_simParam, _settings);
         // printMap(_simParam, _settings);
     }

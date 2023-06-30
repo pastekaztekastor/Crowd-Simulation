@@ -21,12 +21,21 @@
 using namespace std;
 
 // Define
-#define __MAP_EMPTY__  -1
-#define __MAP_EXIT__   -2
-#define __MAP_WALL__   -3
-#define __MAP_HUMAN_QUITE__ make_int2(-1,-1)
-#define __MAX_X_DIM_JPEG__ 1920
-#define __MAX_Y_DIM_JPEG__ 1080
+#define __MAP_EMPTY__         -1
+#define __MAP_EXIT__          -2
+#define __MAP_WALL__          -3
+#define __MAP_HUMAN_QUITE__   make_int2(-1,-1)
+
+#define __MAX_X_DIM_JPEG__    1920
+#define __MAX_Y_DIM_JPEG__    1080
+
+#define __COLOR_WHITE__       cv::Scalar(255, 255, 255)
+#define __COLOR_RED__         cv::Scalar(255, 0, 0)
+#define __COLOR_GREEN__       cv::Scalar(0, 255, 0)
+#define __COLOR_BLUE__        cv::Scalar(0, 0, 255)
+#define __COLOR_BLACK__       cv::Scalar(0, 0, 0)
+
+#define __GIF_FPS__           50
 
 
 // Struct
@@ -64,6 +73,14 @@ typedef struct {
     dim3        threads                 ;
 } kernelParam;
 
+typedef struct {
+    vector<cv::Mat>   frames          ;
+    string            outputFilename  ; // outputFilename = "animation.gif";
+    int               sizeFactor      ; // if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__) min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
+    string            imagePath       ; // imagePath = _settings.dir + _settings.dirName + "/";
+} gif;
+
+
 /*
   _____       _ _ 
  |_   _|     (_) |  
@@ -73,10 +90,10 @@ typedef struct {
  |_____|_| |_|_|\__|
 
 */
-// Declare functions and classes here
-// Launch simulation
 void initSimSettings            ( int argc, char const *argv[], simParam * _simParam, settings * _settings);
 void initPopulationPositionMap  (simParam * _simParam, settings _settings);
+void initGif                    (simParam _simParam, gif * _gif, settings _settings);
+
 /*
    _____      _   _            
   / ____|    | | | |           
@@ -86,7 +103,6 @@ void initPopulationPositionMap  (simParam * _simParam, settings _settings);
  |_____/ \___|\__|\__\___|_|   
                                
 */
-
 void setSimExit                 (simParam * _simParam, settings _settings);
 void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 
@@ -99,17 +115,20 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
  |_____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|
                                                      
 */
-void progressBar(uint progress, uint total, uint width, uint iteration);
-void shuffleIndex(simParam * _simParam, settings _settings);
+void progressBar                (uint progress, uint total, uint width, uint iteration);
+void shuffleIndex               (simParam * _simParam, settings _settings); // NOT USED BUT CODED
 
-void exportPopulationPosition2HDF5(simParam _simParam, settings _settings);
+void exportFrameGif             (simParam _simParam, gif * _gif, settings _settings);
+void saveGif                    (simParam _simParam, settings _settings);
+
+void exportPopPos2HDF5          (simParam _simParam, settings _settings);
 /**
  * Exporte les positions de tout les individus dans le tableau _simParam.populationPosition.
  * Il sont rangé dans le dossier dont le chemin est indiqué dans _settings.dir
  * Le nom du dossier est indiqué dans _settings.dirName
  * Le nom du fichier est la valeur de _simParam.nbFrame
 */
-void exportFrameJpeg(simParam _simParam, settings _settings);
+void exportFrameJpeg            (simParam _simParam, gif _gif, settings _settings);
 /**
  * Créer un image de taille _simParam.dimension.x et _simParam.dimension.y
  * Tout les pixels sont noire
@@ -130,7 +149,7 @@ void exportFrameJpeg(simParam _simParam, settings _settings);
  |_|  |_|  \___|\___|
                      
 */
-void freeSimParam (simParam * _simParam, settings _settings);
+void freeSimParam           (simParam * _simParam, settings _settings);
 
 /*
   _    _ _   _ _     
@@ -144,6 +163,6 @@ void freeSimParam (simParam * _simParam, settings _settings);
 void printMap               (simParam _simParam, settings _settings);
 void printPopulationPosition(simParam _simParam, settings _settings);
 
-uint xPosof(uint value, uint dimX, uint dimY);
-uint yPosof(uint value, uint dimX, uint dimY);
-uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY);
+uint xPosof                 (uint value, uint dimX, uint dimY);
+uint yPosof                 (uint value, uint dimX, uint dimY);
+uint valueOfxy              (uint xPos, uint yPos, uint dimX, uint dimY);

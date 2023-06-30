@@ -131,3 +131,20 @@ Actuellement la seule utilitée du programme est de faire des additions parralé
 - mettre dans le tab map les index our le humains, -1 vide, -2 sortie.
 - Teste deplacement par atomic résultat
 - restructurer les kernel avec un init, launch, clear
+
+## Gestion des exports
+
+Il y a deux types d'exportation possibles : des images/animations et un tableau d'évolution.
+
+Pour le tableau d'évolution, il s'agit d'un tableau en 3D :
+
+- L'axe x représente les individus.
+- L'axe y représente les caractéristiques de chaque individu, telles que les coordonnées x et y ainsi que le temps d'attente.
+- L'axe z représente chaque frame, et toutes les frames doivent être incluses dans le tableau.
+
+Pour l'exportation vidéo :
+
+- Tout d'abord, un fichier d'export est créé.
+- Ensuite, le nombre de frames à inclure dans la vidéo est choisi (par exemple, 1 sur x frames).
+- Pour les frames sélectionnées, une image du gif est capturée.
+- Enfin, le gif est enregistré en tant que fichier de sortie.

@@ -17,7 +17,6 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
   - [Utilisation](#utilisation)
   - [Liste des tâches à effectuer](#liste-des-tâches-à-effectuer)
     - [Organisation](#organisation)
-    - [Programmation](#programmation)
 
 ## Fichier Utiles
 
@@ -260,15 +259,11 @@ Documenté dans les dossier :
 - [x] Réalisation du fichier README.md
 - [x] Explication du projet
 - [x] Refaire le fichier  [`gitignore`](.gitignore) de manière approp
-- [ ] Pas néssécaire de faire un choix de la position des individus.
 - [x] Créer un fichier Makefile.
-
-### Programmation
-
-- [x] Modéliser le problème
-- [x] Version CPU
-- [x] Documentation de la CPU
-- [ ] Benchmark de la CPU
-- [x] Version GPU
-- [ ] Documentation de la GPU
-- [ ] Benchmark de la GPU
+- [ ] finir les export au propre (image)
+- [ ] liste d'attente de chaque individu
+- [ ] gestion des murs
+- [ ] carte des couts
+- [ ] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)
+- [ ] parsseur d'images pour la création d'une map
+- [ ] version "mac" CPU
