@@ -15,27 +15,28 @@ int main(int argc, char const *argv[])
     simParam        _simParam;
     settings        _settings;
     kernelParam     _kernelParam;
-    gif             _gif;
+    exportData      _exportData;
 
-    if( _settings.print > 2 )cout  << " ### Init simulation ###" << endl;
+    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Init simulation ###" << endl;
     srand(time(NULL));
     initSimSettings(argc, argv, &_simParam, &_settings);
     initPopulationPositionMap(&_simParam, _settings);
-    initGif(_simParam, &_gif, _settings);
+    initExportData(_simParam, &_exportData, _settings);
     
     // printMap(_simParam, _settings);
     // printPopulationPosition(_simParam, _settings);
    
     initKernelParam(&_kernelParam, _simParam, _settings);
     
-
+    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Launch simulation ###" << endl;
     while (_simParam.isFinish == 0 && _simParam.nbFrame < _simParam.nbIndividual*2){
         _simParam.nbFrame ++;
         
-        //cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
+        if( _settings.print >= __DEBUG_PRINT_DEBUG__ )cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
         
         if (_simParam.pInSim <= 1) _simParam.isFinish = 1; 
 
+        //if(_settings.print <= __DEBUG_PRINT_ALL__) progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         //shuffleIndex(&_simParam, _settings);
         
@@ -44,7 +45,6 @@ int main(int argc, char const *argv[])
             case 0: // MODEL : sage ignorant
                 kernel_model1_GPU<<<_kernelParam.blocks,_kernelParam.threads>>>(_kernelParam, _simParam, _settings);
                 break;
-
             case 1: // MDOEL : Impatient ignorant
             case 2: // MDOEL : Forcée
             case 3: // MDOEL : Conne de vision
@@ -53,8 +53,8 @@ int main(int argc, char const *argv[])
             default:
                 break;
         }
-        // EXPORT 
-        switch (_settings.exportType){
+        // exportData 
+        switch (_settings.exportDataType){
             case 1:
                 // TO DO  
                 break;
@@ -62,17 +62,19 @@ int main(int argc, char const *argv[])
             default:
                 break;
         }
-        // mapKernelToSim(_kernelParam, &_simParam, _settings);
         popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
-
-        exportFrameJpeg(_simParam, _gif, _settings);
-        // printPopulationPosition(_simParam, _settings);
-        // printMap(_simParam, _settings);
+        exportDataFrame(_simParam, &_exportData, _settings);
     }
     
-    cout << "solved on " << _simParam.nbFrame << " frames" << endl << endl;
-    //printMap(_simParam, _settings);
+        
+    if( _settings.print >= __DEBUG_PRINT_ALL__ )cout << endl<< "solved on " << _simParam.nbFrame << " Frames" << endl << endl;
+    
+    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Export simulation ###" << endl;
+    saveExportData(_simParam, _exportData, _settings);
+    
+    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Free memory ###" << endl;
+    // TO DO 
 
     return 0;
 }

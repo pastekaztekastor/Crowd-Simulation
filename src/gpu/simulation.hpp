@@ -26,6 +26,15 @@ using namespace std;
 #define __MAP_WALL__          -3
 #define __MAP_HUMAN_QUITE__   make_int2(-1,-1)
 
+#define __EXPORT_TYPE_GIF__   0    
+#define __EXPORT_TYPE_VALUE__ 1    
+#define __EXPORT_TYPE_ALL__   2 
+
+#define __DEBUG_PRINT_NONE__  0 
+#define __DEBUG_PRINT_STEP__  1 
+#define __DEBUG_PRINT_ALL__   2 
+#define __DEBUG_PRINT_DEBUG__ 3 
+
 #define __MAX_X_DIM_JPEG__    1920
 #define __MAX_Y_DIM_JPEG__    1080
 
@@ -40,7 +49,7 @@ using namespace std;
 
 // Struct
 typedef struct {
-    int2  * populationPosition          ; // Position table of all the individuals in the simulation [[x,y],[x,y],...]
+    float3* populationPosition          ; // Position table of all the individuals in the simulation [[x,y,att],[x,y,att],...]
     uint  * cost                        ; //
     int   * map                         ; // 2D map composed of the uint 0: empty, 1 humain, 2 wall, 3 exit on 1 line
     uint2   exit                        ; // [x,y] coordinate of simulation output
@@ -56,10 +65,9 @@ typedef struct {
     uint            print               ; // For display the debug [lvl to print]
     uint            debugMap            ; // For display map
     uint            model               ; //
-    uint            exportType          ; //
-    uint            exportFormat        ; //
-    uint            finishCondition     ; //
-    string          dir                 ; // For chose the directory to exporte bin files
+    uint            exportDataType      ; //
+    uint            exportDataFormat    ; //
+    string          dir                 ; // For chose the directory to exportDatae bin files
     string          dirName             ; //
     string          fileName            ; //
 } settings;
@@ -74,11 +82,13 @@ typedef struct {
 } kernelParam;
 
 typedef struct {
-    vector<cv::Mat>   frames          ;
-    string            outputFilename  ; // outputFilename = "animation.gif";
-    int               sizeFactor      ; // if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__) min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
-    string            imagePath       ; // imagePath = _settings.dir + _settings.dirName + "/";
-} gif;
+    vector<cv::Mat>   gifFrames          ;
+    string            gifOutputFilename  ;
+    int               gifSizeFactor      ;
+    string            gifPath            ; 
+    int               gifRatioFrame      ;
+    
+} exportData;
 
 
 /*
@@ -92,7 +102,7 @@ typedef struct {
 */
 void initSimSettings            ( int argc, char const *argv[], simParam * _simParam, settings * _settings);
 void initPopulationPositionMap  (simParam * _simParam, settings _settings);
-void initGif                    (simParam _simParam, gif * _gif, settings _settings);
+void initExportData                 (simParam _simParam, exportData * _exportData, settings _settings);
 
 /*
    _____      _   _            
@@ -118,27 +128,8 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 void progressBar                (uint progress, uint total, uint width, uint iteration);
 void shuffleIndex               (simParam * _simParam, settings _settings); // NOT USED BUT CODED
 
-void exportFrameGif             (simParam _simParam, gif * _gif, settings _settings);
-void saveGif                    (simParam _simParam, settings _settings);
-
-void exportPopPos2HDF5          (simParam _simParam, settings _settings);
-/**
- * Exporte les positions de tout les individus dans le tableau _simParam.populationPosition.
- * Il sont rangé dans le dossier dont le chemin est indiqué dans _settings.dir
- * Le nom du dossier est indiqué dans _settings.dirName
- * Le nom du fichier est la valeur de _simParam.nbFrame
-*/
-void exportFrameJpeg            (simParam _simParam, gif _gif, settings _settings);
-/**
- * Créer un image de taille _simParam.dimension.x et _simParam.dimension.y
- * Tout les pixels sont noire
- * le pixel de coordonnée _simParam.exit.x et _simParam.exit.y en vert
- * pour chaque élément du tableau _simParam.populationPosition mettre le pixel de coordonée _simParam.populationPosition[i].x et _simParam.populationPosition[i].y en blanc
- *
- * L'image est rangé dans le dossier dont le chemin est indiqué dans _settings.dir
- * Le nom du dossier est indiqué dans _settings.dirName
- * Le nom de l'image est la valeur de _simParam.nbFrame
-*/
+void exportDataFrame            (simParam _simParam, exportData * _exportData, settings _settings);
+void saveExportData             (simParam _simParam, exportData _exportData, settings _settings);
 
 /*
   ______             
@@ -149,7 +140,7 @@ void exportFrameJpeg            (simParam _simParam, gif _gif, settings _setting
  |_|  |_|  \___|\___|
                      
 */
-void freeSimParam           (simParam * _simParam, settings _settings);
+void freeSimParam                 (simParam * _simParam, settings _settings);
 
 /*
   _    _ _   _ _     
@@ -160,9 +151,9 @@ void freeSimParam           (simParam * _simParam, settings _settings);
   \____/ \__|_|_|___/
                      
 */
-void printMap               (simParam _simParam, settings _settings);
-void printPopulationPosition(simParam _simParam, settings _settings);
+void printMap                     (simParam _simParam, settings _settings);
+void printPopulationPosition      (simParam _simParam, settings _settings);
 
-uint xPosof                 (uint value, uint dimX, uint dimY);
-uint yPosof                 (uint value, uint dimX, uint dimY);
-uint valueOfxy              (uint xPos, uint yPos, uint dimX, uint dimY);
+uint xPosof                       (uint value, uint dimX, uint dimY);
+uint yPosof                       (uint value, uint dimX, uint dimY);
+uint valueOfxy                    (uint xPos, uint yPos, uint dimX, uint dimY);

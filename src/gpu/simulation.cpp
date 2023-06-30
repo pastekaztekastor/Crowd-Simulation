@@ -30,13 +30,11 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->nbIndividual       = 10;                 
     _simParam->pInSim             = _simParam->nbIndividual;            
     _simParam->isFinish           = 0;     
-    _simParam->nbFrame            = 0;             
-    _settings->print              = 2;                  
-    _settings->debugMap           = 0;                  
+    _simParam->nbFrame            = 0;   
+
+    _settings->print              = __DEBUG_PRINT_ALL__;  
     _settings->model              = 0;                  
-    _settings->exportType         = 0;                  
-    _settings->exportFormat       = 0;                  
-    _settings->finishCondition    = 0;                  
+    _settings->exportDataType     = __EXPORT_TYPE_GIF__;
     _settings->dir                = "bin/";             
     _settings->dirName            = "";                 
     _settings->fileName           = "";    
@@ -50,12 +48,11 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 printf("  -x        : sets the dimension in x of the simulation\n");
                 printf("  -y        : same but for y dimension\n");
                 printf("  -p        : number of individuals in the simulation\n");
-                printf("  -debug    : _settings.print           param [val] default:'normal'\n");
-                printf("              - 'off' : print nothing\n");
-                printf("              - 'time' : print only time execution\n");
-                printf("              - 'normal' : print time execution and simlulation progression\n");
-                printf("              - 'all' : print all\n");
-                printf("  -debugMap : settings_debugMap        param ['on'/'off'] default:'off'\n");
+                printf("  -debug    : _settings.print           param [val] default:'step'\n");
+                printf("              - 'none' : print nothing\n");
+                printf("              - 'step' : print only time execution\n");
+                printf("              - 'all' : print time execution and simlulation progression\n");
+                printf("              - 'debug' : print all\n");
                 printf("  -model    : settings_model           param [num] default:0\n");
                 printf("              - 0 : Acctuel\n");
                 printf("              - 1 : Rng\n");
@@ -65,19 +62,16 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 printf("              - 5 : Cone de vision\n");
                 printf("              - 6 : Meilleur cout\n");
                 printf("              - 7 : Meilleur cout & déplacement forcé\n");
-                printf("  -exptT    : settings_exportType      param ['type'] default:'txt'\n");
-                printf("              - 'txt', 'jpeg', 'bin', ...\n");
-                printf("  -exptF    : settings_exportFormat    param ['type'] default:'m'\n");
-                printf("              - 'm' : export map\n");
-                printf("              - 'p' : export position [ONLY 'txt' OR 'bin' exptT]\n");
-                printf("              - 'c' : export congestion\n");
-                printf("  -fCon     : settings_finishCondition param ['fix'/'empty'] default:empty\n");
+                printf("  -exptT    : settings_exportDataType      param ['type'] default:'gif'\n");
+                printf("              - gif\n");
+                printf("              - value\n");
+                printf("              - all\n");
                 printf("  -dir      : settings_dir             param ['dir'] default:'bin/'\n");
-                printf("              - Chose a custom directory path to export\n");
+                printf("              - Chose a custom directory path to exportData\n");
                 printf("  -dirName  : settings_dirName         param ['name'] default:'X-Y-P'\n");
-                printf("              - Chose a custom directory name to export\n");
+                printf("              - Chose a custom directory name to exportData\n");
                 printf("  -fileName : settings_fileName        param ['string'] default:''\n");
-                printf("              - Chose a custom file name to export\n");
+                printf("              - Chose a custom file name to exportData\n");
                 printf("  -help -h : help (if so...)\n");
                 exit(0);
             } 
@@ -92,17 +86,17 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 _simParam->pInSim  = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-debug") == 0) {
-                if (strcmp(argv[i+1], "off") == 0) {
-                    _settings->print = 0;
+                if (strcmp(argv[i+1], "none") == 0) {
+                    _settings->print = __DEBUG_PRINT_NONE__;
                 }
-                else if (strcmp(argv[i+1], "time") == 0) {
-                    _settings->print = 10;
-                }
-                else if (strcmp(argv[i+1], "normal") == 0) {
-                    _settings->print = 20;
+                else if (strcmp(argv[i+1], "step") == 0) {
+                    _settings->print = __DEBUG_PRINT_STEP__;
                 }
                 else if (strcmp(argv[i+1], "all") == 0) {
-                    _settings->print = 30;
+                    _settings->print = __DEBUG_PRINT_ALL__;
+                }
+                else if (strcmp(argv[i+1], "debug") == 0) {
+                    _settings->print = __DEBUG_PRINT_DEBUG__;
                 }
                 else {
                     printf("Unrecognized argument for -debug param\n");
@@ -125,44 +119,17 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 _settings->model = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-exptT") == 0) {
-                if (strcmp(argv[i+1], "txt") == 0) {
-                    _settings->exportType = 0;
+                if (strcmp(argv[i+1], "gif") == 0) {
+                    _settings->exportDataType = __EXPORT_TYPE_GIF__;
                 }
-                else if (strcmp(argv[i+1], "bin") == 0) {
-                    _settings->exportType = 1;
+                else if (strcmp(argv[i+1], "value") == 0) {
+                    _settings->exportDataType = __EXPORT_TYPE_VALUE__;
                 }
-                else if (strcmp(argv[i+1], "jpeg") == 0) {
-                    _settings->exportType = 2;
+                else if (strcmp(argv[i+1], "all") == 0) {
+                    _settings->exportDataType = __EXPORT_TYPE_ALL__;
                 }
                 else {
                     printf("Unrecognized argument for -exptT param\n");
-                    exit(0);
-                }
-            }
-            else if (strcmp(argv[i], "-exptF") == 0) {
-                if (strcmp(argv[i+1], "m") == 0) {
-                    _settings->exportFormat = 0;
-                }
-                else if (strcmp(argv[i+1], "p") == 0) {
-                    _settings->exportFormat = 1;
-                }
-                else if (strcmp(argv[i+1], "c") == 0) {
-                    _settings->exportFormat = 2;
-                }
-                else {
-                    printf("Unrecognized argument for -exptF param\n");
-                    exit(0);
-                }
-            }
-            else if (strcmp(argv[i], "-fCon") == 0) {
-                if (strcmp(argv[i+1], "fix") == 0) {
-                    _settings->finishCondition = 0;
-                }
-                else if (strcmp(argv[i+1], "empty") == 0) {
-                    _settings->finishCondition = 1;
-                }
-                else {
-                    printf("Unrecognized argument for -fCon param\n");
                     exit(0);
                 }
             }
@@ -186,6 +153,9 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
         exit(0);
     }
 
+    // Regarde si la population n'entraine pas trop de frame
+    // TO DO
+
     // Concaténer les valeurs des variables en chaînes de caractères
     string dimensionXStr = to_string(_simParam->dimension.x);
     string dimensionYStr = to_string(_simParam->dimension.y);
@@ -195,7 +165,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _settings->dirName = "X" + dimensionXStr + "_Y" + dimensionYStr + "_P" + nbIndividualStr;
 
     // Calloc
-    _simParam->populationPosition = ( int2 * ) calloc(_simParam->nbIndividual, sizeof( int2 ));
+    _simParam->populationPosition = ( float3 * ) calloc(_simParam->nbIndividual, sizeof( float3 ));
     _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
         _simParam->map[i] = __MAP_EMPTY__ ; // -1 for empty 
@@ -204,22 +174,20 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->exit = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
     
-    if(_settings->print > 1) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
+    if(_settings->print >= __DEBUG_PRINT_ALL__) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
         << "\t # simDimX = " << _simParam->dimension.x <<endl
         << "\t # simDimY = " << _simParam->dimension.y <<endl
         << "\t # simDimP = " << _simParam->nbIndividual <<endl
         << "\t # _settings.print = " << _settings->print <<endl
-        << "\t # settings_debugMap = " << _settings->debugMap <<endl
         << "\t # settings_model = " << _settings->model <<endl
-        << "\t # settings_exportType = " << _settings->exportType <<endl
-        << "\t # settings_exportFormat = " << _settings->exportFormat <<endl
-        << "\t # settings_finishCondition = " << _settings->finishCondition <<endl
+        << "\t # settings_exportDataType = " << _settings->exportDataType <<endl
         << "\t # settings_dir = " << _settings->dir <<endl
         << "\t # settings_dirName = " << _settings->dirName <<endl
         << "\t # settings_fileName = " << _settings->fileName <<endl <<endl;
+    if(_settings->print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void initPopulationPositionMap(simParam * _simParam, settings _settings){
-    if(_settings.print >2) cout << "\t# initPopulationPositionMap  " << endl;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initPopulationPositionMap ---"<<endl;
     uint2 coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
     // -2) Placing the walls
@@ -242,22 +210,25 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
             coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
         }
         // ---- population
-        _simParam->populationPosition[i] = make_int2(coord.x, coord.y) ;
+        _simParam->populationPosition[i] = make_float3(coord.x, coord.y,0.f) ;
         // ---- map
         _simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] = i;
     }
     // printPopulationPosition((*_simParam), _settings);
 
-    if(_settings.print >2)cout << "\tOK " << endl ;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
-void initGif(simParam _simParam, gif * _gif, settings _settings){
-    _gif->outputFilename  = "animation" + _settings.dirName + ".gif";
-    _gif->sizeFactor      = 1;
+void initExportData(simParam _simParam, exportData * _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initExportData ---"<<endl;
+    // gifFrames
+    _exportData->gifOutputFilename  = "animation" + _settings.dirName + ".gif";
+    _exportData->gifSizeFactor      = 1;
     if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__){ 
-        _gif->sizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
+        _exportData->gifSizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
     }
-    _gif->imagePath       = _settings.dir + _settings.dirName + "/";
-    cout << "La structur GIF a été initialisé avec succes." << endl;
+    _exportData->gifPath       = _settings.dir + _settings.dirName + "/";
+    _exportData->gifRatioFrame = 1 ;// mettre un parametre en géniie log
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 /*
@@ -271,10 +242,14 @@ void initGif(simParam _simParam, gif * _gif, settings _settings){
 
 */
 void setSimExit(simParam * _simParam, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setSimExit ---"<<endl;
     // TO DO
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void setPopulationPositionMap(simParam * _simParam, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setPopulationPositionMap ---"<<endl;
     // TO DO
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 /*
@@ -298,130 +273,75 @@ void progressBar(uint progress, uint total, uint width, uint iteration) {
             printf(" ");
         }
     }
-    printf("] %.2f%% : %d frames\r", percentage * 100, iteration);
+    printf("] %.2f%% : %d Frames\r", percentage * 100, iteration);
     fflush(stdout);
 }
 void shuffleIndex(simParam * _simParam, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - Shuffle index --- "<<endl;
     for ( uint i = _simParam->nbIndividual - 1; i > 0; i--) {
        uint j = rand() % (i + 1);
        uint temp = _simParam->populationIndex[i];
        _simParam->populationIndex[i] = _simParam->populationIndex[j];
        _simParam->populationIndex[j] = temp;
     }
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
-void exportPopPos2HDF5(simParam _simParam, settings _settings) {
-    // Création du nom du fichier
-    cout << "fdp" ;
-    string filePath = _settings.dir + "/" + _settings.dirName + "/";
-    string fileName = filePath + to_string(_simParam.nbFrame) + ".h5";
-    // Vérifier si le répertoire existe et le créer si nécessaire
-    if (mkdir(_settings.dir.c_str(), 0777) != 0) {
-        if (mkdir(filePath.c_str(), 0777) != 0) {
-            // Création du fichier HDF5
-            hid_t file = H5Fcreate(fileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-            if (file < 0) {
-                cerr << "Erreur lors de la création du fichier HDF5." << endl;
-                return;
-            }
-
-            // Création de l'espace de données pour les positions
-            hsize_t dims[2] = {_simParam.nbIndividual, 2}; // Dimensions du tableau de positions
-            hid_t dataspace = H5Screate_simple(2, dims, NULL);
-
-            // Création du dataset pour les positions
-            hid_t dataset = H5Dcreate(file, "populationPosition", H5T_NATIVE_INT, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-            if (dataset < 0) {
-                cerr << "Erreur lors de la création du dataset HDF5." << endl;
-                H5Sclose(dataspace);
-                H5Fclose(file);
-                return;
-            }
-
-            // Écriture des positions dans le dataset
-            herr_t status = H5Dwrite(dataset, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, _simParam.populationPosition);
-            if (status < 0) {
-                cerr << "Erreur lors de l'écriture des positions dans le dataset HDF5." << endl;
-            }
-
-            // Fermeture des ressources HDF5
-            H5Dclose(dataset);
-            H5Sclose(dataspace);
-            H5Fclose(file);
-        }
-    }  
-    if(_settings.print >2) cout << "Exportation des positions terminée avec succès." << endl;
-}
-
-void exportFrameJpeg(simParam _simParam, gif _gif, settings _settings) {
-    // Création du nom du fichier
-
-    // Vérifier si le répertoire existe et le créer si nécessaire
-    //if (mkdir(_settings.dir.c_str(), 0777) != 0) {
-    //    if (mkdir(imagePath.c_str(), 0777) != 0) {
-            cv::Mat frame(_simParam.dimension.x * _gif.sizeFactor, _simParam.dimension.y * _gif.sizeFactor, CV_8UC3, cv::Scalar(0, 0, 0));
+void exportDataFrame(simParam _simParam, exportData * _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrame --- "<<endl;
+    if(_settings.exportDataFormat == __EXPORT_TYPE_GIF__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
+        if(_simParam.nbFrame%_exportData->gifRatioFrame == 0){
+            cv::Mat frame(_simParam.dimension.x * _exportData->gifSizeFactor, _simParam.dimension.y * _exportData->gifSizeFactor, CV_8UC3, __COLOR_BLACK__);
 
             // Dessiner le pixel de sortie en vert
-            cv::Point TL(_simParam.exit.x*_gif.sizeFactor, _simParam.exit.y*_gif.sizeFactor);
-            cv::Point BR(TL.x+_gif.sizeFactor, TL.y+_gif.sizeFactor);
+            cv::Point TL(_simParam.exit.x * _exportData->gifSizeFactor, _simParam.exit.y * _exportData->gifSizeFactor);
+            cv::Point BR(TL.x + _exportData->gifSizeFactor , TL.y + _exportData->gifSizeFactor);
             cv::Rect rectangle(TL, BR);
             cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
 
             // Dessiner les pixels de la population en blanc
             for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
-                cv::Point TL(_simParam.populationPosition[i].x*_gif.sizeFactor, _simParam.populationPosition[i].y*_gif.sizeFactor);
-                cv::Point BR(TL.x+_gif.sizeFactor, TL.y+_gif.sizeFactor);
+                cv::Point TL(_simParam.populationPosition[i].x * _exportData->gifSizeFactor, _simParam.populationPosition[i].y * _exportData->gifSizeFactor);
+                cv::Point BR(TL.x + _exportData->gifSizeFactor, TL.y + _exportData->gifSizeFactor);
                 cv::Rect rectangle(TL, BR);
                 cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
             }
-
-            string tmp = to_string(_simParam.nbFrame) + ".jpg";
-            // cout << imagePath << endl;
-            cv::imwrite(tmp, frame);
-    //    }
-    //}
-}
-/*
-
-void exportFrameGif(simParam _simParam, gif * _gif, settings _settings){
-    cv::Mat frame(_simParam.dimension.x * _gif->sizeFactor, _simParam.dimension.y * _gif->sizeFactor, CV_8UC3, __COLOR_BLACK__);
-
-    // Dessiner le pixel de sortie en vert
-    cv::Point TL(_simParam.exit.x*sizeFactor, _simParam.exit.y*sizeFactor);
-    cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
-    cv::Rect rectangle(TL, BR);
-    cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
-
-    // Dessiner les pixels de la population en blanc
-    for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
-        cv::Point TL(_simParam.populationPosition[i].x*sizeFactor, _simParam.populationPosition[i].y*sizeFactor);
-        cv::Point BR(TL.x+sizeFactor, TL.y+sizeFactor);
-        cv::Rect rectangle(TL, BR);
-        cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
+            _exportData->gifFrames.push_back(frame);
+        }
     }
-    _gif->frames.push_back(frame);
+    if(_settings.exportDataFormat == __EXPORT_TYPE_VALUE__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
+        // TO DO
+    }
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
-void saveFrameGif(simParam _simParam, gif _gif, settings _settings){
-    // Créer un objet VideoWriter pour écrire le fichier GIF
-    cv::VideoWriter writer(_gif.outputFilename, cv::VideoWriter::fourcc('G', 'I', 'F', 'S'), __GIF_FPS__, _gif.frames[0].size());
 
-    // Vérifier si le VideoWriter a été correctement initialisé
-    if (!writer.isOpened()) {
-        cout << "Erreur lors de l'ouverture du fichier GIF de sortie" << endl;
-        return -1;
+void saveExportData(simParam _simParam, exportData _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportData --- "<<endl;
+    if(_settings.exportDataFormat == __EXPORT_TYPE_GIF__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
+        // Créer un objet VideoWriter pour écrire le fichier GIF
+        cv::VideoWriter writer(_exportData.gifOutputFilename, cv::VideoWriter::fourcc('G', 'I', 'F', 'S'), __GIF_FPS__, _exportData.gifFrames[0].size());
+
+        // Vérifier si le VideoWriter a été correctement initialisé
+        if (!writer.isOpened()) {
+            cout << "Erreur lors de l'ouverture du fichier GIF de sortie" << endl;
+        }
+
+        // Écrire chaque image dans le fichier GIF
+        for (const cv::Mat& frame : _exportData.gifFrames) {
+            writer.write(frame);
+        }
+
+        // Fermer le fichier GIF
+        writer.release();
+        cout << "Le fichier GIF a été créé avec succès." << endl;
     }
-
-    // Écrire chaque image dans le fichier GIF
-    for (const cv::Mat& frame : _gif.frames) {
-        writer.write(frame);
+    if(_settings.exportDataFormat == __EXPORT_TYPE_VALUE__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
+        // TO DO
     }
-
-    // Fermer le fichier GIF
-    writer.release();
-    cout << "Le fichier GIF a été créé avec succès." << endl;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
-*/
+
 
 /*
   ______             
@@ -433,12 +353,12 @@ void saveFrameGif(simParam _simParam, gif _gif, settings _settings){
                      
 */
 void freeSimParam (simParam * _simParam, settings _settings){
-    if(_settings.print >2)cout << "\t# freeTab  " ;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - freeSimParam --- "<<endl;
     free(_simParam->populationPosition);
     free(_simParam->populationIndex);
     free(_simParam->cost);
     free(_simParam->map);
-    if(_settings.print >2)cout << "\tOK " << endl;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 /*
@@ -451,7 +371,7 @@ void freeSimParam (simParam * _simParam, settings _settings){
                      
 */
 void printMap(simParam _simParam, settings _settings){
-    if(_settings.print > 2)cout << " # - Display map --- "<<endl;
+    if(_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - Display map --- "<<endl;
 
     // Display column numbers
     cout<<"  ";
@@ -485,15 +405,15 @@ void printMap(simParam _simParam, settings _settings){
         }
         cout<<endl;
     }
-    if(_settings.print < 2)cout << "                         --- DONE " << endl;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void printPopulationPosition(simParam _simParam, settings _settings){
-    cout << endl << "\t# printPopulationPosition"<< endl << "\t   Id \t x \t y " <<endl;
+    if(_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printPopulationPosition --- "<<endl;
     for (size_t i = 0; i < _simParam.nbIndividual; i++)
     {
         cout << "\t  - " << i << " )\t" << _simParam.populationPosition[i].x << "\t" << _simParam.populationPosition[i].y <<endl;
     }
-    cout << "\t OK" <<endl; 
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 uint xPosof(uint value, uint dimX, uint dimY) {
     return value % dimX;
