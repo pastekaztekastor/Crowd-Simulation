@@ -485,59 +485,9 @@ HDF5_DIFF_EXECUTABLE:FILEPATH=HDF5_DIFF_EXECUTABLE-NOTFOUND
 //The directory containing a CMake configuration file for HDF5.
 HDF5_DIR:PATH=HDF5_DIR-NOTFOUND
 
-//Build the unit tests when BUILD_TESTING is enabled.
-JSON_BuildTests:BOOL=OFF
+//The directory containing a CMake configuration file for OpenCV.
+OpenCV_DIR:PATH=/usr/local/lib/cmake/opencv4
 
-//Enable CI build targets.
-JSON_CI:BOOL=OFF
-
-//Use extended diagnostic messages.
-JSON_Diagnostics:BOOL=OFF
-
-//Disable default integer enum serialization.
-JSON_DisableEnumSerialization:BOOL=OFF
-
-//Place use-defined string literals in the global namespace.
-JSON_GlobalUDLs:BOOL=ON
-
-//Enable implicit conversions.
-JSON_ImplicitConversions:BOOL=ON
-
-//Install CMake targets during install step.
-JSON_Install:BOOL=OFF
-
-//Enable legacy discarded value comparison.
-JSON_LegacyDiscardedValueComparison:BOOL=OFF
-
-//Use non-amalgamated version of the library.
-JSON_MultipleHeaders:BOOL=ON
-
-//Include as system headers (skip for clang-tidy).
-JSON_SystemInclude:BOOL=OFF
-
-//Value Computed by CMake
-cJSON_BINARY_DIR:STATIC=/home/cartron3/StageXLIM/lib/cJSON
-
-//Value Computed by CMake
-cJSON_SOURCE_DIR:STATIC=/home/cartron3/StageXLIM/lib/cJSON
-
-//Dependencies for the target
-cjson_LIB_DEPENDS:STATIC=general;m;
-
-//Value Computed by CMake
-nlohmann_json_BINARY_DIR:STATIC=/home/cartron3/StageXLIM/extern/nlohmann_json
-
-//The directory containing a CMake configuration file for nlohmann_json.
-nlohmann_json_DIR:PATH=/home/cartron3/StageXLIM/extern/nlohmann_json
-
-//Value Computed by CMake
-nlohmann_json_SOURCE_DIR:STATIC=/home/cartron3/StageXLIM/extern/nlohmann_json
-
-//Dependencies for target
-unity_LIB_DEPENDS:STATIC=
-
-=======
->>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE
 
 ########################
 # INTERNAL cache entries
@@ -827,6 +777,10 @@ CUDA_parse_cubin:INTERNAL=/usr/share/cmake-3.10/Modules/FindCUDA/parse_cubin.cma
 CUDA_run_nvcc:INTERNAL=/usr/share/cmake-3.10/Modules/FindCUDA/run_nvcc.cmake
 //Details about finding CUDA
 FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr][/usr/bin/nvcc][/usr/include][/usr/lib/x86_64-linux-gnu/libcudart_static.a][v9.1()]
+//Details about finding HDF5
+FIND_PACKAGE_MESSAGE_DETAILS_HDF5:INTERNAL=[/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5.so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/lib/x86_64-linux-gnu/libsz.so;/usr/lib/x86_64-linux-gnu/libz.so;/usr/lib/x86_64-linux-gnu/libdl.so;/usr/lib/x86_64-linux-gnu/libm.so][/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5_hl.so][cfound components:  C HL ][v1.10.0.1()]
+//Details about finding OpenCV
+FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/usr/local][v4.8.0()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 <<<<<<< HEAD

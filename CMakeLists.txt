@@ -32,6 +32,11 @@ set(HEADERS
     src/gpu/utils/commonCUDA.hpp
 )
 
+# Recherchez le package OpenCV
+set(OpenCV_DIR /usr/local)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 # Spécifier le répertoire de sortie pour l'exécutable
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/exe)
 
@@ -42,15 +47,7 @@ set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-arch=sm_30)
 # Compiler les fichiers source avec g++
 add_executable(gpuSimulation ${SOURCES} ${HEADERS})
 
-<<<<<<< HEAD
-# Lier les librairies CUDA, HDF5 et nlohmann_json
-target_link_libraries(gpuSimulation PRIVATE ${CUDA_LIBRARIES})
-target_link_libraries(gpuSimulation PRIVATE ${HDF5_LIBRARIES})
-target_link_libraries(gpuSimulation PRIVATE nlohmann_json::nlohmann_json)
-
-# Inclure les répertoires d'inclusion
-target_include_directories(gpuSimulation PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extern/nlohmann_json/include)
-=======
-# Lier les librairies CUDA
-target_link_libraries(gpuSimulation ${CUDA_LIBRARIES})
->>>>>>> parent of 7988a53... Ajout de la lib HDF5 + parsseur IMAGE
+# Lier les librairies CUDA et HDF5
+target_link_libraries(gpuSimulation PRIVATE ${CUDA_LIBRARIES} ${HDF5_LIBRARIES})
+target_link_libraries(gpuSimulation PRIVATE opencv_core opencv_highgui opencv_imgproc)
+target_link_libraries(gpuSimulation PRIVATE ${OpenCV_LIBS})

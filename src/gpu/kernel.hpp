@@ -33,6 +33,7 @@ void            initKernelParam   (kernelParam * _kernelParam, simParam _simPara
 
 */
 __global__ void kernel_model1_GPU (kernelParam _kernelParam, simParam _simParam, settings _settings);
+__global__ void kernel_costMap_GPU(kernelParam _kernelParam, simParam _simParam, settings _settings);
 
 /*
   ______                       _    
