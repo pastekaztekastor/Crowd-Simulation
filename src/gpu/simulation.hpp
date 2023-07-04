@@ -47,7 +47,7 @@ using namespace std;
 #define __COLOR_RED__         cv::Scalar(0, 0, 255)
 #define __COLOR_BLACK__       cv::Scalar(0, 0, 0)
 
-#define __VIDEO_FPS__         25
+#define __VIDEO_FPS__         40
 
 #define __SIM_MAX_WAITING__   100
 
@@ -55,7 +55,7 @@ using namespace std;
 // Struct
 typedef struct {
     float3* populationPosition          ; // Position table of all the individuals in the simulation [[x,y,att],[x,y,att],...]
-    uint2*  wallPosition                ; // Position table of all the individuals in the simulation [[x,y,att],[x,y,att],...]
+    uint2 * wallPosition                ; // Position table of all the individuals in the simulation [[x,y,att],[x,y,att],...]
     uint  * cost                        ; //
     int   * map                         ; // 2D map composed of the uint 0: empty, 1 humain, 2 wall, 3 exit on 1 line
     uint2   exit                        ; // [x,y] coordinate of simulation output
@@ -69,17 +69,18 @@ typedef struct {
 } simParam;
 
 typedef struct {
-    uint            print               ; // For display the debug [lvl to print]
-    uint            debugMap            ; // For display map
-    uint            model               ; //
-    uint            exportDataType      ; //=
-    string          dir                 ; //
+    uint        print                   ; // For display the debug [lvl to print]
+    uint        debugMap                ; // For display map
+    uint        model                   ; //
+    uint        exportDataType          ; //=
+    string      dir                     ; //
 } settings;
 
 typedef struct {
     float3*     populationPosition      ;
     int   *     map                     ;
     uint  *     pInSim                  ;
+    uint  *     cost                    ; //
     uint        nb_threads              ;
     dim3        blocks                  ;
     dim3        threads                 ;

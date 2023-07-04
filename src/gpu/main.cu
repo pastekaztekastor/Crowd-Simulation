@@ -33,7 +33,8 @@ int main(int argc, char const *argv[])
     initKernelParam(&_kernelParam, _simParam, _settings);
     
     if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Launch simulation ###" << endl;
-    while (_simParam.isFinish == 0 && _simParam.nbFrame < _simParam.nbIndividual*2){
+    //while (_simParam.isFinish == 0 ){
+    while (_simParam.nbFrame <= _simParam.nbIndividual*3 ){
         _simParam.nbFrame ++;
         
         if( _settings.print >= __DEBUG_PRINT_DEBUG__ )cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
@@ -70,7 +71,9 @@ int main(int argc, char const *argv[])
 
         popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
+        
 
+        if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) cout << "  -  P IN : " << _simParam.pInSim << endl;
         if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printMap(_simParam, _settings);
         if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printPopulationPosition(_simParam, _settings);
 

@@ -219,7 +219,7 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
 void initExportData(simParam _simParam, exportData * _exportData, settings _settings){
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initExportData ---"<<endl;
     // videoFrames
-    _exportData->videoFilename = "animation_X" + to_string(_simParam.dimension.x) + "Y" + to_string(_simParam.dimension.y) + "P" + to_string(_simParam.nbIndividual) + ".mp4";
+    _exportData->videoFilename = "anim_M" + to_string(_settings.model) + "-X" + to_string(_simParam.dimension.x) + "-Y" + to_string(_simParam.dimension.y) + "-P" + to_string(_simParam.nbIndividual) + ".mp4";
     _exportData->videoPath = _settings.dir + _exportData->videoFilename;
     _exportData->videoSizeFactor = 1;
     if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__){ 
@@ -251,7 +251,7 @@ void initCostMap (simParam * _simParam, settings _settings) {
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
         _simParam->cost[i] = 99;
     }
-    printCostMap((*_simParam), _settings);
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)printCostMap((*_simParam), _settings);
     
     // Définir la case de sortie avec un coût de 0
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir la case de sortie avec un coût de 0 "<<endl;

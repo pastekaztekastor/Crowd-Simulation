@@ -168,7 +168,6 @@ Dans un premier temps, j'ai commencé par créer un programme qui implémente ce
 
 Cepandant dans un premier temps vous pouvez essayer le programme `onlyCPU` sur votre propre machine. Elle doit néanmoins être équipé d'un terminal et de bach.
 
-<<<<<<< HEAD
 ### Installation de HDF5
 
 La bibliothèque HDF5 (Hierarchical Data Format 5) est utilisée pour stocker et organiser de grandes quantités de données de manière efficace et structurée. Elle offre des fonctionnalités avancées telles que la compression des données, l'indexation, la gestion des métadonnées et la possibilité de travailler avec des ensembles de données hiérarchiques. HDF5 est largement utilisée dans le domaine de la science, de la recherche et de l'analyse de données pour gérer et échanger des données complexes, volumineuses et multidimensionnelles, offrant une solution flexible et performante pour le stockage et la manipulation de données. Elle est utilisé dans ce projet pour exporter chaque frames de la simulation en perdant le moins de temps possible.
@@ -279,7 +278,7 @@ Une fois l'installation terminée, le codec GIF devrait être installé sur votr
 - [x] finir les export au propre (image)
 - [x] liste d'attente de chaque individu
 - [x] gestion des murs
-- [ ] carte des couts
+- [x] carte des couts
 - [ ] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)
 - [ ] parsseur d'images pour la création d'une map
 - [ ] version "mac" CPU
