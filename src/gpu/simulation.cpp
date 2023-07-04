@@ -75,10 +75,12 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
             } 
             else if (strcmp(argv[i], "-x") == 0) {
                 _simParam->dimension.x = atoi(argv[i + 1]);
-                _simParam->nbWall = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-y") == 0) {
                 _simParam->dimension.y = atoi(argv[i + 1]);
+            }
+            else if (strcmp(argv[i], "-w") == 0) {
+                _simParam->nbWall = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-p") == 0) {
                 _simParam->nbIndividual = atoi(argv[i + 1]);

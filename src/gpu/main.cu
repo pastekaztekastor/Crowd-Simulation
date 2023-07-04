@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
             case 0: // MODEL : sage ignorant
                 kernel_model1_GPU<<<_kernelParam.blocks,_kernelParam.threads>>>(_kernelParam, _simParam, _settings);
                 break;
-            case 1: // MDOEL : Impatient ignorant
+            case 1: // MDOEL : Carte de cout
                 kernel_costMap_GPU<<<_kernelParam.blocks,_kernelParam.threads>>>(_kernelParam, _simParam, _settings);
                 break;
             case 2: // MDOEL : Forcée

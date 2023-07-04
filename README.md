@@ -1,3 +1,5 @@
+<video src="video/anim_M1-X40-Y20-P200.mp4" controls title="Démo"></video>
+
 # Simulation de foule avec CUDA
 
 Ce *README* servira davantage de feuille de route/journal de bord qu'un README classique. Les quelques documents pouvant être utiles seront tout de même répertoriés ici.
@@ -279,6 +281,6 @@ Une fois l'installation terminée, le codec GIF devrait être installé sur votr
 - [x] liste d'attente de chaque individu
 - [x] gestion des murs
 - [x] carte des couts
-- [ ] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)
+- [x] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)
 - [ ] parsseur d'images pour la création d'une map
 - [ ] version "mac" CPU
