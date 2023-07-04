@@ -290,7 +290,7 @@ void shuffleIndex(simParam * _simParam, settings _settings){
 
 void exportDataFrameVideo(simParam _simParam, exportData * _exportData, settings _settings){
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameVideo --- "<<endl;
-    cv::Mat frame(_simParam.dimension.x * _exportData->videoSizeFactor, _simParam.dimension.y * _exportData->videoSizeFactor, CV_8UC3, __COLOR_BLACK__);
+    cv::Mat frame(_simParam.dimension.y * _exportData->videoSizeFactor, _simParam.dimension.x * _exportData->videoSizeFactor, CV_8UC3, __COLOR_BLACK__);
 
     // Dessiner le pixel de sortie en vert
     cv::Point TL(_simParam.exit.x * _exportData->videoSizeFactor, _simParam.exit.y * _exportData->videoSizeFactor);
@@ -303,7 +303,7 @@ void exportDataFrameVideo(simParam _simParam, exportData * _exportData, settings
         cv::Point TL(_simParam.populationPosition[i].x * _exportData->videoSizeFactor, _simParam.populationPosition[i].y * _exportData->videoSizeFactor);
         cv::Point BR(TL.x + _exportData->videoSizeFactor, TL.y + _exportData->videoSizeFactor);
         cv::Rect rectangle(TL, BR);
-        cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
+        cv::rectangle(frame, rectangle, colorInterpol(__COLOR_WHITE__, __COLOR_RED__, _simParam.populationPosition[i].z/float(__SIM_MAX_WAITING__)), -1);
     }
     _exportData->videoFrames.push_back(frame);
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
@@ -330,19 +330,14 @@ void saveExportDataVideo(simParam _simParam, exportData _exportData, settings _s
     {
         if(_settings.print >= __DEBUG_PRINT_STEP__)cout << " # - Vidéo : "<<endl;
         // Écrire chaque image dans le fichier MP4
-        // for (const cv::Mat& frame : _exportData.videoFrames) {
-        //     _exportData.videoWriter.write(frame);
-
-        // }
-        for (size_t i = 0; i < _simParam.nbFrame; i++)
-        {
+        for (size_t i = 0; i < _simParam.nbFrame; i++){
             _exportData.videoWriter.write(_exportData.videoFrames[i]);
-            progressBar(i,_simParam.nbFrame, 100, i);
+            progressBar(i,_simParam.nbFrame-1, 100, i);
         }
-        
+        cout << endl;
         // Fermer le fichier MP4
         _exportData.videoWriter.release();
-        cout << "Le fichier video a été créé avec succès." << endl;
+        if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "Le fichier video a été créé avec succès." << endl;
     }
 }
 
@@ -434,4 +429,10 @@ uint yPosof(uint value, uint dimX, uint dimY) {
 uint valueOfxy(uint xPos, uint yPos, uint dimX, uint dimY) {
     return yPos * dimX + xPos;
 }
-
+cv::Scalar colorInterpol(cv::Scalar a, cv::Scalar b, float ratio) {
+    cv::Scalar result;
+    for (int i = 0; i < 4; ++i) {
+        result[i] = a[i] + (b[i] - a[i]) * ratio;
+    }
+    return result;
+}

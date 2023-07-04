@@ -42,12 +42,14 @@ using namespace std;
 #define __MAX_Y_DIM_JPEG__    1080
 
 #define __COLOR_WHITE__       cv::Scalar(255, 255, 255)
-#define __COLOR_RED__         cv::Scalar(255, 0, 0)
+#define __COLOR_BLUE__        cv::Scalar(255, 0, 0)
 #define __COLOR_GREEN__       cv::Scalar(0, 255, 0)
-#define __COLOR_BLUE__        cv::Scalar(0, 0, 255)
+#define __COLOR_RED__         cv::Scalar(0, 0, 255)
 #define __COLOR_BLACK__       cv::Scalar(0, 0, 0)
 
 #define __VIDEO_FPS__         25
+
+#define __SIM_MAX_WAITING__   100
 
 
 // Struct
@@ -160,3 +162,8 @@ void printPopulationPosition      (simParam _simParam, settings _settings);
 uint xPosof                       (uint value, uint dimX, uint dimY);
 uint yPosof                       (uint value, uint dimX, uint dimY);
 uint valueOfxy                    (uint xPos, uint yPos, uint dimX, uint dimY);
+
+cv::Scalar colorInterpol          (cv::Scalar a, cv::Scalar b, float ratio);
+/**
+ * Fait l'interpolation de 2 cv::Scalar représentant des couleur a la position ratio.
+*/

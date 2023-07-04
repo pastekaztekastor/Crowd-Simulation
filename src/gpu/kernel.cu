@@ -65,7 +65,7 @@ __global__ void kernel_model1_GPU(kernelParam _kernelParam, simParam _simParam, 
             switch (oldValue)
             {
             case __MAP_EMPTY__:
-                _kernelParam.populationPosition[tid] = make_float3(pos.x + move.x, pos.y + move.y,_kernelParam.populationPosition[tid].z);           // Position dans populationPosition
+                _kernelParam.populationPosition[tid] = make_float3(pos.x + move.x, pos.y + move.y, 0.f);           // Position dans populationPosition
                 atomicExch(&_kernelParam.map[_simParam.dimension.x * (pos.y) + (pos.x)], __MAP_EMPTY__); 
                 break;
             case __MAP_EXIT__:

@@ -278,8 +278,8 @@ Documenté dans les dossier :
 - [x] Explication du projet
 - [x] Refaire le fichier  [`gitignore`](.gitignore) de manière approp
 - [x] Créer un fichier Makefile.
-- [ ] finir les export au propre (image)
-- [ ] liste d'attente de chaque individu
+- [x] finir les export au propre (image)
+- [x] liste d'attente de chaque individu
 - [ ] gestion des murs
 - [ ] carte des couts
 - [ ] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)

@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
     default:
         break;
     }
-    
+    cout << endl;
     if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Free memory ###" << endl;
     // TO DO 
 
