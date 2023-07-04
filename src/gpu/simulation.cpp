@@ -33,7 +33,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->nbFrame            = 0;   
 
     _settings->print              = __DEBUG_PRINT_ALL__;  
-    _settings->model              = 0;                  
+    _settings->model              = 1;                  
     _settings->exportDataType     = __EXPORT_TYPE_VIDEO__;
     _settings->dir                = "video/";
 
@@ -161,6 +161,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
         _simParam->map[i] = __MAP_EMPTY__ ; // -1 for empty 
     }
+    _simParam->cost = ( uint * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( uint ));
     _simParam->populationIndex = ( uint * ) calloc(_simParam->nbIndividual * 2, sizeof( uint));
     _simParam->exit = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
@@ -241,6 +242,60 @@ void initExportData(simParam _simParam, exportData * _exportData, settings _sett
         }
     }
 }
+
+void initCostMap (simParam * _simParam, settings _settings) {
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initCostMap ---"<<endl;
+    // Remplire la carte de coût avec des valeur élevé.
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Remplire la carte de coût avec des valeur élevé. "<<endl;
+    // if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "     - Taille de la carte de couts "<<  endl;
+    for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
+        _simParam->cost[i] = 99;
+    }
+    printCostMap((*_simParam), _settings);
+    
+    // Définir la case de sortie avec un coût de 0
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir la case de sortie avec un coût de 0 "<<endl;
+    _simParam->cost[valueOfxy(_simParam->exit.x, _simParam->exit.y, _simParam->dimension.x, _simParam->dimension.y)] = 0;
+
+    // Définir les déplacements possibles (haut, bas, gauche, droite)
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir les déplacements possibles (haut, bas, gauche, droite) "<<endl;
+    std::vector<std::pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+
+    // Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie "<<endl;
+    bool updated;
+    do {
+        updated = false;
+
+        // Parcourir chaque case de la carte
+        for (uint y = 0; y < _simParam->dimension.y; ++y) {
+            for (uint x = 0; x < _simParam->dimension.x; ++x) { // Cols
+                // Vérifier si la case actuelle n'est pas un mur
+                if (_simParam->map[valueOfxy(x, y, _simParam->dimension.x, _simParam->dimension.y)] != __MAP_WALL__) {
+                    int currentCost = _simParam->cost[valueOfxy(x, y, _simParam->dimension.x, _simParam->dimension.y)];
+
+                    // Explorer les déplacements possibles à partir du point actuel
+                    for (const auto& direction : directions) {
+                        uint2 newPos = make_uint2(x + direction.first, y + direction.second);
+
+                        // Vérifier si les nouvelles coordonnées sont valides et si ce n'est pas un mure
+                        if (newPos.x >= 0 && newPos.x < _simParam->dimension.x && newPos.y >= 0 && newPos.y < _simParam->dimension.y && _simParam->map[valueOfxy(newPos.x, newPos.y, _simParam->dimension.x, _simParam->dimension.y)] != __MAP_WALL__) {
+                            int newCost = currentCost + 1;
+
+                            // Mettre à jour le coût si nécessaire
+                            if (newCost < _simParam->cost[valueOfxy(newPos.x, newPos.y, _simParam->dimension.x, _simParam->dimension.y)]) {
+                                _simParam->cost[valueOfxy(newPos.x, newPos.y, _simParam->dimension.x, _simParam->dimension.y)] = newCost;
+                                updated = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } while (updated);
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+}
+
 
 /*
    _____      _   _            
@@ -429,6 +484,29 @@ void printMap(simParam _simParam, settings _settings){
                 cout<<"[H]";
                 break;
             }
+        }
+        cout<<endl;
+    }
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+}
+
+void printCostMap (simParam _simParam, settings _settings){
+    if(_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printCostMap --- "<<endl;
+    // Display column numbers
+    cout<<"  ";
+        for (int x = 0; x < _simParam.dimension.x; x++)
+        {
+            printf("%2d  ",x); 
+        }
+        cout<<"  "<<endl;
+
+    // We browse the map and we display according to what the box contains
+    for (int y = 0; y < _simParam.dimension.y; y++)
+    {
+        printf("%2d ",y); 
+        for (int x = 0; x < _simParam.dimension.x; x++)
+        {
+            printf(" %2d ", _simParam.cost[valueOfxy(x,y,_simParam.dimension.x,_simParam.dimension.y)]);
         }
         cout<<endl;
     }

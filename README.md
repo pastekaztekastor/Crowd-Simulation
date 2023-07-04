@@ -280,7 +280,7 @@ Documenté dans les dossier :
 - [x] Créer un fichier Makefile.
 - [x] finir les export au propre (image)
 - [x] liste d'attente de chaque individu
-- [ ] gestion des murs
+- [x] gestion des murs
 - [ ] carte des couts
 - [ ] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)
 - [ ] parsseur d'images pour la création d'une map

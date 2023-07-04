@@ -20,6 +20,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
+#include <climits>
 
 using namespace std;
 
@@ -107,8 +108,8 @@ typedef struct {
 */
 void initSimSettings            ( int argc, char const *argv[], simParam * _simParam, settings * _settings);
 void initPopulationPositionMap  (simParam * _simParam, settings _settings);
-void initExportData                 (simParam _simParam, exportData * _exportData, settings _settings);
-
+void initExportData             (simParam _simParam, exportData * _exportData, settings _settings);
+void initCostMap                (simParam * _simParam, settings _settings);
 /*
    _____      _   _            
   / ____|    | | | |           
@@ -160,6 +161,7 @@ void freeSimParam                 (simParam * _simParam, settings _settings);
 */
 void printMap                     (simParam _simParam, settings _settings);
 void printPopulationPosition      (simParam _simParam, settings _settings);
+void printCostMap                 (simParam _simParam, settings _settings);
 
 uint xPosof                       (uint value, uint dimX, uint dimY);
 uint yPosof                       (uint value, uint dimX, uint dimY);
