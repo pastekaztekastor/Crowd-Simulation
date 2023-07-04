@@ -15,7 +15,6 @@
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
 #include <cuda_runtime.h>
-#include <hdf5.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
