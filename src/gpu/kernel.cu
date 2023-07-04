@@ -21,12 +21,12 @@ void initKernelParam(kernelParam * _kernelParam, simParam _simParam, settings _s
     if( _settings.print > 2 )cout << endl << " ### Init kernel params ###" << endl;
 
     if( _settings.print > 2 )cout << " \t> Malloc";
-    cudaMalloc( &_kernelParam->populationPosition , 2 * sizeof(uint) * _simParam.nbIndividual); 
+    cudaMalloc( &_kernelParam->populationPosition , sizeof(float3) * _simParam.nbIndividual); 
     cudaMalloc( &_kernelParam->map                , _simParam.dimension.x * _simParam.dimension.y * sizeof(uint ));
     cudaMalloc( &_kernelParam->pInSim             , sizeof(uint));
     if( _settings.print > 2 )cout  << " OK " << endl;
     if( _settings.print > 2 )cout << " \t> Copy";
-    cudaMemcpy( (void**) _kernelParam->populationPosition, _simParam.populationPosition, (2 * sizeof(uint) * _simParam.nbIndividual)                     , cudaMemcpyHostToDevice);
+    cudaMemcpy( (void**) _kernelParam->populationPosition, _simParam.populationPosition, (sizeof(float3) * _simParam.nbIndividual)                             , cudaMemcpyHostToDevice);
     cudaMemcpy( (void**) _kernelParam->map               , _simParam.map               , (_simParam.dimension.x * _simParam.dimension.y * sizeof(uint))  , cudaMemcpyHostToDevice);
     cudaMemcpy( (void**) _kernelParam->pInSim            , &_simParam.pInSim           , sizeof(uint)                                                    , cudaMemcpyHostToDevice);
     if( _settings.print > 2 )cout  << " OK " << endl;
@@ -65,7 +65,7 @@ __global__ void kernel_model1_GPU(kernelParam _kernelParam, simParam _simParam, 
             switch (oldValue)
             {
             case __MAP_EMPTY__:
-                _kernelParam.populationPosition[tid] = make_int2(pos.x + move.x, pos.y + move.y);           // Position dans populationPosition
+                _kernelParam.populationPosition[tid] = make_float3(pos.x + move.x, pos.y + move.y,_kernelParam.populationPosition[tid].z);           // Position dans populationPosition
                 atomicExch(&_kernelParam.map[_simParam.dimension.x * (pos.y) + (pos.x)], __MAP_EMPTY__); 
                 break;
             case __MAP_EXIT__:
@@ -75,6 +75,7 @@ __global__ void kernel_model1_GPU(kernelParam _kernelParam, simParam _simParam, 
                 (*_kernelParam.pInSim) --;
                 break;
             default:
+                _kernelParam.populationPosition[tid] = make_float3(pos.x, pos.y,_kernelParam.populationPosition[tid].z + 1.f);           // Position dans populationPosition
                 break;
             }
         }
@@ -97,7 +98,7 @@ void mapKernelToSim(kernelParam _kernelParam, simParam * _simParam, settings _se
 }
 void popKernelToSim(kernelParam _kernelParam, simParam * _simParam, settings _settings){
     if( _settings.print > 2 )cout <<endl<< " \t> popKernelToSim " << endl;
-    cudaMemcpy(_simParam->populationPosition, _kernelParam.populationPosition, 2 * sizeof(uint) * _simParam->nbIndividual, cudaMemcpyDeviceToHost);
+    cudaMemcpy(_simParam->populationPosition, _kernelParam.populationPosition, sizeof(float3) * _simParam->nbIndividual, cudaMemcpyDeviceToHost);
     if( _settings.print > 2 )cout  << " OK " << endl;
 }
 void pInKernelToSim(kernelParam _kernelParam, simParam * _simParam, settings _settings){

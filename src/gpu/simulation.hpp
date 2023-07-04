@@ -17,6 +17,9 @@
 #include <cuda_runtime.h>
 #include <hdf5.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
 
 using namespace std;
 
@@ -24,9 +27,9 @@ using namespace std;
 #define __MAP_EMPTY__         -1
 #define __MAP_EXIT__          -2
 #define __MAP_WALL__          -3
-#define __MAP_HUMAN_QUITE__   make_int2(-1,-1)
+#define __MAP_HUMAN_QUITE__   make_float3(-1.f,-1.f,0.f)
 
-#define __EXPORT_TYPE_GIF__   0    
+#define __EXPORT_TYPE_VIDEO__   0    
 #define __EXPORT_TYPE_VALUE__ 1    
 #define __EXPORT_TYPE_ALL__   2 
 
@@ -44,7 +47,7 @@ using namespace std;
 #define __COLOR_BLUE__        cv::Scalar(0, 0, 255)
 #define __COLOR_BLACK__       cv::Scalar(0, 0, 0)
 
-#define __GIF_FPS__           50
+#define __VIDEO_FPS__         25
 
 
 // Struct
@@ -65,15 +68,12 @@ typedef struct {
     uint            print               ; // For display the debug [lvl to print]
     uint            debugMap            ; // For display map
     uint            model               ; //
-    uint            exportDataType      ; //
-    uint            exportDataFormat    ; //
-    string          dir                 ; // For chose the directory to exportDatae bin files
-    string          dirName             ; //
-    string          fileName            ; //
+    uint            exportDataType      ; //=
+    string          dir                 ; //
 } settings;
 
 typedef struct {
-    int2  *     populationPosition      ;
+    float3*     populationPosition      ;
     int   *     map                     ;
     uint  *     pInSim                  ;
     uint        nb_threads              ;
@@ -82,11 +82,12 @@ typedef struct {
 } kernelParam;
 
 typedef struct {
-    vector<cv::Mat>   gifFrames          ;
-    string            gifOutputFilename  ;
-    int               gifSizeFactor      ;
-    string            gifPath            ; 
-    int               gifRatioFrame      ;
+    vector<cv::Mat>   videoFrames          ;
+    string            videoFilename        ;
+    string            videoPath            ;
+    int               videoSizeFactor      ;
+    int               videoRatioFrame      ;
+    cv::VideoWriter   videoWriter          ;
     
 } exportData;
 
@@ -128,8 +129,10 @@ void setPopulationPositionMap   (simParam * _simParam, settings _settings);
 void progressBar                (uint progress, uint total, uint width, uint iteration);
 void shuffleIndex               (simParam * _simParam, settings _settings); // NOT USED BUT CODED
 
-void exportDataFrame            (simParam _simParam, exportData * _exportData, settings _settings);
-void saveExportData             (simParam _simParam, exportData _exportData, settings _settings);
+void exportDataFrameVideo       (simParam _simParam, exportData * _exportData, settings _settings);
+void exportDataFrameValue       (simParam _simParam, exportData * _exportData, settings _settings);
+void saveExportDataVideo        (simParam _simParam, exportData _exportData, settings _settings);
+void saveExportDataValue        (simParam _simParam, exportData _exportData, settings _settings);
 
 /*
   ______             

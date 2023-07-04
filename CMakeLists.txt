@@ -16,6 +16,7 @@ set(HEADERS
 )
 
 # Recherchez le package OpenCV
+set(OpenCV_DIR /usr/local)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 

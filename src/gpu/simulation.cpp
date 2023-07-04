@@ -34,10 +34,8 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
 
     _settings->print              = __DEBUG_PRINT_ALL__;  
     _settings->model              = 0;                  
-    _settings->exportDataType     = __EXPORT_TYPE_GIF__;
-    _settings->dir                = "bin/";             
-    _settings->dirName            = "";                 
-    _settings->fileName           = "";    
+    _settings->exportDataType     = __EXPORT_TYPE_VIDEO__;
+    _settings->dir                = "video/";
 
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
@@ -48,7 +46,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 printf("  -x        : sets the dimension in x of the simulation\n");
                 printf("  -y        : same but for y dimension\n");
                 printf("  -p        : number of individuals in the simulation\n");
-                printf("  -debug    : _settings.print           param [val] default:'step'\n");
+                printf("  -print    : _settings.print           param [val] default:'step'\n");
                 printf("              - 'none' : print nothing\n");
                 printf("              - 'step' : print only time execution\n");
                 printf("              - 'all' : print time execution and simlulation progression\n");
@@ -62,11 +60,11 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 printf("              - 5 : Cone de vision\n");
                 printf("              - 6 : Meilleur cout\n");
                 printf("              - 7 : Meilleur cout & déplacement forcé\n");
-                printf("  -exptT    : settings_exportDataType      param ['type'] default:'gif'\n");
-                printf("              - gif\n");
+                printf("  -exptT    : settings_exportDataType      param ['type'] default:'video'\n");
+                printf("              - video\n");
                 printf("              - value\n");
                 printf("              - all\n");
-                printf("  -dir      : settings_dir             param ['dir'] default:'bin/'\n");
+                printf("  -dir      : settings_dir             param ['dir'] default:'video/'\n");
                 printf("              - Chose a custom directory path to exportData\n");
                 printf("  -dirName  : settings_dirName         param ['name'] default:'X-Y-P'\n");
                 printf("              - Chose a custom directory name to exportData\n");
@@ -85,7 +83,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 _simParam->nbIndividual = atoi(argv[i + 1]);
                 _simParam->pInSim  = atoi(argv[i + 1]);
             }
-            else if (strcmp(argv[i], "-debug") == 0) {
+            else if (strcmp(argv[i], "-print") == 0) {
                 if (strcmp(argv[i+1], "none") == 0) {
                     _settings->print = __DEBUG_PRINT_NONE__;
                 }
@@ -119,8 +117,8 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
                 _settings->model = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-exptT") == 0) {
-                if (strcmp(argv[i+1], "gif") == 0) {
-                    _settings->exportDataType = __EXPORT_TYPE_GIF__;
+                if (strcmp(argv[i+1], "video") == 0) {
+                    _settings->exportDataType = __EXPORT_TYPE_VIDEO__;
                 }
                 else if (strcmp(argv[i+1], "value") == 0) {
                     _settings->exportDataType = __EXPORT_TYPE_VALUE__;
@@ -135,12 +133,6 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
             }
             else if (strcmp(argv[i], "-dir") == 0) {
                 _settings->dir = argv[i+1];
-            }
-            else if (strcmp(argv[i], "-dirName") == 0) {
-                _settings->dirName = argv[i+1];
-            }
-            else if (strcmp(argv[i], "-fileName") == 0) {
-                _settings->fileName = argv[i+1];
             }
             else{
                 printf("Unrecognized argument, try -h or -help\n");
@@ -161,9 +153,6 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     string dimensionYStr = to_string(_simParam->dimension.y);
     string nbIndividualStr = to_string(_simParam->nbIndividual);
 
-    // Concaténer les chaînes pour former le nom du dossier
-    _settings->dirName = "X" + dimensionXStr + "_Y" + dimensionYStr + "_P" + nbIndividualStr;
-
     // Calloc
     _simParam->populationPosition = ( float3 * ) calloc(_simParam->nbIndividual, sizeof( float3 ));
     _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
@@ -181,9 +170,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
         << "\t # _settings.print = " << _settings->print <<endl
         << "\t # settings_model = " << _settings->model <<endl
         << "\t # settings_exportDataType = " << _settings->exportDataType <<endl
-        << "\t # settings_dir = " << _settings->dir <<endl
-        << "\t # settings_dirName = " << _settings->dirName <<endl
-        << "\t # settings_fileName = " << _settings->fileName <<endl <<endl;
+        << "\t # settings_dir = " << _settings->dir <<endl <<endl;
     if(_settings->print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void initPopulationPositionMap(simParam * _simParam, settings _settings){
@@ -220,15 +207,29 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
 }
 void initExportData(simParam _simParam, exportData * _exportData, settings _settings){
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initExportData ---"<<endl;
-    // gifFrames
-    _exportData->gifOutputFilename  = "animation" + _settings.dirName + ".gif";
-    _exportData->gifSizeFactor      = 1;
+    // videoFrames
+    _exportData->videoFilename = "animation_X" + to_string(_simParam.dimension.x) + "Y" + to_string(_simParam.dimension.y) + "P" + to_string(_simParam.nbIndividual) + ".mp4";
+    _exportData->videoPath = _settings.dir + _exportData->videoFilename;
+    _exportData->videoSizeFactor = 1;
     if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__){ 
-        _exportData->gifSizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
+        _exportData->videoSizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
     }
-    _exportData->gifPath       = _settings.dir + _settings.dirName + "/";
-    _exportData->gifRatioFrame = 1 ;// mettre un parametre en géniie log
+    _exportData->videoRatioFrame = 1 ;// mettre un parametre en génie log
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+
+    // création de l'arboraissance et du nom du fichier 
+    struct stat info;
+    if (stat(_settings.dir.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
+        if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier existe déjà." << std::endl;
+    } else {
+        // Le dossier n'existe pas, on le crée
+        int status = mkdir(_settings.dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if (status == 0) {
+            if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier a été créé avec succès." << std::endl;
+        } else {
+            if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Erreur lors de la création du dossier." << std::endl;
+        }
+    }
 }
 
 /*
@@ -287,58 +288,67 @@ void shuffleIndex(simParam * _simParam, settings _settings){
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
-void exportDataFrame(simParam _simParam, exportData * _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrame --- "<<endl;
-    if(_settings.exportDataFormat == __EXPORT_TYPE_GIF__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
-        if(_simParam.nbFrame%_exportData->gifRatioFrame == 0){
-            cv::Mat frame(_simParam.dimension.x * _exportData->gifSizeFactor, _simParam.dimension.y * _exportData->gifSizeFactor, CV_8UC3, __COLOR_BLACK__);
+void exportDataFrameVideo(simParam _simParam, exportData * _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameVideo --- "<<endl;
+    cv::Mat frame(_simParam.dimension.x * _exportData->videoSizeFactor, _simParam.dimension.y * _exportData->videoSizeFactor, CV_8UC3, __COLOR_BLACK__);
 
-            // Dessiner le pixel de sortie en vert
-            cv::Point TL(_simParam.exit.x * _exportData->gifSizeFactor, _simParam.exit.y * _exportData->gifSizeFactor);
-            cv::Point BR(TL.x + _exportData->gifSizeFactor , TL.y + _exportData->gifSizeFactor);
-            cv::Rect rectangle(TL, BR);
-            cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
+    // Dessiner le pixel de sortie en vert
+    cv::Point TL(_simParam.exit.x * _exportData->videoSizeFactor, _simParam.exit.y * _exportData->videoSizeFactor);
+    cv::Point BR(TL.x + _exportData->videoSizeFactor , TL.y + _exportData->videoSizeFactor);
+    cv::Rect rectangle(TL, BR);
+    cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
 
-            // Dessiner les pixels de la population en blanc
-            for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
-                cv::Point TL(_simParam.populationPosition[i].x * _exportData->gifSizeFactor, _simParam.populationPosition[i].y * _exportData->gifSizeFactor);
-                cv::Point BR(TL.x + _exportData->gifSizeFactor, TL.y + _exportData->gifSizeFactor);
-                cv::Rect rectangle(TL, BR);
-                cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
-            }
-            _exportData->gifFrames.push_back(frame);
-        }
+    // Dessiner les pixels de la population en blanc
+    for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
+        cv::Point TL(_simParam.populationPosition[i].x * _exportData->videoSizeFactor, _simParam.populationPosition[i].y * _exportData->videoSizeFactor);
+        cv::Point BR(TL.x + _exportData->videoSizeFactor, TL.y + _exportData->videoSizeFactor);
+        cv::Rect rectangle(TL, BR);
+        cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
     }
-    if(_settings.exportDataFormat == __EXPORT_TYPE_VALUE__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
-        // TO DO
-    }
+    _exportData->videoFrames.push_back(frame);
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+}
+
+void exportDataFrameValue(simParam _simParam, exportData * _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameValue --- "<<endl;
+    // TO DO
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 
-void saveExportData(simParam _simParam, exportData _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportData --- "<<endl;
-    if(_settings.exportDataFormat == __EXPORT_TYPE_GIF__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
-        // Créer un objet VideoWriter pour écrire le fichier GIF
-        cv::VideoWriter writer(_exportData.gifOutputFilename, cv::VideoWriter::fourcc('G', 'I', 'F', 'S'), __GIF_FPS__, _exportData.gifFrames[0].size());
+void saveExportDataVideo(simParam _simParam, exportData _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportDataVideo --- "<<endl;
+    // Créer un objet VideoWriter pour écrire le fichier MP4
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "Création d'un vidéo : " << _exportData.videoPath << ", fps :" << __VIDEO_FPS__ << ", taille : " << _exportData.videoFrames[0].size() << endl;
+    _exportData.videoWriter.open(_exportData.videoPath, cv::VideoWriter::fourcc('a','v','c','1'), __VIDEO_FPS__, _exportData.videoFrames[0].size(), true);
 
-        // Vérifier si le VideoWriter a été correctement initialisé
-        if (!writer.isOpened()) {
-            cout << "Erreur lors de l'ouverture du fichier GIF de sortie" << endl;
-        }
-
-        // Écrire chaque image dans le fichier GIF
-        for (const cv::Mat& frame : _exportData.gifFrames) {
-            writer.write(frame);
-        }
-
-        // Fermer le fichier GIF
-        writer.release();
-        cout << "Le fichier GIF a été créé avec succès." << endl;
+    // Vérifier si le VideoWriter a été correctement initialisé
+    if (!_exportData.videoWriter.isOpened()) {
+        cout << "Erreur lors de l'ouverture du fichier : " << _exportData.videoFilename << " dans (" << _settings.dir << ")" << endl;
     }
-    if(_settings.exportDataFormat == __EXPORT_TYPE_VALUE__ || _settings.exportDataFormat == __EXPORT_TYPE_ALL__){
+    else
+    {
+        if(_settings.print >= __DEBUG_PRINT_STEP__)cout << " # - Vidéo : "<<endl;
+        // Écrire chaque image dans le fichier MP4
+        // for (const cv::Mat& frame : _exportData.videoFrames) {
+        //     _exportData.videoWriter.write(frame);
+
+        // }
+        for (size_t i = 0; i < _simParam.nbFrame; i++)
+        {
+            _exportData.videoWriter.write(_exportData.videoFrames[i]);
+            progressBar(i,_simParam.nbFrame, 100, i);
+        }
+        
+        // Fermer le fichier MP4
+        _exportData.videoWriter.release();
+        cout << "Le fichier video a été créé avec succès." << endl;
+    }
+}
+
+void saveExportDataValue(simParam _simParam, exportData _exportData, settings _settings){
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportDataValue --- "<<endl;
         // TO DO
-    }
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 

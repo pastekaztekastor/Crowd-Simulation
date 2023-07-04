@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
         
         if( _settings.print >= __DEBUG_PRINT_DEBUG__ )cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
         
-        if (_simParam.pInSim <= 1) _simParam.isFinish = 1; 
+        if (_simParam.pInSim <= 0) _simParam.isFinish = 1; 
 
         //if(_settings.print <= __DEBUG_PRINT_ALL__) progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
@@ -64,14 +64,45 @@ int main(int argc, char const *argv[])
         }
         popKernelToSim(_kernelParam, &_simParam, _settings);
         pInKernelToSim(_kernelParam, &_simParam, _settings);
-        exportDataFrame(_simParam, &_exportData, _settings);
+        
+        switch (_settings.exportDataType)
+        {
+        case  __EXPORT_TYPE_ALL__:
+                exportDataFrameVideo(_simParam, &_exportData, _settings);
+                exportDataFrameValue(_simParam, &_exportData, _settings);
+            break;
+        case  __EXPORT_TYPE_VIDEO__:
+                exportDataFrameVideo(_simParam, &_exportData, _settings);
+            break;
+        case  __EXPORT_TYPE_VALUE__:
+                exportDataFrameValue(_simParam, &_exportData, _settings);
+            break;
+        
+        default:
+            break;
+        }
     }
     
         
     if( _settings.print >= __DEBUG_PRINT_ALL__ )cout << endl<< "solved on " << _simParam.nbFrame << " Frames" << endl << endl;
     
     if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Export simulation ###" << endl;
-    saveExportData(_simParam, _exportData, _settings);
+    switch (_settings.exportDataType)
+    {
+    case  __EXPORT_TYPE_ALL__:
+            saveExportDataVideo(_simParam, _exportData, _settings);
+            saveExportDataValue(_simParam, _exportData, _settings);
+        break;
+    case  __EXPORT_TYPE_VIDEO__:
+            saveExportDataVideo(_simParam, _exportData, _settings);
+        break;
+    case  __EXPORT_TYPE_VALUE__:
+            saveExportDataValue(_simParam, _exportData, _settings);
+        break;
+    
+    default:
+        break;
+    }
     
     if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Free memory ###" << endl;
     // TO DO 
