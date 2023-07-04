@@ -75,6 +75,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
             } 
             else if (strcmp(argv[i], "-x") == 0) {
                 _simParam->dimension.x = atoi(argv[i + 1]);
+                _simParam->nbWall = atoi(argv[i + 1]);
             }
             else if (strcmp(argv[i], "-y") == 0) {
                 _simParam->dimension.y = atoi(argv[i + 1]);
@@ -155,6 +156,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
 
     // Calloc
     _simParam->populationPosition = ( float3 * ) calloc(_simParam->nbIndividual, sizeof( float3 ));
+    _simParam->wallPosition = ( uint2 * ) calloc(_simParam->nbIndividual, sizeof( uint2 ));
     _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
         _simParam->map[i] = __MAP_EMPTY__ ; // -1 for empty 
@@ -177,23 +179,31 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initPopulationPositionMap ---"<<endl;
     uint2 coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t -> Placing element"<< endl;
     // -2) Placing the walls
-        // if(_settings.print >2)cout << "   --> Placing the walls  ";
-        // TO DO - Currently we do not put
-        // if(_settings.print >2)cout << "-> DONE " << endl;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Wall " ;
+    for (size_t i = 0; i < _simParam->nbWall; i++)
+    {
+        coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
+        while (_simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] != __MAP_EMPTY__){
+            coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
+        }
+        _simParam->wallPosition[i] = make_uint2(coord.x, coord.y) ;
+        _simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] = __MAP_WALL__;
+    }
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
 
     // -3) Placing exit
-    if(_settings.print >2) cout << "\t -> Placing element"<< endl;
-    if(_settings.print >2) cout << "\t --> Wall " ;
-    _simParam->map[valueOfxy(_simParam->exit.x,_simParam->exit.y,_simParam->dimension.x, _simParam->dimension.y)] = -2;
-    if(_settings.print >2) cout << "\tOK " << endl ;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Exit " ;
+    _simParam->map[valueOfxy(_simParam->exit.x,_simParam->exit.y,_simParam->dimension.x, _simParam->dimension.y)] = __MAP_EXIT__;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
     
     // -4) Place individuals only if it is free.
-    if(_settings.print >2) cout << "\t --> People " ;
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> People " ;
     for (size_t i = 0; i < _simParam->nbIndividual; i++){
         coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
 
-        while (_simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] != -1){
+        while (_simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] != __MAP_EMPTY__){
             coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
         }
         // ---- population
@@ -298,13 +308,25 @@ void exportDataFrameVideo(simParam _simParam, exportData * _exportData, settings
     cv::Rect rectangle(TL, BR);
     cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
 
-    // Dessiner les pixels de la population en blanc
+    // Dessiner les pixels de la population en blanc / rouge 
     for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
         cv::Point TL(_simParam.populationPosition[i].x * _exportData->videoSizeFactor, _simParam.populationPosition[i].y * _exportData->videoSizeFactor);
         cv::Point BR(TL.x + _exportData->videoSizeFactor, TL.y + _exportData->videoSizeFactor);
         cv::Rect rectangle(TL, BR);
         cv::rectangle(frame, rectangle, colorInterpol(__COLOR_WHITE__, __COLOR_RED__, _simParam.populationPosition[i].z/float(__SIM_MAX_WAITING__)), -1);
     }
+    _exportData->videoFrames.push_back(frame);
+    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+
+    // Dessiner les mure en bleu
+    for (size_t i = 0; i < _simParam.nbWall; ++i) {
+        cv::Point TL(_simParam.wallPosition[i].x * _exportData->videoSizeFactor, _simParam.wallPosition[i].y * _exportData->videoSizeFactor);
+        cv::Point BR(TL.x + _exportData->videoSizeFactor, TL.y + _exportData->videoSizeFactor);
+        cv::Rect rectangle(TL, BR);
+        cv::rectangle(frame, rectangle, __COLOR_BLUE__, -1);
+    }
+
+    // Exporte la frame
     _exportData->videoFrames.push_back(frame);
     if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }

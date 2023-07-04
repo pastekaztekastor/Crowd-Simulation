@@ -55,12 +55,14 @@ using namespace std;
 // Struct
 typedef struct {
     float3* populationPosition          ; // Position table of all the individuals in the simulation [[x,y,att],[x,y,att],...]
+    uint2*  wallPosition                ; // Position table of all the individuals in the simulation [[x,y,att],[x,y,att],...]
     uint  * cost                        ; //
     int   * map                         ; // 2D map composed of the uint 0: empty, 1 humain, 2 wall, 3 exit on 1 line
     uint2   exit                        ; // [x,y] coordinate of simulation output
     uint  * populationIndex             ; // List of individual indexes so as not to disturb the order of the individuals
     uint2   dimension                   ; // Simulation x-dimension
     uint    nbIndividual                ; // Number of individuals who must evolve during the simulation
+    uint    nbWall                      ; // Number of wall
     uint    pInSim                      ; //
     uint    isFinish                    ; //
     uint    nbFrame                     ; // 
