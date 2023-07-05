@@ -143,7 +143,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
             }
         }  
     }
-    if(_simParam->nbIndividual > _simParam->dimension.x * _simParam->dimension.y * 0.8){
+    if (_simParam->nbIndividual > _simParam->dimension.x * _simParam->dimension.y * 0.8){
         cout << "The number of individuals exceeds 80\% of the simulation space. Terrain generation will not be compleor efficient. Please decrease the individual quantity or increase the dimension.";
         exit(0);
     }
@@ -168,7 +168,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->exit = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
     
-    if(_settings->print >= __DEBUG_PRINT_ALL__) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
+    if (_settings->print >= __DEBUG_PRINT_ALL__) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
         << "\t # simDimX = " << _simParam->dimension.x <<endl
         << "\t # simDimY = " << _simParam->dimension.y <<endl
         << "\t # simDimP = " << _simParam->nbIndividual <<endl
@@ -176,15 +176,15 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
         << "\t # settings_model = " << _settings->model <<endl
         << "\t # settings_exportDataType = " << _settings->exportDataType <<endl
         << "\t # settings_dir = " << _settings->dir <<endl <<endl;
-    if(_settings->print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings->print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void initPopulationPositionMap(simParam * _simParam, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initPopulationPositionMap ---"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initPopulationPositionMap ---"<<endl;
     uint2 coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t -> Placing element"<< endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t -> Placing element"<< endl;
     // -2) Placing the walls
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Wall " ;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Wall " ;
     for (size_t i = 0; i < _simParam->nbWall; i++)
     {
         coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
@@ -194,15 +194,15 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
         _simParam->wallPosition[i] = make_uint2(coord.x, coord.y) ;
         _simParam->map[valueOfxy(coord.x,coord.y,_simParam->dimension.x,_simParam->dimension.y)] = __MAP_WALL__;
     }
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
 
     // -3) Placing exit
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Exit " ;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Exit " ;
     _simParam->map[valueOfxy(_simParam->exit.x,_simParam->exit.y,_simParam->dimension.x, _simParam->dimension.y)] = __MAP_EXIT__;
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
     
     // -4) Place individuals only if it is free.
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> People " ;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> People " ;
     for (size_t i = 0; i < _simParam->nbIndividual; i++){
         coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
 
@@ -216,55 +216,78 @@ void initPopulationPositionMap(simParam * _simParam, settings _settings){
     }
     // printPopulationPosition((*_simParam), _settings);
 
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void initExportData(simParam _simParam, exportData * _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initExportData ---"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initExportData ---"<<endl;
     // videoFrames
     _exportData->videoFilename = "anim_M" + to_string(_settings.model) + "-X" + to_string(_simParam.dimension.x) + "-Y" + to_string(_simParam.dimension.y) + "-P" + to_string(_simParam.nbIndividual) + ".mp4";
     _exportData->videoPath = _settings.dir + _exportData->videoFilename;
+    _exportData->videoNbFrame = 0;
     _exportData->videoSizeFactor = 1;
     if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__){ 
         _exportData->videoSizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
     }
-    _exportData->videoRatioFrame = 1 ;// mettre un parametre en génie log
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    _exportData->videoRatioFrame = 2 ;// mettre un parametre en génie log
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 
     // création de l'arboraissance et du nom du fichier 
     struct stat info;
     if (stat(_settings.dir.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
-        if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier existe déjà." << std::endl;
+        if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier existe déjà." << std::endl;
     } else {
         // Le dossier n'existe pas, on le crée
         int status = mkdir(_settings.dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (status == 0) {
-            if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier a été créé avec succès." << std::endl;
+            if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier a été créé avec succès." << std::endl;
         } else {
-            if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Erreur lors de la création du dossier." << std::endl;
+            if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Erreur lors de la création du dossier." << std::endl;
+        }
+    }
+    if ( max(_simParam.dimension.x, _simParam.dimension.y) > 50 ){
+        _exportData->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_OFF__;
+    }
+    else{
+        _exportData->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_ON__;
+    }
+    
+    _exportData->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_OFF__;
+    if ( _exportData->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_ON__ ){
+        _exportData->videoCalcCost = cv::Mat(_simParam.dimension.y * _exportData->videoSizeFactor, _simParam.dimension.x * _exportData->videoSizeFactor, CV_8UC3, __COLOR_ALPHA__);
+        for (size_t i = 0; i < _simParam.dimension.x * _simParam.dimension.y; i++){
+            // Paramètres du texte
+            string texte = to_string(_simParam.cost[i]);
+            cv::Point position((xPosof(i, _simParam.dimension.x, _simParam.dimension.y ) * _exportData->videoSizeFactor) + (_exportData->videoSizeFactor * 0,9), (yPosof(i, _simParam.dimension.x, _simParam.dimension.y) * _exportData->videoSizeFactor) + (_exportData->videoSizeFactor * 0.9));
+            int epaisseur = 1;
+            float taillePolice = 0.8;
+            int ligneType = cv::LINE_AA;
+        
+            // Écrire le texte sur l'image
+            cv::putText(_exportData->videoCalcCost, texte, position, cv::FONT_HERSHEY_SIMPLEX, taillePolice, __COLOR_GREY__, epaisseur, ligneType);
         }
     }
 }
 
 void initCostMap (simParam * _simParam, settings _settings) {
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initCostMap ---"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initCostMap ---"<<endl;
     // Remplire la carte de coût avec des valeur élevé.
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Remplire la carte de coût avec des valeur élevé. "<<endl;
-    // if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "     - Taille de la carte de couts "<<  endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Remplire la carte de coût avec des valeur élevé. "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "     - Taille de la carte de couts "<<  endl;
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
-        _simParam->cost[i] = 99;
+        _simParam->cost[i] = _simParam->dimension.x*_simParam->dimension.x;
     }
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)printCostMap((*_simParam), _settings);
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)printCostMap((*_simParam), _settings);
     
     // Définir la case de sortie avec un coût de 0
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir la case de sortie avec un coût de 0 "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir la case de sortie avec un coût de 0 "<<endl;
     _simParam->cost[valueOfxy(_simParam->exit.x, _simParam->exit.y, _simParam->dimension.x, _simParam->dimension.y)] = 0;
 
     // Définir les déplacements possibles (haut, bas, gauche, droite)
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir les déplacements possibles (haut, bas, gauche, droite) "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir les déplacements possibles (haut, bas, gauche, droite) "<<endl;
     std::vector<std::pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
     // Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie "<<endl;
     bool updated;
     do {
         updated = false;
@@ -295,7 +318,7 @@ void initCostMap (simParam * _simParam, settings _settings) {
             }
         }
     } while (updated);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 
@@ -310,14 +333,14 @@ void initCostMap (simParam * _simParam, settings _settings) {
 
 */
 void setSimExit(simParam * _simParam, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setSimExit ---"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setSimExit ---"<<endl;
     // TO DO
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void setPopulationPositionMap(simParam * _simParam, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setPopulationPositionMap ---"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setPopulationPositionMap ---"<<endl;
     // TO DO
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 /*
@@ -345,36 +368,28 @@ void progressBar(uint progress, uint total, uint width, uint iteration) {
     fflush(stdout);
 }
 void shuffleIndex(simParam * _simParam, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - Shuffle index --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - Shuffle index --- "<<endl;
     for ( uint i = _simParam->nbIndividual - 1; i > 0; i--) {
        uint j = rand() % (i + 1);
        uint temp = _simParam->populationIndex[i];
        _simParam->populationIndex[i] = _simParam->populationIndex[j];
        _simParam->populationIndex[j] = temp;
     }
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 void exportDataFrameVideo(simParam _simParam, exportData * _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameVideo --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameVideo --- "<<endl;
     cv::Mat frame(_simParam.dimension.y * _exportData->videoSizeFactor, _simParam.dimension.x * _exportData->videoSizeFactor, CV_8UC3, __COLOR_BLACK__);
 
-    // Dessiner le pixel de sortie en vert
-    cv::Point TL(_simParam.exit.x * _exportData->videoSizeFactor, _simParam.exit.y * _exportData->videoSizeFactor);
-    cv::Point BR(TL.x + _exportData->videoSizeFactor , TL.y + _exportData->videoSizeFactor);
-    cv::Rect rectangle(TL, BR);
-    cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
-
-    // Dessiner les pixels de la population en blanc / rouge 
+    // Dessiner les cercle de la population en blanc / rouge 
     for (size_t i = 0; i < _simParam.nbIndividual; ++i) {
-        cv::Point TL(_simParam.populationPosition[i].x * _exportData->videoSizeFactor, _simParam.populationPosition[i].y * _exportData->videoSizeFactor);
-        cv::Point BR(TL.x + _exportData->videoSizeFactor, TL.y + _exportData->videoSizeFactor);
-        cv::Rect rectangle(TL, BR);
-        cv::rectangle(frame, rectangle, colorInterpol(__COLOR_WHITE__, __COLOR_RED__, _simParam.populationPosition[i].z/float(__SIM_MAX_WAITING__)), -1);
+        cv::Point center((_simParam.populationPosition[i].x * _exportData->videoSizeFactor) + (_exportData->videoSizeFactor / 2), (_simParam.populationPosition[i].y * _exportData->videoSizeFactor) + (_exportData->videoSizeFactor / 2));
+        float radius = (_exportData->videoSizeFactor / 2) * 0.9;
+        cv::Scalar color = colorInterpol(__COLOR_WHITE__, __COLOR_RED__, _simParam.populationPosition[i].z / float(__SIM_MAX_WAITING__));
+        int thickness = -1;  // Remplacer par un nombre positif pour un contour solide
+        cv::circle(frame, center, radius, color, thickness);
     }
-    _exportData->videoFrames.push_back(frame);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
-
     // Dessiner les mure en bleu
     for (size_t i = 0; i < _simParam.nbWall; ++i) {
         cv::Point TL(_simParam.wallPosition[i].x * _exportData->videoSizeFactor, _simParam.wallPosition[i].y * _exportData->videoSizeFactor);
@@ -382,21 +397,38 @@ void exportDataFrameVideo(simParam _simParam, exportData * _exportData, settings
         cv::Rect rectangle(TL, BR);
         cv::rectangle(frame, rectangle, __COLOR_BLUE__, -1);
     }
+    // Dessiner le pixel de sortie en vert
+    cv::Point TL(_simParam.exit.x * _exportData->videoSizeFactor, _simParam.exit.y * _exportData->videoSizeFactor);
+    cv::Point BR(TL.x + _exportData->videoSizeFactor , TL.y + _exportData->videoSizeFactor);
+    cv::Rect rectangle(TL, BR);
+    cv::rectangle(frame, rectangle, __COLOR_GREEN__, -1);
+
+    // Superposition avec le calque de cout de chaque case
+    if ( 0 ){
+        // Paramètre pour la superposition
+        double alpha = 0.5; // Facteur de pondération pour l'image 1
+        double beta = 0.5;  // Facteur de pondération pour l'image 2
+        double gamma = 0.0; // Paramètre d'ajout d'un scalaire
+
+        // Superposer les images
+        cv::addWeighted(_exportData->videoCalcCost, alpha, frame, beta, gamma, frame);
+    }
 
     // Exporte la frame
     _exportData->videoFrames.push_back(frame);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    _exportData->videoNbFrame ++;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 void exportDataFrameValue(simParam _simParam, exportData * _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameValue --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - exportDataFrameValue --- "<<endl;
     // TO DO
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 
 void saveExportDataVideo(simParam _simParam, exportData _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportDataVideo --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportDataVideo --- "<<endl;
     // Créer un objet VideoWriter pour écrire le fichier MP4
     if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "Création d'un vidéo : " << _exportData.videoPath << ", fps :" << __VIDEO_FPS__ << ", taille : " << _exportData.videoFrames[0].size() << endl;
     _exportData.videoWriter.open(_exportData.videoPath, cv::VideoWriter::fourcc('a','v','c','1'), __VIDEO_FPS__, _exportData.videoFrames[0].size(), true);
@@ -407,11 +439,11 @@ void saveExportDataVideo(simParam _simParam, exportData _exportData, settings _s
     }
     else
     {
-        if(_settings.print >= __DEBUG_PRINT_STEP__)cout << " # - Vidéo : "<<endl;
+        if (_settings.print >= __DEBUG_PRINT_STEP__)cout << " # - Vidéo : "<<endl;
         // Écrire chaque image dans le fichier MP4
-        for (size_t i = 0; i < _simParam.nbFrame; i++){
+        for (size_t i = 0; i < _exportData.videoNbFrame ; i++){
             _exportData.videoWriter.write(_exportData.videoFrames[i]);
-            progressBar(i,_simParam.nbFrame-1, 100, i);
+            progressBar(i,_exportData.videoNbFrame-1, 100, i);
         }
         cout << endl;
         // Fermer le fichier MP4
@@ -421,9 +453,9 @@ void saveExportDataVideo(simParam _simParam, exportData _exportData, settings _s
 }
 
 void saveExportDataValue(simParam _simParam, exportData _exportData, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportDataValue --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - saveExportDataValue --- "<<endl;
         // TO DO
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 
@@ -437,12 +469,12 @@ void saveExportDataValue(simParam _simParam, exportData _exportData, settings _s
                      
 */
 void freeSimParam (simParam * _simParam, settings _settings){
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - freeSimParam --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - freeSimParam --- "<<endl;
     free(_simParam->populationPosition);
     free(_simParam->populationIndex);
     free(_simParam->cost);
     free(_simParam->map);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 /*
@@ -455,7 +487,7 @@ void freeSimParam (simParam * _simParam, settings _settings){
                      
 */
 void printMap(simParam _simParam, settings _settings){
-    if(_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - Display map --- "<<endl;
+    if (_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - Display map --- "<<endl;
 
     // Display column numbers
     cout<<"  ";
@@ -489,11 +521,11 @@ void printMap(simParam _simParam, settings _settings){
         }
         cout<<endl;
     }
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
 void printCostMap (simParam _simParam, settings _settings){
-    if(_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printCostMap --- "<<endl;
+    if (_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printCostMap --- "<<endl;
     // Display column numbers
     cout<<"  ";
         for (int x = 0; x < _simParam.dimension.x; x++)
@@ -512,15 +544,15 @@ void printCostMap (simParam _simParam, settings _settings){
         }
         cout<<endl;
     }
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 void printPopulationPosition(simParam _simParam, settings _settings){
-    if(_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printPopulationPosition --- "<<endl;
+    if (_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printPopulationPosition --- "<<endl;
     for (size_t i = 0; i < _simParam.nbIndividual; i++)
     {
         cout << "\t  - " << i << " )\t" << _simParam.populationPosition[i].x << "\t" << _simParam.populationPosition[i].y <<endl;
     }
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 uint xPosof(uint value, uint dimX, uint dimY) {
     return value % dimX;

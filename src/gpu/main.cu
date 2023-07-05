@@ -17,31 +17,29 @@ int main(int argc, char const *argv[])
     kernelParam     _kernelParam;
     exportData      _exportData;
 
-    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Init simulation ###" << endl;
+    if ( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Init simulation ###" << endl;
     srand(time(NULL));
     initSimSettings(argc, argv, &_simParam, &_settings);
     initPopulationPositionMap(&_simParam, _settings);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printMap(_simParam, _settings);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printPopulationPosition(_simParam, _settings);
-    initExportData(_simParam, &_exportData, _settings);
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__ ) printMap(_simParam, _settings);
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__ ) printPopulationPosition(_simParam, _settings);
     initCostMap(&_simParam, _settings);
-    if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printCostMap(_simParam, _settings);
+    initExportData(_simParam, &_exportData, _settings);
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__ ) printCostMap(_simParam, _settings);
     
     // printMap(_simParam, _settings);
     // printPopulationPosition(_simParam, _settings);
    
     initKernelParam(&_kernelParam, _simParam, _settings);
     
-    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Launch simulation ###" << endl;
-    //while (_simParam.isFinish == 0 ){
-    while (_simParam.nbFrame <= _simParam.nbIndividual*3 ){
+    if ( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Launch simulation ###" << endl;
+    
+    while (_exportData.videoNbFrame <= 3000){
+        
+        if ( _settings.print >= __DEBUG_PRINT_DEBUG__ )cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
+        if (_simParam.pInSim <= 0) break; 
         _simParam.nbFrame ++;
-        
-        if( _settings.print >= __DEBUG_PRINT_DEBUG__ )cout << "------------ FRAME " << _simParam.nbFrame << " ------------" << endl;
-        
-        if (_simParam.pInSim <= 0) _simParam.isFinish = 1; 
-
-        if(_settings.print <= __DEBUG_PRINT_ALL__) progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
+        if (_settings.print <= __DEBUG_PRINT_ALL__) progressBar(_simParam.nbIndividual - _simParam.pInSim, _simParam.nbIndividual, 100, _simParam.nbFrame);
         //shuffleIndex(&_simParam, _settings);
         
         // MODEL
@@ -73,18 +71,18 @@ int main(int argc, char const *argv[])
         pInKernelToSim(_kernelParam, &_simParam, _settings);
         
 
-        if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) cout << "  -  P IN : " << _simParam.pInSim << endl;
-        if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printMap(_simParam, _settings);
-        if(_settings.print >= __DEBUG_PRINT_DEBUG__ ) printPopulationPosition(_simParam, _settings);
+        if (_settings.print >= __DEBUG_PRINT_DEBUG__ ) cout << "  -  P IN : " << _simParam.pInSim << endl;
+        if (_settings.print >= __DEBUG_PRINT_DEBUG__ ) printMap(_simParam, _settings);
+        if (_settings.print >= __DEBUG_PRINT_DEBUG__ ) printPopulationPosition(_simParam, _settings);
 
         switch (_settings.exportDataType)
         {
         case  __EXPORT_TYPE_ALL__:
-                exportDataFrameVideo(_simParam, &_exportData, _settings);
+                if ((_simParam.nbFrame % _exportData.videoRatioFrame) == 0) exportDataFrameVideo(_simParam, &_exportData, _settings);
                 exportDataFrameValue(_simParam, &_exportData, _settings);
             break;
         case  __EXPORT_TYPE_VIDEO__:
-                exportDataFrameVideo(_simParam, &_exportData, _settings);
+                if ((_simParam.nbFrame % _exportData.videoRatioFrame) == 0) exportDataFrameVideo(_simParam, &_exportData, _settings);
             break;
         case  __EXPORT_TYPE_VALUE__:
                 exportDataFrameValue(_simParam, &_exportData, _settings);
@@ -96,9 +94,9 @@ int main(int argc, char const *argv[])
     }
     
         
-    if( _settings.print >= __DEBUG_PRINT_ALL__ )cout << endl<< "solved on " << _simParam.nbFrame << " Frames" << endl << endl;
+    if ( _settings.print >= __DEBUG_PRINT_ALL__ )cout << endl<< "solved on " << _simParam.nbFrame << " Frames" << endl << endl;
     
-    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Export simulation ###" << endl;
+    if ( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Export simulation ###" << endl;
     switch (_settings.exportDataType)
     {
     case  __EXPORT_TYPE_ALL__:
@@ -116,7 +114,7 @@ int main(int argc, char const *argv[])
         break;
     }
     cout << endl;
-    if( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Free memory ###" << endl << std::numeric_limits<uint>::max() << " " << UINT_MAX;
+    if ( _settings.print >= __DEBUG_PRINT_STEP__ )cout  << " ### Free memory ###" << endl;
     // TO DO 
     cout << endl;
     return 0;

@@ -19,6 +19,7 @@ Ce *README* servira davantage de feuille de route/journal de bord qu'un README c
   - [Utilisation](#utilisation)
   - [Liste des tâches à effectuer](#liste-des-tâches-à-effectuer)
     - [Organisation](#organisation)
+    - [Prolèmes rencontré](#prolèmes-rencontré)
 
 ## Fichier Utiles
 
@@ -284,3 +285,12 @@ Une fois l'installation terminée, le codec GIF devrait être installé sur votr
 - [x] mettre en place un nouveau model (model avec calcul de distance des case voisines les plus proche)
 - [ ] parsseur d'images pour la création d'une map
 - [ ] version "mac" CPU
+
+### Prolèmes rencontré
+
+- [x] Le Pin qui n'est pas bon dans le model 2 -> po de gestion de la fin // annimation
+  C'était un problème lors de la création de la vidéo. j'enregistrais 2 frame a chaque fois.
+- [ ] Trop gourmand en ressource quand on fait des grosse vidéo
+- [x] La sortie n'apparait pas toujours -> ordre de plot dans la fonction qui créer les frames.
+- [x] J'affiche des var de debg a la fin du programme  -> supprimé.
+- [ ] Maybee faire l'inondation sur GPU ? C'est long avec des grosse matrice.

@@ -18,25 +18,25 @@
                     
 */
 void initKernelParam(kernelParam * _kernelParam, simParam _simParam, settings _settings){
-    if( _settings.print > 2 )cout << endl << " ### Init kernel params ###" << endl;
+    if ( _settings.print > 2 )cout << endl << " ### Init kernel params ###" << endl;
 
-    if( _settings.print > 2 )cout << " \t> Malloc";
+    if ( _settings.print > 2 )cout << " \t> Malloc";
     cudaMalloc( &_kernelParam->populationPosition , sizeof(float3) * _simParam.nbIndividual); 
     cudaMalloc( &_kernelParam->cost               , _simParam.dimension.x * _simParam.dimension.y * sizeof(uint)); 
     cudaMalloc( &_kernelParam->map                , _simParam.dimension.x * _simParam.dimension.y * sizeof(int));
     cudaMalloc( &_kernelParam->pInSim             , sizeof(uint));
-    if( _settings.print > 2 )cout  << " OK " << endl;
-    if( _settings.print > 2 )cout << " \t> Copy";
+    if ( _settings.print > 2 )cout  << " OK " << endl;
+    if ( _settings.print > 2 )cout << " \t> Copy";
     cudaMemcpy( (void**) _kernelParam->populationPosition, _simParam.populationPosition, (sizeof(float3) * _simParam.nbIndividual)                             , cudaMemcpyHostToDevice);
     cudaMemcpy( (void**) _kernelParam->cost              , _simParam.cost              , (_simParam.dimension.x * _simParam.dimension.y * sizeof(uint))  , cudaMemcpyHostToDevice);
     cudaMemcpy( (void**) _kernelParam->map               , _simParam.map               , (_simParam.dimension.x * _simParam.dimension.y * sizeof(int))   , cudaMemcpyHostToDevice);
     cudaMemcpy( (void**) _kernelParam->pInSim            , &_simParam.pInSim           , sizeof(uint)                                                    , cudaMemcpyHostToDevice);
-    if( _settings.print > 2 )cout  << " OK " << endl;
-    if( _settings.print > 2 )cout << " \t> Threads & blocks" ;
+    if ( _settings.print > 2 )cout  << " OK " << endl;
+    if ( _settings.print > 2 )cout << " \t> Threads & blocks" ;
     _kernelParam->nb_threads = 32;
     _kernelParam->blocks = ((_simParam.nbIndividual + (_kernelParam->nb_threads-1))/_kernelParam->nb_threads);
     _kernelParam->threads = (_kernelParam->nb_threads);
-    if( _settings.print > 2 )cout  << " OK " << endl;
+    if ( _settings.print > 2 )cout  << " OK " << endl;
 }
 
 /*
@@ -50,7 +50,7 @@ void initKernelParam(kernelParam * _kernelParam, simParam _simParam, settings _s
 */
 __global__ void kernel_model1_GPU(kernelParam _kernelParam, simParam _simParam, settings _settings){
     int tid = blockDim.x * blockIdx.x + threadIdx.x;
-    if(tid < _simParam.nbIndividual)
+    if (tid < _simParam.nbIndividual)
     {
         if ( _kernelParam.populationPosition[tid].x > -1 && _kernelParam.populationPosition[tid].y > -1){
             // printf(" frame %d id %d\n", _simParam.nbFrame, tid);
@@ -85,7 +85,7 @@ __global__ void kernel_model1_GPU(kernelParam _kernelParam, simParam _simParam, 
 
 __global__ void kernel_costMap_GPU(kernelParam _kernelParam, simParam _simParam, settings _settings){
     int tid = blockDim.x * blockIdx.x + threadIdx.x;
-    if(tid < _simParam.nbIndividual){
+    if (tid < _simParam.nbIndividual){
         if ( _kernelParam.populationPosition[tid].x > -1 && _kernelParam.populationPosition[tid].y > -1){
             if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL TID = %d \n", tid);
             // position de l'individue tid
@@ -172,19 +172,19 @@ __global__ void kernel_costMap_GPU(kernelParam _kernelParam, simParam _simParam,
              |_|                    
 */
 void mapKernelToSim(kernelParam _kernelParam, simParam * _simParam, settings _settings){
-    if( _settings.print > 2 )cout <<endl<< " \t> mapKernelToSim " << endl;
+    if ( _settings.print > 2 )cout <<endl<< " \t> mapKernelToSim " << endl;
     cudaMemcpy(_simParam->map, _kernelParam.map, _simParam->dimension.x * _simParam->dimension.y * sizeof(uint), cudaMemcpyDeviceToHost);
-    if( _settings.print > 2 )cout  << " OK " << endl;
+    if ( _settings.print > 2 )cout  << " OK " << endl;
 }
 void popKernelToSim(kernelParam _kernelParam, simParam * _simParam, settings _settings){
-    if( _settings.print > 2 )cout <<endl<< " \t> popKernelToSim " << endl;
+    if ( _settings.print > 2 )cout <<endl<< " \t> popKernelToSim " << endl;
     cudaMemcpy(_simParam->populationPosition, _kernelParam.populationPosition, sizeof(float3) * _simParam->nbIndividual, cudaMemcpyDeviceToHost);
-    if( _settings.print > 2 )cout  << " OK " << endl;
+    if ( _settings.print > 2 )cout  << " OK " << endl;
 }
 void pInKernelToSim(kernelParam _kernelParam, simParam * _simParam, settings _settings){
-    if( _settings.print > 2 )cout <<endl<< " \t> mapKernelToSim " << endl;
+    if ( _settings.print > 2 )cout <<endl<< " \t> mapKernelToSim " << endl;
     cudaMemcpy(&_simParam->pInSim, _kernelParam.pInSim, sizeof(uint), cudaMemcpyDeviceToHost);
-    if( _settings.print > 2 )cout  << " OK " << endl;
+    if ( _settings.print > 2 )cout  << " OK " << endl;
 } 
 
 /*
