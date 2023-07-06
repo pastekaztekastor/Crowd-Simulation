@@ -152,7 +152,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=GPUSimulation
+CMAKE_PROJECT_NAME:STATIC=GPUObjSimulation
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -343,6 +343,12 @@ CUDA_npps_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libnpps.so
 
 //Path to a library.
 CUDA_rt_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
+
+//Value Computed by CMake
+GPUObjSimulation_BINARY_DIR:STATIC=/home/cartron3/StageXLIM
+
+//Value Computed by CMake
+GPUObjSimulation_SOURCE_DIR:STATIC=/home/cartron3/StageXLIM
 
 //Value Computed by CMake
 GPUSimulation_BINARY_DIR:STATIC=/home/cartron3/StageXLIM

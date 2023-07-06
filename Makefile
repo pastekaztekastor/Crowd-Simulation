@@ -123,86 +123,194 @@ gpuSimulation/fast:
 	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/build
 .PHONY : gpuSimulation/fast
 
-src/gpu/kernel.o: src/gpu/kernel.cu.o
+src/gpuObjectVersion/Kernel.o: src/gpuObjectVersion/Kernel.cu.o
 
-.PHONY : src/gpu/kernel.o
-
-# target to build an object file
-src/gpu/kernel.cu.o:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.o
-.PHONY : src/gpu/kernel.cu.o
-
-src/gpu/kernel.i: src/gpu/kernel.cu.i
-
-.PHONY : src/gpu/kernel.i
-
-# target to preprocess a source file
-src/gpu/kernel.cu.i:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.i
-.PHONY : src/gpu/kernel.cu.i
-
-src/gpu/kernel.s: src/gpu/kernel.cu.s
-
-.PHONY : src/gpu/kernel.s
-
-# target to generate assembly for a file
-src/gpu/kernel.cu.s:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/kernel.cu.s
-.PHONY : src/gpu/kernel.cu.s
-
-src/gpu/main.o: src/gpu/main.cu.o
-
-.PHONY : src/gpu/main.o
+.PHONY : src/gpuObjectVersion/Kernel.o
 
 # target to build an object file
-src/gpu/main.cu.o:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.o
-.PHONY : src/gpu/main.cu.o
+src/gpuObjectVersion/Kernel.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Kernel.cu.o
+.PHONY : src/gpuObjectVersion/Kernel.cu.o
 
-src/gpu/main.i: src/gpu/main.cu.i
+src/gpuObjectVersion/Kernel.i: src/gpuObjectVersion/Kernel.cu.i
 
-.PHONY : src/gpu/main.i
+.PHONY : src/gpuObjectVersion/Kernel.i
 
 # target to preprocess a source file
-src/gpu/main.cu.i:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.i
-.PHONY : src/gpu/main.cu.i
+src/gpuObjectVersion/Kernel.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Kernel.cu.i
+.PHONY : src/gpuObjectVersion/Kernel.cu.i
 
-src/gpu/main.s: src/gpu/main.cu.s
+src/gpuObjectVersion/Kernel.s: src/gpuObjectVersion/Kernel.cu.s
 
-.PHONY : src/gpu/main.s
+.PHONY : src/gpuObjectVersion/Kernel.s
 
 # target to generate assembly for a file
-src/gpu/main.cu.s:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/main.cu.s
-.PHONY : src/gpu/main.cu.s
+src/gpuObjectVersion/Kernel.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Kernel.cu.s
+.PHONY : src/gpuObjectVersion/Kernel.cu.s
 
-src/gpu/simulation.o: src/gpu/simulation.cpp.o
+src/gpuObjectVersion/Map.o: src/gpuObjectVersion/Map.cu.o
 
-.PHONY : src/gpu/simulation.o
+.PHONY : src/gpuObjectVersion/Map.o
 
 # target to build an object file
-src/gpu/simulation.cpp.o:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/simulation.cpp.o
-.PHONY : src/gpu/simulation.cpp.o
+src/gpuObjectVersion/Map.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Map.cu.o
+.PHONY : src/gpuObjectVersion/Map.cu.o
 
-src/gpu/simulation.i: src/gpu/simulation.cpp.i
+src/gpuObjectVersion/Map.i: src/gpuObjectVersion/Map.cu.i
 
-.PHONY : src/gpu/simulation.i
+.PHONY : src/gpuObjectVersion/Map.i
 
 # target to preprocess a source file
-src/gpu/simulation.cpp.i:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/simulation.cpp.i
-.PHONY : src/gpu/simulation.cpp.i
+src/gpuObjectVersion/Map.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Map.cu.i
+.PHONY : src/gpuObjectVersion/Map.cu.i
 
-src/gpu/simulation.s: src/gpu/simulation.cpp.s
+src/gpuObjectVersion/Map.s: src/gpuObjectVersion/Map.cu.s
 
-.PHONY : src/gpu/simulation.s
+.PHONY : src/gpuObjectVersion/Map.s
 
 # target to generate assembly for a file
-src/gpu/simulation.cpp.s:
-	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpu/simulation.cpp.s
-.PHONY : src/gpu/simulation.cpp.s
+src/gpuObjectVersion/Map.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Map.cu.s
+.PHONY : src/gpuObjectVersion/Map.cu.s
+
+src/gpuObjectVersion/Population.o: src/gpuObjectVersion/Population.cu.o
+
+.PHONY : src/gpuObjectVersion/Population.o
+
+# target to build an object file
+src/gpuObjectVersion/Population.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Population.cu.o
+.PHONY : src/gpuObjectVersion/Population.cu.o
+
+src/gpuObjectVersion/Population.i: src/gpuObjectVersion/Population.cu.i
+
+.PHONY : src/gpuObjectVersion/Population.i
+
+# target to preprocess a source file
+src/gpuObjectVersion/Population.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Population.cu.i
+.PHONY : src/gpuObjectVersion/Population.cu.i
+
+src/gpuObjectVersion/Population.s: src/gpuObjectVersion/Population.cu.s
+
+.PHONY : src/gpuObjectVersion/Population.s
+
+# target to generate assembly for a file
+src/gpuObjectVersion/Population.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Population.cu.s
+.PHONY : src/gpuObjectVersion/Population.cu.s
+
+src/gpuObjectVersion/Settings.o: src/gpuObjectVersion/Settings.cu.o
+
+.PHONY : src/gpuObjectVersion/Settings.o
+
+# target to build an object file
+src/gpuObjectVersion/Settings.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Settings.cu.o
+.PHONY : src/gpuObjectVersion/Settings.cu.o
+
+src/gpuObjectVersion/Settings.i: src/gpuObjectVersion/Settings.cu.i
+
+.PHONY : src/gpuObjectVersion/Settings.i
+
+# target to preprocess a source file
+src/gpuObjectVersion/Settings.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Settings.cu.i
+.PHONY : src/gpuObjectVersion/Settings.cu.i
+
+src/gpuObjectVersion/Settings.s: src/gpuObjectVersion/Settings.cu.s
+
+.PHONY : src/gpuObjectVersion/Settings.s
+
+# target to generate assembly for a file
+src/gpuObjectVersion/Settings.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Settings.cu.s
+.PHONY : src/gpuObjectVersion/Settings.cu.s
+
+src/gpuObjectVersion/Simulation.o: src/gpuObjectVersion/Simulation.cu.o
+
+.PHONY : src/gpuObjectVersion/Simulation.o
+
+# target to build an object file
+src/gpuObjectVersion/Simulation.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Simulation.cu.o
+.PHONY : src/gpuObjectVersion/Simulation.cu.o
+
+src/gpuObjectVersion/Simulation.i: src/gpuObjectVersion/Simulation.cu.i
+
+.PHONY : src/gpuObjectVersion/Simulation.i
+
+# target to preprocess a source file
+src/gpuObjectVersion/Simulation.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Simulation.cu.i
+.PHONY : src/gpuObjectVersion/Simulation.cu.i
+
+src/gpuObjectVersion/Simulation.s: src/gpuObjectVersion/Simulation.cu.s
+
+.PHONY : src/gpuObjectVersion/Simulation.s
+
+# target to generate assembly for a file
+src/gpuObjectVersion/Simulation.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/Simulation.cu.s
+.PHONY : src/gpuObjectVersion/Simulation.cu.s
+
+src/gpuObjectVersion/main.o: src/gpuObjectVersion/main.cu.o
+
+.PHONY : src/gpuObjectVersion/main.o
+
+# target to build an object file
+src/gpuObjectVersion/main.cu.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/main.cu.o
+.PHONY : src/gpuObjectVersion/main.cu.o
+
+src/gpuObjectVersion/main.i: src/gpuObjectVersion/main.cu.i
+
+.PHONY : src/gpuObjectVersion/main.i
+
+# target to preprocess a source file
+src/gpuObjectVersion/main.cu.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/main.cu.i
+.PHONY : src/gpuObjectVersion/main.cu.i
+
+src/gpuObjectVersion/main.s: src/gpuObjectVersion/main.cu.s
+
+.PHONY : src/gpuObjectVersion/main.s
+
+# target to generate assembly for a file
+src/gpuObjectVersion/main.cu.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/main.cu.s
+.PHONY : src/gpuObjectVersion/main.cu.s
+
+src/gpuObjectVersion/utils/utils.o: src/gpuObjectVersion/utils/utils.cpp.o
+
+.PHONY : src/gpuObjectVersion/utils/utils.o
+
+# target to build an object file
+src/gpuObjectVersion/utils/utils.cpp.o:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/utils/utils.cpp.o
+.PHONY : src/gpuObjectVersion/utils/utils.cpp.o
+
+src/gpuObjectVersion/utils/utils.i: src/gpuObjectVersion/utils/utils.cpp.i
+
+.PHONY : src/gpuObjectVersion/utils/utils.i
+
+# target to preprocess a source file
+src/gpuObjectVersion/utils/utils.cpp.i:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/utils/utils.cpp.i
+.PHONY : src/gpuObjectVersion/utils/utils.cpp.i
+
+src/gpuObjectVersion/utils/utils.s: src/gpuObjectVersion/utils/utils.cpp.s
+
+.PHONY : src/gpuObjectVersion/utils/utils.s
+
+# target to generate assembly for a file
+src/gpuObjectVersion/utils/utils.cpp.s:
+	$(MAKE) -f CMakeFiles/gpuSimulation.dir/build.make CMakeFiles/gpuSimulation.dir/src/gpuObjectVersion/utils/utils.cpp.s
+.PHONY : src/gpuObjectVersion/utils/utils.cpp.s
 
 # Help Target
 help:
@@ -213,15 +321,27 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... gpuSimulation"
 	@echo "... edit_cache"
-	@echo "... src/gpu/kernel.o"
-	@echo "... src/gpu/kernel.i"
-	@echo "... src/gpu/kernel.s"
-	@echo "... src/gpu/main.o"
-	@echo "... src/gpu/main.i"
-	@echo "... src/gpu/main.s"
-	@echo "... src/gpu/simulation.o"
-	@echo "... src/gpu/simulation.i"
-	@echo "... src/gpu/simulation.s"
+	@echo "... src/gpuObjectVersion/Kernel.o"
+	@echo "... src/gpuObjectVersion/Kernel.i"
+	@echo "... src/gpuObjectVersion/Kernel.s"
+	@echo "... src/gpuObjectVersion/Map.o"
+	@echo "... src/gpuObjectVersion/Map.i"
+	@echo "... src/gpuObjectVersion/Map.s"
+	@echo "... src/gpuObjectVersion/Population.o"
+	@echo "... src/gpuObjectVersion/Population.i"
+	@echo "... src/gpuObjectVersion/Population.s"
+	@echo "... src/gpuObjectVersion/Settings.o"
+	@echo "... src/gpuObjectVersion/Settings.i"
+	@echo "... src/gpuObjectVersion/Settings.s"
+	@echo "... src/gpuObjectVersion/Simulation.o"
+	@echo "... src/gpuObjectVersion/Simulation.i"
+	@echo "... src/gpuObjectVersion/Simulation.s"
+	@echo "... src/gpuObjectVersion/main.o"
+	@echo "... src/gpuObjectVersion/main.i"
+	@echo "... src/gpuObjectVersion/main.s"
+	@echo "... src/gpuObjectVersion/utils/utils.o"
+	@echo "... src/gpuObjectVersion/utils/utils.i"
+	@echo "... src/gpuObjectVersion/utils/utils.s"
 .PHONY : help
 
 

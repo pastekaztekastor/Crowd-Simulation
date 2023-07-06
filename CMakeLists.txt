@@ -1,18 +1,28 @@
 cmake_minimum_required(VERSION 3.0)
-project(GPUSimulation VERSION 0.1.0 LANGUAGES CXX CUDA)
+project(GPUObjSimulation VERSION 0.1.0 LANGUAGES CXX CUDA)
 
 # Spécifier les fichiers source
 set(SOURCES
-    src/gpu/simulation.cpp
-    src/gpu/kernel.cu
-    src/gpu/main.cu
+    src/gpuObjectVersion/main.cu
+
+    src/gpuObjectVersion/utils/utils.cpp
+
+    src/gpuObjectVersion/Kernel.cu
+    src/gpuObjectVersion/Map.cu
+    src/gpuObjectVersion/Population.cu
+    src/gpuObjectVersion/Settings.cu
+    src/gpuObjectVersion/Simulation.cu
 )
 
 # Spécifier les fichiers d'en-tête
 set(HEADERS
-    src/gpu/kernel.hpp
-    src/gpu/simulation.hpp
-    src/gpu/utils/commonCUDA.hpp
+    src/gpuObjectVersion/utils/utils.hpp
+
+    src/gpuObjectVersion/Kernel.hpp
+    src/gpuObjectVersion/Map.hpp
+    src/gpuObjectVersion/Population.hpp
+    src/gpuObjectVersion/Settings.hpp
+    src/gpuObjectVersion/Simulation.hpp
 )
 
 # Recherchez le package OpenCV
