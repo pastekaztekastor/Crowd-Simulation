@@ -36,6 +36,7 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _settings->model              = 1;                  
     _settings->exportDataType     = __EXPORT_TYPE_VIDEO__;
     _settings->dir                = "video/";
+    _settings->inputMapPath       = "";
 
     if (argc > 1){
         for (size_t i = 1; i < argc; i += 2) {
@@ -137,6 +138,9 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
             else if (strcmp(argv[i], "-dir") == 0) {
                 _settings->dir = argv[i+1];
             }
+            else if (strcmp(argv[i], "-input") == 0) {
+                _settings->inputMapPath = string(argv[i+1]);
+            }
             else{
                 printf("Unrecognized argument, try -h or -help\n");
                 exit(0);
@@ -156,6 +160,20 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     string dimensionYStr = to_string(_simParam->dimension.y);
     string nbIndividualStr = to_string(_simParam->nbIndividual);
 
+    if (_settings->print >= __DEBUG_PRINT_ALL__) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
+        << "\t # simDimX = " << _simParam->dimension.x <<endl
+        << "\t # simDimY = " << _simParam->dimension.y <<endl
+        << "\t # simDimP = " << _simParam->nbIndividual <<endl
+        << "\t # settings.print = " << _settings->print <<endl
+        << "\t # settings_model = " << _settings->model <<endl
+        << "\t # settings_exportDataType = " << _settings->exportDataType <<endl
+        << "\t # settings_dir = " << _settings->dir <<endl
+        << "\t # settings_inputMapPath = " << _settings->inputMapPath <<endl <<endl;
+    if (_settings->print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+}
+void initPopulationPositionMap(simParam * _simParam, settings _settings){
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initPopulationPositionMap ---"<<endl;
+    
     // Calloc
     _simParam->populationPosition = ( float3 * ) calloc(_simParam->nbIndividual, sizeof( float3 ));
     _simParam->wallPosition = ( uint2 * ) calloc(_simParam->nbIndividual, sizeof( uint2 ));
@@ -167,19 +185,6 @@ void initSimSettings( int argc, char const *argv[], simParam * _simParam, settin
     _simParam->populationIndex = ( uint * ) calloc(_simParam->nbIndividual * 2, sizeof( uint));
     _simParam->exit = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
-    
-    if (_settings->print >= __DEBUG_PRINT_ALL__) cout << " *** WELCOME TO CROWD SIMULATION ON CUDA *** " << endl 
-        << "\t # simDimX = " << _simParam->dimension.x <<endl
-        << "\t # simDimY = " << _simParam->dimension.y <<endl
-        << "\t # simDimP = " << _simParam->nbIndividual <<endl
-        << "\t # _settings.print = " << _settings->print <<endl
-        << "\t # settings_model = " << _settings->model <<endl
-        << "\t # settings_exportDataType = " << _settings->exportDataType <<endl
-        << "\t # settings_dir = " << _settings->dir <<endl <<endl;
-    if (_settings->print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
-}
-void initPopulationPositionMap(simParam * _simParam, settings _settings){
-    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - initPopulationPositionMap ---"<<endl;
     uint2 coord = make_uint2((rand() % _simParam->dimension.x),(rand() % _simParam->dimension.y));
     
     if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t -> Placing element"<< endl;
@@ -228,20 +233,20 @@ void initExportData(simParam _simParam, exportData * _exportData, settings _sett
     if (_simParam.dimension.x < __MAX_X_DIM_JPEG__ && _simParam.dimension.y <__MAX_Y_DIM_JPEG__){ 
         _exportData->videoSizeFactor = min((__MAX_X_DIM_JPEG__ / _simParam.dimension.x), (__MAX_Y_DIM_JPEG__ / _simParam.dimension.y));
     }
-    _exportData->videoRatioFrame = 2 ;// mettre un parametre en génie log
+    _exportData->videoRatioFrame = __VIDEO_RATIO_FRAME__ ;// mettre un parametre en génie log
     if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 
     // création de l'arboraissance et du nom du fichier 
     struct stat info;
     if (stat(_settings.dir.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
-        if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier existe déjà." << std::endl;
+        if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier existe déjà." << endl;
     } else {
         // Le dossier n'existe pas, on le crée
         int status = mkdir(_settings.dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (status == 0) {
-            if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier a été créé avec succès." << std::endl;
+            if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Le dossier a été créé avec succès." << endl;
         } else {
-            if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Erreur lors de la création du dossier." << std::endl;
+            if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "Erreur lors de la création du dossier." << endl;
         }
     }
     if ( max(_simParam.dimension.x, _simParam.dimension.y) > 50 ){
@@ -276,7 +281,7 @@ void initCostMap (simParam * _simParam, settings _settings) {
     for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
         _simParam->cost[i] = _simParam->dimension.x*_simParam->dimension.x;
     }
-    if (_settings.print >= __DEBUG_PRINT_DEBUG__)printCostMap((*_simParam), _settings);
+    // if (_settings.print >= __DEBUG_PRINT_DEBUG__)printCostMap((*_simParam), _settings);
     
     // Définir la case de sortie avec un coût de 0
     if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir la case de sortie avec un coût de 0 "<<endl;
@@ -284,7 +289,7 @@ void initCostMap (simParam * _simParam, settings _settings) {
 
     // Définir les déplacements possibles (haut, bas, gauche, droite)
     if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Définir les déplacements possibles (haut, bas, gauche, droite) "<<endl;
-    std::vector<std::pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    vector<pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
     // Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie
     if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie "<<endl;
@@ -340,6 +345,100 @@ void setSimExit(simParam * _simParam, settings _settings){
 void setPopulationPositionMap(simParam * _simParam, settings _settings){
     if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - setPopulationPositionMap ---"<<endl;
     // TO DO
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
+}
+void importMap (simParam * _simParam, settings _settings){
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - importMap ---"<<endl;
+
+    // on Réinitialise tout les paramètre qui touche a la simulaiton ou l'export mais qui en dépendent
+    _simParam->populationPosition = nullptr;
+    _simParam->wallPosition       = nullptr;
+    _simParam->cost               = nullptr;
+    _simParam->map                = nullptr;
+    _simParam->exit               = make_uint2(0,0);
+    _simParam->populationIndex    = nullptr;
+    _simParam->dimension          = make_uint2(0,0);
+    _simParam->nbIndividual       = 0;
+    _simParam->nbWall             = 0;
+    _simParam->pInSim             = 0;
+    _simParam->isFinish           = 0;
+    _simParam->nbFrame            = 0;
+
+    // On charge l'image
+    cv::Mat image = cv::imread(_settings.inputMapPath, cv::IMREAD_COLOR);
+    if (image.empty()) {
+        cout << "Erreur lors de l'importation de l'image :" << _settings.inputMapPath << endl;
+        return;
+    }
+    // On la parcour une première fois pour en connaitre la topologie
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+            cv::Scalar color(pixel[0], pixel[1], pixel[2]);
+            if ( color == __COLOR_BLUE__ ){
+                _simParam->nbWall ++;
+            }
+            if ( color == __COLOR_WHITE__ ){
+                _simParam->nbIndividual ++;
+            }
+        }
+    }
+
+    // on attribut les valeur de _simParam en fonction de l'image chargé
+    _simParam->dimension = make_uint2(image.cols, image.rows);
+    _simParam->populationPosition = ( float3 * ) calloc(_simParam->nbIndividual, sizeof( float3 ));
+    _simParam->wallPosition = ( uint2 * ) calloc(_simParam->nbIndividual, sizeof( uint2 ));
+    _simParam->cost = ( uint * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( uint ));
+    _simParam->map = ( int * ) calloc(_simParam->dimension.x * _simParam->dimension.y , sizeof( int ));
+    for (size_t i = 0; i < _simParam->dimension.x * _simParam->dimension.y; i++){
+        _simParam->map[i] = __MAP_EMPTY__ ; // -1 for empty 
+    }
+    _simParam->populationIndex = ( uint * ) calloc(_simParam->nbIndividual * 2, sizeof( uint));
+    _simParam->pInSim = _simParam->nbIndividual;
+    //printMap((*_simParam), _settings);
+
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   - Nb Wall : "<< _simParam->nbWall << " - Nb Individual : " << _simParam->nbIndividual <<endl;
+
+    // On la parcour une 2iem fois pour remplire nos elements WALL et POPULATION
+    int acctualWall = 0;
+    int acctualIndividual = 0;
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+            cv::Scalar color(pixel[0], pixel[1], pixel[2]);
+
+            if ( color == __COLOR_GREEN__ ){
+                _simParam->exit = make_uint2(x,y);
+            } 
+            else if ( color == __COLOR_BLUE__ ){
+                _simParam->wallPosition[acctualWall] = (make_uint2(x,y));
+                acctualWall ++;
+            }
+            else if ( color == __COLOR_WHITE__ ){
+                _simParam->populationPosition[acctualIndividual] = (make_float3((float)x,(float)y, 0.f));
+                acctualIndividual ++;
+            }
+        }
+    }
+
+    // On Remplie la carte 
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t -> Placing element"<< endl;
+    // -4) Place individuals
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> People " ;
+    for (size_t i = 0; i < _simParam->nbIndividual; i++){
+        _simParam->map[valueOfxy(_simParam->populationPosition[i].x,_simParam->populationPosition[i].y,_simParam->dimension.x,_simParam->dimension.y)] = i;
+    }
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
+    // -2) Placing the walls
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Wall " ;
+    for (size_t i = 0; i < _simParam->nbWall; i++){
+        _simParam->map[valueOfxy(_simParam->wallPosition[i].x,_simParam->wallPosition[i].y,_simParam->dimension.x,_simParam->dimension.y)] = __MAP_WALL__;
+    }
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
+    // -3) Placing exit
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\t --> Exit " ;
+    _simParam->map[valueOfxy(_simParam->exit.x,_simParam->exit.y,_simParam->dimension.x, _simParam->dimension.y)] = __MAP_EXIT__;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__) cout << "\tOK " << endl ;
     if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << "   ->OK"<<endl;
 }
 
@@ -439,7 +538,7 @@ void saveExportDataVideo(simParam _simParam, exportData _exportData, settings _s
     }
     else
     {
-        if (_settings.print >= __DEBUG_PRINT_STEP__)cout << " # - Vidéo : "<<endl;
+        if (_settings.print >= __DEBUG_PRINT_STEP__)cout << " # - Vidéo : " << _exportData.videoPath <<endl;
         // Écrire chaque image dans le fichier MP4
         for (size_t i = 0; i < _exportData.videoNbFrame ; i++){
             _exportData.videoWriter.write(_exportData.videoFrames[i]);
@@ -515,7 +614,7 @@ void printMap(simParam _simParam, settings _settings){
                 cout<<" . ";
                 break;
             default:
-                cout<<"[H]";
+                cout<<" "<< _simParam.map[valueOfxy(x,y,_simParam.dimension.x,_simParam.dimension.y)] <<" ";
                 break;
             }
         }
@@ -525,7 +624,7 @@ void printMap(simParam _simParam, settings _settings){
 }
 
 void printCostMap (simParam _simParam, settings _settings){
-    if (_settings.print > __DEBUG_PRINT_DEBUG__)cout << " # - printCostMap --- "<<endl;
+    if (_settings.print >= __DEBUG_PRINT_DEBUG__)cout << " # - printCostMap --- "<<endl;
     // Display column numbers
     cout<<"  ";
         for (int x = 0; x < _simParam.dimension.x; x++)

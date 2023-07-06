@@ -11,6 +11,7 @@
 
 #include "simulation.hpp"
 #include <cuda_runtime.h>
+#include <curand_kernel.h>
 
 /*
   _____       _ _   

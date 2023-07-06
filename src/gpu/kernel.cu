@@ -93,47 +93,114 @@ __global__ void kernel_costMap_GPU(kernelParam _kernelParam, simParam _simParam,
             uint  cost    = _kernelParam.cost[pos.y * _simParam.dimension.x + pos.x];
             uint2 nextPos = pos;
             if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", pos.x,pos.y,cost);
-            
-            // Définir les déplacements possibles (haut)
-            int2 newPos  = make_int2((int)pos.x + 0, (int)pos.y + -1);
-            if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
-                uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
-                if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
-                // Vérifier si les nouvelles sont plus intéréssante.
-                if (newCost <= cost) {
-                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement en haut \n");
-                    nextPos = make_uint2(newPos.x,newPos.y);
+
+            // Initialiser le générateur de nombres aléatoires
+            curandState state;
+            curand_init(clock64(), tid, 0, &state);
+
+            // Générer un nombre aléatoire entre 0 et 1
+            float randomValue = curand_uniform(&state);
+            printf("%d ",randomValue);
+
+            if ( randomValue >= 0 ){
+                // Définir les déplacements possibles (haut)
+                int2 newPos  = make_int2((int)pos.x + 0, (int)pos.y + -1);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement en haut \n");
+                        nextPos = make_uint2(newPos.x,newPos.y);
+                    }
                 }
-            }// Définir les déplacements possibles (bas)
-            newPos  = make_int2((int)pos.x + 0, (int)pos.y + 1);
-            if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
-                uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
-                if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
-                // Vérifier si les nouvelles sont plus intéréssante.
-                if (newCost <= cost) {
-                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement en bas \n");
-                    nextPos = make_uint2(newPos.x,newPos.y);
+                // Définir les déplacements possibles (gauche)
+                newPos  = make_int2((int)pos.x + -1, (int)pos.y + 0);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement à gauche \n");
+                        nextPos = make_uint2(newPos.x ,newPos.y);
+                    }
                 }
-            }// Définir les déplacements possibles (gauche)
-            newPos  = make_int2((int)pos.x + -1, (int)pos.y + 0);
-            if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
-                uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
-                if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
-                // Vérifier si les nouvelles sont plus intéréssante.
-                if (newCost <= cost) {
-                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement à gauche \n");
-                    nextPos = make_uint2(newPos.x ,newPos.y);
+            }
+            else{
+                // Définir les déplacements possibles (gauche)
+                int2 newPos  = make_int2((int)pos.x + -1, (int)pos.y + 0);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement à gauche \n");
+                        nextPos = make_uint2(newPos.x ,newPos.y);
+                    }
                 }
-            }// Définir les déplacements possibles (droite)
-            newPos  = make_int2((int)pos.x + 1, (int)pos.y + 0);
-            if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
-                uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
-                if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
-                // Vérifier si les nouvelles sont plus intéréssante.
-                if (newCost <= cost) {
-                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement à droite \n");
-                    nextPos = make_uint2(newPos.x,newPos.y);
+                // Définir les déplacements possibles (haut)
+                newPos  = make_int2((int)pos.x + 0, (int)pos.y + + 1);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement en bas \n");
+                        nextPos = make_uint2(newPos.x,newPos.y);
+                    }
                 }
+            }
+
+            // Générer un nombre aléatoire entre 0 et 1
+            randomValue = curand_uniform(&state);
+
+            if ( randomValue >= 0 ){
+                // Définir les déplacements possibles (bas)
+                int2 newPos  = make_int2((int)pos.x + 0, (int)pos.y + 1);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement en haut \n");
+                        nextPos = make_uint2(newPos.x,newPos.y);
+                    }
+                }
+                // Définir les déplacements possibles (droite)
+                newPos  = make_int2((int)pos.x + 1, (int)pos.y + 0);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement à droite \n");
+                        nextPos = make_uint2(newPos.x,newPos.y);
+                    }
+                }
+            }
+            else {
+                // Définir les déplacements possibles (droite)
+                int2 newPos  = make_int2((int)pos.x + 1, (int)pos.y + 0);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement à droite \n");
+                        nextPos = make_uint2(newPos.x,newPos.y);
+                    }
+                }
+                // Définir les déplacements possibles (bas)
+                newPos  = make_int2((int)pos.x + 0, (int)pos.y + 1);
+                if (newPos.x >=0 && newPos.x < _simParam.dimension.x && newPos.y >=0 && newPos.y < _simParam.dimension.y){
+                    uint  newCost = _kernelParam.cost[newPos.y * _simParam.dimension.x + newPos.x];
+                    if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL position : [%d,%d] avec un cout de %d\n", newPos.x,newPos.y,newCost);
+                    // Vérifier si les nouvelles sont plus intéréssante.
+                    if (newCost <= cost) {
+                        if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf("     Meilleur déplacement en bas \n");
+                        nextPos = make_uint2(newPos.x,newPos.y);
+                    }
+                } 
             }
             if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL : nest pos = [%d,%d]\n", nextPos.x, nextPos.y);
             // on regarde si la case est disponible 
@@ -142,12 +209,12 @@ __global__ void kernel_costMap_GPU(kernelParam _kernelParam, simParam _simParam,
             switch (oldValue)
             {
             case __MAP_EMPTY__:
-                _kernelParam.populationPosition[tid] = make_float3(nextPos.x, nextPos.y, 0.f);           // Position dans populationPosition
+                _kernelParam.populationPosition[tid] = make_float3(nextPos.x, nextPos.y, 0.f);               // Position dans populationPosition
                 if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL : __MAP_EMPTY__ -> \n");
                 atomicExch(&_kernelParam.map[_simParam.dimension.x * (pos.y) + (pos.x)], __MAP_EMPTY__); 
                 break;
             case __MAP_EXIT__:
-                _kernelParam.populationPosition[tid] =  __MAP_HUMAN_QUITE__;                                    // Position dans populationPosition
+                _kernelParam.populationPosition[tid] =  __MAP_HUMAN_QUITE__;                                  // Position dans populationPosition
                 if (_settings.print >= __DEBUG_PRINT_DEBUG__) printf(" @@@ KERNEL : __MAP_EXIT__ -> \n");
                 atomicExch(&_kernelParam.map[_simParam.dimension.x * (pos.y) + (pos.x)], __MAP_EMPTY__); 
                 _kernelParam.map[_simParam.dimension.x * (nextPos.y) + (nextPos.x)] =  __MAP_EXIT__;  // Valeur de la nouvelle position map qui doit rester la sortie

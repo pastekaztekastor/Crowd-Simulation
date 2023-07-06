@@ -37,6 +37,7 @@ using namespace std;
 #define __DEBUG_PRINT_STEP__            1 
 #define __DEBUG_PRINT_ALL__             2 
 #define __DEBUG_PRINT_DEBUG__           3 
+#define __DEBUG_PRINT_KERNEL__          4
 
 #define __MAX_X_DIM_JPEG__              1920
 #define __MAX_Y_DIM_JPEG__              1080
@@ -52,6 +53,7 @@ using namespace std;
 #define __VIDEO_FPS__                   40
 #define __VIDEO_CALC_COST_PLOT_ON__     1
 #define __VIDEO_CALC_COST_PLOT_OFF__    0
+#define __VIDEO_RATIO_FRAME__           1
 
 #define __SIM_MAX_WAITING__             100
 
@@ -78,6 +80,7 @@ typedef struct {
     uint        model                   ; //
     uint        exportDataType          ; //=
     string      dir                     ; //
+    string      inputMapPath            ; //
 } settings;
 
 typedef struct {
@@ -128,6 +131,17 @@ void initCostMap                (simParam * _simParam, settings _settings);
 */
 void setSimExit                 (simParam * _simParam, settings _settings);
 void setPopulationPositionMap   (simParam * _simParam, settings _settings);
+void importMap                  (simParam * _simParam, settings _settings);
+/**
+ * Importe l'image dont le path est :
+ * _simParam.dimension.x c'est la largeur de l'image en pixel
+ * _simParam.dimension.y c'est la hauteur de l'image en pixel
+ * 
+ * Parcour l'image et attribut en fonction de la couleur du pixel
+ *  - Un humain si c'est blanc (_simParam.populationPosition)
+ *  - Un mur si c'est bleu     (_simParam.wallPosition)
+ *  - La sortie si c'est vert  (_simParam.exit)
+*/
 
 /*
    _____ _                 _       _   _             
