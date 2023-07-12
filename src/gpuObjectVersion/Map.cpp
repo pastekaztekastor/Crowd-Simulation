@@ -1,16 +1,34 @@
+/*******************************************************************************
+ * Fichier : Map.cpp
+ * Description : Fichier de définition de la classe Map qui représente la topologie de la simulation de foule.
+ * Auteur : Mathurin Champémont
+ * Date : 06/07/2023
+*******************************************************************************/
+
 #include "Map.hpp"
 
-Map(){
-    //TO DO
+void Map::createMapFromPositions(){
+    for (size_t i = 0; i < this->dimentions.x * this->dimentions.y; i++)
+    {
+        this->map.push_back(__MAP_EMPTY__);
+    }
+    for (auto && wall : this->wallPositions)
+    {
+        this->map[wall.y * this->dimentions.x + wall.x] = __MAP_WALL__;
+    }
 }
-Map(std::vector<Population> new_populations, std::vector<uint2> new_wallPositions, std::vector<int> new_map, uint2 dimentions){
-    //TO DO
+
+Map::Map(){
+    this->dimentions = {5,5};
+    Map::initRandomWallPositions((uint)10);
+    Map::initRandomPopulation(1, 10);
+    Map::createMapFromPositions();
 }
 
 void Map::initRandomPopulation(uint nbPopulations, int populationSize){
     for (size_t i = 0; i < nbPopulations ; i++)
     {
-        this.populations.add(new Population(to_string(i), populationSize, 1, this.dimentions, this.map));
+        this->populations.push_back(Population(std::to_string(i), populationSize, 1, this->dimentions, this->map));
     }
 }
 
@@ -20,15 +38,15 @@ void Map::initRandomWallPositions(uint nbWallPositions){
         uint2 coord;
         do 
         {
-            coord = uint2(rand()%this.dimentions.x, rand()%this.dimentions.y);
+            coord = {rand()%this->dimentions.x, rand()%this->dimentions.y};
             
-        } while ( (this.map[coord.y * this.dimentions.x + coord.y] != __MAP_EMPTY__));
+        } while ( (this->map[coord.y * this->dimentions.x + coord.y] != __MAP_EMPTY__));
 
-        this.wallPosition.push_back(coord);
+        this->wallPositions.push_back(coord);
     }
 }
 void Map::initRandomWallPositions(float purcenteOccupation){
-    initRandomWallPositions(float(this.dimension.x)*float(this.dimension.y)*purcenteOccupation);
+    initRandomWallPositions(float(this->dimentions.x)*float(this->dimentions.y)*purcenteOccupation);
 }
 
 
@@ -37,36 +55,62 @@ void Map::initWithFile(std::string filePath){
 }
 
 void Map::setWallPositions(std::vector<uint2> wallPositions){
-    this.wallPositions = wallPositions;
+    this->wallPositions = wallPositions;
 }
 
 void Map::addPopulation(Population population){
-    this.populations.push_back(population)
+    this->populations.push_back(population);
 }
 
 std::vector<int>        Map::getMap() const{
-    //TO DO
+    return this->map;
 }
 std::vector<Population> Map::getPopulations() const{
-    //TO DO
+    return this->populations;
 }
 std::vector<uint2>      Map::getWallPositions() const{
-    //TO DO
+    return this->wallPositions;    
 }
 
 void Map::printPopulations(){
-    //TO DO
+    std::cout << " Affichage des populations de la carte : " << std::endl;
+    for (auto && population : this->populations)
+    {
+        population.print(this->dimentions);
+    }
+    
 }
 void Map::printWallPositions(){
-    //TO DO
+    std::cout << " Positions de tous les mures : " << std::endl;
+    for (auto && wall : wallPositions)
+    {
+        std::cout << " x : " << wall.x << " - y : " << wall.y << std::endl;
+    }
+    
 }
-void Map::printMap(){
-    //TO DO
+void Map::printMapWall(){
+    std::cout << " Carte des mures : " << std::endl;
+    std::cout <<"  ";
+        for (int x = 0; x < this->dimentions.x; x++)
+        {
+            printf("%2d  ",x); 
+        }
+        std::cout<<"  "<<std::endl;
+
+    for (int y = 0; y < this->dimentions.y; y++)
+    {
+        printf("%2d ",y); 
+        for (int x = 0; x < this->dimentions.x; x++)
+        {
+            printf(" %2d ", this->map[y * this->dimentions.x + x]);
+        }
+        std::cout << std::endl;
+    }
 }
 void Map::print(){
     //TO DO
 }
 
-~Map(){
+Map::~Map(){
     //TO DO
 }

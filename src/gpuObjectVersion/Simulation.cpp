@@ -1,16 +1,11 @@
-class Simulation
-{
-private:
-    /* data */
-public:
-    Simulation(/* args */);
-    ~Simulation();
-};
+#include "Simulation.hpp"
 
-Simulation::Simulation(/* args */)
+/*
+Simulation::Simulation()
 {
 }
 
 Simulation::~Simulation()
 {
 }
+*/

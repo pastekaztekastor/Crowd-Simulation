@@ -21,7 +21,7 @@
 int main(int argc, char const *argv[])
 {
     // TEST CLASS Population
-    Population population(5, make_uint2(3,3),);
+    // Population population(5, make_uint2(3,3),);
     
     return 0;
 }

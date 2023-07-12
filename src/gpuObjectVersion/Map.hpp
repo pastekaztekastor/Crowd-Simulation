@@ -1,14 +1,27 @@
+/*******************************************************************************
+// Fichier : Map.hpp
+// Description : Fichier d'en-tête de la classe Map qui représente la topologie de la simulation de foule.
+// Auteur : Mathurin Champémont
+// Date : 06/07/2023
+*******************************************************************************/
+
+#ifndef MAP_HPP
+#define MAP_HPP
+
+// Déclaration de la classe Map
+
 #include "utils/utils.hpp"
 #include "Population.hpp"
 
 class Map
-
 {
 private:
     std::vector<Population> populations;
     std::vector<uint2> wallPositions;
     std::vector<int> map;
     uint2 dimentions;
+
+    void createMapFromPositions();
 
 public:
     Map();
@@ -38,8 +51,10 @@ public:
 
     void printPopulations();
     void printWallPositions();
-    void printMap();
+    void printMapWall();
     void print();
 
     ~Map();
 };
+
+#endif // MAP_HPP

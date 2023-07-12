@@ -1,9 +1,14 @@
+#ifndef UTILS_HPP
+#define UTILS_HPP
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <string>
+#include <iostream>
 
 // Define
-#define uint usigned int
+#define uint unsigned int
 
 // Map
 #define __MAP_EMPTY__                   -1
@@ -46,5 +51,9 @@
 // Struct 
 typedef struct { int x ; int y ; }int2;
 typedef struct { uint x; uint y; }uint2;
-typedef struct { int x ; int y ; int z }int3;
-typedef struct { uint x; uint y; uint z}uint3;
+typedef struct { int x ; int y ; int z ; }int3;
+typedef struct { uint x; uint y; uint z; }uint3;
+
+typedef struct { uint r; uint g; uint b; }color;
+
+#endif // UTILS_HPP

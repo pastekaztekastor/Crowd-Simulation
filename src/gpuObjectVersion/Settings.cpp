@@ -1,11 +1,4 @@
-class Settings
-{
-private:
-    /* data */
-public:
-    Settings(/* args */);
-    ~Settings();
-};
+#include "Settings.hpp"
 
 Settings::Settings(/* args */)
 {

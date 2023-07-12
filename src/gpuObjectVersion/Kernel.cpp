@@ -1,11 +1,4 @@
-class Kernel
-{
-private:
-    /* data */
-public:
-    Kernel(/* args */);
-    ~Kernel();
-};
+#include "Kernel.hpp"
 
 Kernel::Kernel(/* args */)
 {

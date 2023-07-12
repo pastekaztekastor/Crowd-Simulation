@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(GPUObjSimulation VERSION 0.1.0 LANGUAGES CXX)
 
+# Définir le standard C++11
+set(CMAKE_CXX_STANDARD 11)
+
 # Spécifier les fichiers source
 set(SOURCES
     src/gpuObjectVersion/main.cpp
@@ -46,10 +49,10 @@ enable_language(C)
 # link_directories(${HDF5_LIBRARY_DIRS})
 
 # Compiler les fichiers source avec g++
-add_executable(gpuSimulation ${SOURCES} ${HEADERS})
+add_executable(gpuObjSimulation ${SOURCES} ${HEADERS})
 
 # Lier les librairies CUDA et HDF5
 #target_link_libraries(gpuSimulation PRIVATE ${CUDA_LIBRARIES})
-target_link_libraries(gpuSimulation PRIVATE ${HDF5_LIBRARIES})
-target_link_libraries(gpuSimulation PRIVATE opencv_core opencv_highgui opencv_imgproc)
-target_link_libraries(gpuSimulation PRIVATE ${OpenCV_LIBS})
+target_link_libraries(gpuObjSimulation PRIVATE ${HDF5_LIBRARIES})
+#target_link_libraries(gpuObjSimulation PRIVATE opencv_highgui opencv_imgproc)
+target_link_libraries(gpuObjSimulation PRIVATE ${OpenCV_LIBS})
