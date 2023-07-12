@@ -14,11 +14,10 @@ public:
     Map();
     Map(std::vector<Population> new_populations, std::vector<uint2> new_wallPositions, std::vector<int> new_map, uint2 dimentions);
 
-    void initRandomPopulation(uint nbPopulations);
-    void initRandomPopulation(float purcentPopulations);
+    void initRandomPopulation(uint nbPopulations, int populationSize);
 
     void initRandomWallPositions(uint nbWallPositions);
-    void initRandomWallPositions(float purcentWallPositions);
+    void initRandomWallPositions(float purcenteOccupation);
 
     void initWithFile(std::string filePath);
     /**
@@ -29,9 +28,9 @@ public:
      * @return void
      */
     
-    void setWallPosition(std::vector<uint2> new_wallPositions);
+    void setWallPositions(std::vector<uint2> wallPositions);
 
-    void addPopulation(Population populations);
+    void addPopulation(Population population);
 
     std::vector<int>        getMap() const;
     std::vector<Population> getPopulations() const;

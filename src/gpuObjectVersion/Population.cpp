@@ -4,9 +4,11 @@ Population::Population()
 {
 
 }
-Population::Population(int newNbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements)
+Population::Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements)
 {
-    Population::initRandom(newNbPopulations, nbExit, simulationDim, mapElements);
+    this.name = name;
+    this.color = cv::Scalar(rand()%255, rand()%255, rand()%255);
+    Population::initRandom(nbPopulations, nbExit, simulationDim, mapElements);
 }
 void Population::initRandomEtats(int nbPopulations, uint2 simulationDim, vector<int> mapElements){
     for (size_t i = 0; i < nbPopulations; i++)
@@ -15,7 +17,7 @@ void Population::initRandomEtats(int nbPopulations, uint2 simulationDim, vector<
         bool isPicked = false;
         do 
         {
-            coord = make_int3(rand()%simulationDim.x, rand()%simulationDim.y, 0);
+            coord = int3(rand()%simulationDim.x, rand()%simulationDim.y, 0);
             for (auto && etat : this->etats)
             {
                 if (etat.x == coord.x && etat.y == coord.y)
@@ -57,8 +59,11 @@ void Population::initRandom(int nbPopulations, int nbExit, uint2 simulationDim, 
     Population::initRandomExits(nbExit, simulationDim, mapElements);
     Population::initRandomEtats(nbPopulations,simulationDim, mapElements);
 }
-void Population::setName(std::string name) const{
+void Population::setName(std::string name){
     this.name = name;
+}
+void Population::setColor(int r, int g, int b){
+    this.color = cv::scalar(r,g,b);
 }
 
 // GETTER
@@ -77,20 +82,46 @@ int Population::getNbPopulations() const
 
 
 void Population::printEtats(){
-    std::cout " Liste des position de : " << this.name << std::endl;
-    for (auto && etat : this->etats.size())
+    std::cout << " Liste de position des individus de de la population : " << this.name << std::endl;
+    for (auto && coord : this->etats.size())
     {
-        std::cout << "x : " << etat.x << "y : " << etat.y << "z : " << etat.z << std::endl;
+        std::cout << "x : " << coord.x << "y : " << coord.y << "z : " << coord.z << std::endl;
     }
 }
 void Population::printExits(){
-    // TO DO
+    std::cout << " Liste de position des sorties de la population : " << this.name << std::endl;
+    for (auto && coord : this->exits.size())
+    {
+        std::cout << "x : " << coord.x << "y : " << coord.y << "z : " << coord.z << std::endl;
+    }
 }
-void Population::printMapCost(){
-    // TO DO
+void Population::printMapCost(int2 dimension){
+    std::cout << " Carte de cout de la population : " << this.name << std::endl;
+    std::cout <<"  ";
+        for (int x = 0; x < dimension.x; x++)
+        {
+            printf("%2d  ",x); 
+        }
+        std::cout<<"  "<<std::endl;
+
+    for (int y = 0; y < dimension.y; y++)
+    {
+        printf("%2d ",y); 
+        for (int x = 0; x < dimension.x; x++)
+        {
+            printf(" %2d ", this.mapCost[y * dimension.x + x]);
+        }
+        std::cout << std::endl;
+    }
 }
-void Population::print(){
-    // TO DO
+void Population::print(int2 dimension){
+    std::cout << "POPULATION : " << this.name << std::endl;
+
+    Population::printEtats();
+    Population::printExits();
+    Population::printMapCost(int2 dimension);
+
+    std::cout << std::endl;
 }
 
 Population::~Population()

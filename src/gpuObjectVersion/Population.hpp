@@ -8,17 +8,19 @@ private:
     std::vector<int3> etats;
     std::vector<int2> exits;
     std::vector<uint> mapCost;
-    cv::Scalar(255, 255, 255) color;
+    cv::Scalar() color;
 
 public:
-    Population(std::string new_name);
+    Population(std::string name);
+    Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
     
     void initRandomEtats(int nbPopulations, uint2 simulationDim, vector<int> mapElements);
     void initRandomExits(int nbExit, uint2 simulationDim, vector<int> mapElements);
 
     void initRandom(int nbPopulations, int nbExit, uint2 simulationDim, vector<int> mapElements);
 
-    void setName(std::string name) const;
+    void setName(std::string name);
+    void setColor(int r, int g, int b);
 
     int2 getPosOf(int index) const;
     int  getWaitOf(int index) const;
