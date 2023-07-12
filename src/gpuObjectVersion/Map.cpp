@@ -1,11 +1,4 @@
-class Map
-{
-private:
-    /* data */
-public:
-    Map(/* args */);
-    ~Map();
-};
+#include "Map.hpp"
 
 Map::Map(/* args */)
 {

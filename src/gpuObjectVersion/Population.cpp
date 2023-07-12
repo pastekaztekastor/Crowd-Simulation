@@ -2,12 +2,13 @@
 
 Population::Population()
 {
-    
+
 }
-Population::Population(int newNbPopulations, uint2 simulationDim, vector<int> mapElements)
+Population::Population(int newNbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements)
 {
-    nbPopulations = newNbPopulations;
-    
+    Population::initRandom(newNbPopulations, nbExit, simulationDim, mapElements);
+}
+void Population::initRandomEtats(int nbPopulations, uint2 simulationDim, vector<int> mapElements){
     for (size_t i = 0; i < nbPopulations; i++)
     {
         int3 coord;
@@ -15,7 +16,7 @@ Population::Population(int newNbPopulations, uint2 simulationDim, vector<int> ma
         do 
         {
             coord = make_int3(rand()%simulationDim.x, rand()%simulationDim.y, 0);
-            for (auto && etat : etats)
+            for (auto && etat : this->etats)
             {
                 if (etat.x == coord.x && etat.y == coord.y)
                 {
@@ -26,8 +27,38 @@ Population::Population(int newNbPopulations, uint2 simulationDim, vector<int> ma
             
         } while ( (mapElements[coord.y * simulationDim.x + coord.y] != __MAP_EMPTY__) || isPicked );
 
-        etats.push_back(coord);
+        this->etats.push_back(coord);
     }
+}
+void Population::initRandomExits(int nbExit, uint2 simulationDim, vector<int> mapElements){
+    for (size_t i = 0; i < nbExit; i++)
+    {
+        int3 coord;
+        bool isPicked = false;
+        do 
+        {
+            coord = make_int3(rand()%simulationDim.x, rand()%simulationDim.y, 0);
+            for (auto && exit : this->exits)
+            {
+                if (exit.x == coord.x && exit.y == coord.y)
+                {
+                    isPicked = true;
+                    break;
+                }
+            }
+            
+        } while ( (mapElements[coord.y * simulationDim.x + coord.y] != __MAP_EMPTY__) || isPicked );
+
+        this->exits.push_back(coord);
+    }
+}
+
+void Population::initRandom(int nbPopulations, int nbExit, uint2 simulationDim, vector<int> mapElements){
+    Population::initRandomExits(nbExit, simulationDim, mapElements);
+    Population::initRandomEtats(nbPopulations,simulationDim, mapElements);
+}
+void Population::setName(std::string name) const{
+    this.name = name;
 }
 
 // GETTER
@@ -41,15 +72,26 @@ int Population::getWaitOf(int index) const
 }
 int Population::getNbPopulations() const
 {
-    return nbPopulations;
+    return etats.size();
 }
 
-// SETTER
-void Population::setNbPopulations(int newNbPopulations)
-{
-    nbPopulations = newNbPopulations;
-}
 
+void Population::printEtats(){
+    std::cout " Liste des position de : " << this.name << std::endl;
+    for (auto && etat : this->etats.size())
+    {
+        std::cout << "x : " << etat.x << "y : " << etat.y << "z : " << etat.z << std::endl;
+    }
+}
+void Population::printExits(){
+    // TO DO
+}
+void Population::printMapCost(){
+    // TO DO
+}
+void Population::print(){
+    // TO DO
+}
 
 Population::~Population()
 {
