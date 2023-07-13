@@ -21,7 +21,13 @@
 int main(int argc, char const *argv[])
 {
     // TEST CLASS Population
-    // Population population(5, make_uint2(3,3),);
-    
+    std::cout << "Simulaiton de foule" << std::endl;
+    // TEST CLASS Map
+    Map map;
+    for (int i = 0; i < 10; ++i) {
+        std::cout << i ;
+    }
+    map.print();
+
     return 0;
 }

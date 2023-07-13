@@ -20,22 +20,26 @@ private:
     std::vector<int2> exits;
     std::vector<uint> mapCost;
     color col;
-
 public:
     Population(std::string name);
+
     Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
-    
     void initRandomEtats(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements);
     void initRandomExits(int nbExit, uint2 simulationDim, std::vector<int> mapElements);
 
     void initRandom(int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
 
-    void setName(std::string name);
+    const std::string &getName() const;
+    void setName(const std::string &name);
+    const std::vector<int3> &getEtats() const;
+    void setEtats(const std::vector<int3> &etats);
+    const std::vector<int2> &getExits() const;
+    void setExits(const std::vector<int2> &exits);
+    const std::vector<unsigned int> &getMapCost() const;
+    void setMapCost(const std::vector<unsigned int> &mapCost);
+    const color &getCol() const;
+    void setCol(const color &col);
     void setColor(uint r, uint g, uint b);
-
-    int2 getPosOf(int index) const;
-    int  getWaitOf(int index) const;
-    int  getNbPopulations() const;
 
     void printEtats();
     void printExits();

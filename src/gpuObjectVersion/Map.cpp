@@ -7,7 +7,8 @@
 
 #include "Map.hpp"
 
-void Map::createMapFromPositions(){
+void Map::initMapFromWallPositions(){
+    this->map.clear();
     for (size_t i = 0; i < this->dimentions.x * this->dimentions.y; i++)
     {
         this->map.push_back(__MAP_EMPTY__);
@@ -21,8 +22,8 @@ void Map::createMapFromPositions(){
 Map::Map(){
     this->dimentions = {5,5};
     Map::initRandomWallPositions((uint)10);
-    Map::initRandomPopulation(1, 10);
-    Map::createMapFromPositions();
+    Map::initMapFromWallPositions();
+    Map::initRandomPopulation(1, 3);
 }
 
 void Map::initRandomPopulation(uint nbPopulations, int populationSize){
@@ -33,6 +34,10 @@ void Map::initRandomPopulation(uint nbPopulations, int populationSize){
 }
 
 void Map::initRandomWallPositions(uint nbWallPositions){
+    for (size_t i = 0; i < this->dimentions.x * this->dimentions.y; i++)
+    {
+        this->map.push_back(__MAP_EMPTY__);
+    }
     for (size_t i = 0; i < nbWallPositions; i++)
     {
         uint2 coord;
@@ -84,16 +89,18 @@ void Map::printWallPositions(){
     std::cout << " Positions de tous les mures : " << std::endl;
     for (auto && wall : wallPositions)
     {
-        std::cout << " x : " << wall.x << " - y : " << wall.y << std::endl;
+        std::cout << "[" << wall.x << "," << wall.y << "] ";
     }
-    
+    std::cout << std::endl;
 }
-void Map::printMapWall(){
-    std::cout << " Carte des mures : " << std::endl;
+void Map::printMap(int index){
+    std::cout << " Carte de la population : " << std::endl;
+    Map::initMapFromWallPositions();
+    Map::addPopulationToMap(index);
     std::cout <<"  ";
         for (int x = 0; x < this->dimentions.x; x++)
         {
-            printf("%2d  ",x); 
+            printf("%2d ",x);
         }
         std::cout<<"  "<<std::endl;
 
@@ -102,15 +109,28 @@ void Map::printMapWall(){
         printf("%2d ",y); 
         for (int x = 0; x < this->dimentions.x; x++)
         {
-            printf(" %2d ", this->map[y * this->dimentions.x + x]);
+            if (this->map[y * this->dimentions.x + x] == __MAP_EMPTY__) std::cout << "   ";
+            if (this->map[y * this->dimentions.x + x] == __MAP_WALL__) std::cout << "///";
+            if (this->map[y * this->dimentions.x + x] >= __MAP_EXIT__) std::cout << " X ";
+            if (this->map[y * this->dimentions.x + x] >= 0) std::cout << "[P]";
         }
         std::cout << std::endl;
     }
 }
 void Map::print(){
-    //TO DO
+    Map::printPopulations();
+    Map::printWallPositions();
+    for (int i = 0; i > this->populations.size(); i++){
+        Map::printMap(i);
+    }
 }
 
 Map::~Map(){
     //TO DO
+}
+
+void Map::addPopulationToMap(int index) {
+    for (auto && etat : this->populations[index].getEtats()) {
+        this->map[etat.y * this->dimentions.x + etat.x] = 0;
+    }
 }

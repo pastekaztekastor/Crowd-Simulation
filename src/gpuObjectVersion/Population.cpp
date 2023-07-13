@@ -14,6 +14,7 @@ Population::Population(std::string name, int nbPopulations, int nbExit, uint2 si
     Population::initRandom(nbPopulations, nbExit, simulationDim, mapElements);
 }
 void Population::initRandomEtats(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements){
+    std::cout << "init Random Etats" << std::endl;
     for (size_t i = 0; i < nbPopulations; i++)
     {
         int3 coord;
@@ -30,10 +31,11 @@ void Population::initRandomEtats(int nbPopulations, uint2 simulationDim, std::ve
                 }
             }
             
-        } while ( (mapElements[coord.y * simulationDim.x + coord.y] != __MAP_EMPTY__) || isPicked );
+        } while ( (mapElements[coord.y * simulationDim.x + coord.x] != __MAP_EMPTY__) || isPicked );
 
         this->etats.push_back(coord);
     }
+    std::cout << "end" << std::endl;
 }
 void Population::initRandomExits(int nbExit, uint2 simulationDim, std::vector<int> mapElements){
     for (size_t i = 0; i < nbExit; i++)
@@ -62,25 +64,9 @@ void Population::initRandom(int nbPopulations, int nbExit, uint2 simulationDim, 
     Population::initRandomExits(nbExit, simulationDim, mapElements);
     Population::initRandomEtats(nbPopulations,simulationDim, mapElements);
 }
-void Population::setName(std::string name){
-    this->name = name;
-}
+
 void Population::setColor(uint r, uint g, uint b){
     this->col = {r,g,b};
-}
-
-// GETTER
-int2 Population::getPosOf(int index) const
-{
-    return {etats[index].x, etats[index].y};
-}
-int Population::getWaitOf(int index) const
-{
-    return (etats[index].z);
-}
-int Population::getNbPopulations() const
-{
-    return etats.size();
 }
 
 
@@ -88,14 +74,14 @@ void Population::printEtats(){
     std::cout << " Liste de position des individus de de la population : " << this->name << std::endl;
     for (auto && coord : this->etats)
     {
-        std::cout << "x : " << coord.x << "y : " << coord.y << "z : " << coord.z << std::endl;
+        std::cout << "  [" << coord.x << "," << coord.y << "] " << coord.z << std::endl;
     }
 }
 void Population::printExits(){
     std::cout << " Liste de position des sorties de la population : " << this->name << std::endl;
     for (auto && coord : this->exits)
     {
-        std::cout << "x : " << coord.x << "y : " << coord.y << "z : " << std::endl;
+        std::cout << "  [" << coord.x << "," << coord.y << "] " << std::endl;
     }
 }
 void Population::printMapCost(uint2 dimension){
@@ -122,13 +108,53 @@ void Population::print(uint2 dimension){
 
     Population::printEtats();
     Population::printExits();
-    Population::printMapCost(dimension);
+    if(this->mapCost.size()>0) Population::printMapCost(dimension);
 
     std::cout << std::endl;
 }
 
 Population::~Population()
 {
+}
+
+const std::string &Population::getName() const {
+    return name;
+}
+
+const std::vector<int3> &Population::getEtats() const {
+    return etats;
+}
+
+void Population::setEtats(const std::vector<int3> &etats) {
+    Population::etats = etats;
+}
+
+const std::vector<int2> &Population::getExits() const {
+    return exits;
+}
+
+void Population::setExits(const std::vector<int2> &exits) {
+    Population::exits = exits;
+}
+
+const std::vector<unsigned int> &Population::getMapCost() const {
+    return mapCost;
+}
+
+void Population::setMapCost(const std::vector<unsigned int> &mapCost) {
+    Population::mapCost = mapCost;
+}
+
+const color &Population::getCol() const {
+    return col;
+}
+
+void Population::setCol(const color &col) {
+    Population::col = col;
+}
+
+void Population::setName(const std::string &name) {
+    Population::name = name;
 }
 
 

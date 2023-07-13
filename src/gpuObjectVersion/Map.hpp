@@ -21,11 +21,11 @@ private:
     std::vector<int> map;
     uint2 dimentions;
 
-    void createMapFromPositions();
+    void initMapFromWallPositions();
+    void addPopulationToMap(int index);
 
 public:
     Map();
-    Map(std::vector<Population> new_populations, std::vector<uint2> new_wallPositions, std::vector<int> new_map, uint2 dimentions);
 
     void initRandomPopulation(uint nbPopulations, int populationSize);
 
@@ -51,7 +51,7 @@ public:
 
     void printPopulations();
     void printWallPositions();
-    void printMapWall();
+    void printMap(int index);
     void print();
 
     ~Map();
