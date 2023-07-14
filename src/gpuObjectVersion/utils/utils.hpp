@@ -10,11 +10,25 @@
 // Define
 #define uint unsigned int
 
+// Define des valeur nominales
+// #define __POPULATION_NOMINAL__
+
+#define __POPULATION_NOMINAL_SIZE__     10
+#define __POPULATION_NOMINAL_NB_EXIT__  1
+
 // Map
-#define __MAP_EMPTY__                   -1
-#define __MAP_EXIT__                    -2
-#define __MAP_WALL__                    -3
-#define __MAP_HUMAN_QUITE__             make_float3(-1.f,-1.f,0.f)
+#define __MAP_EMPTY__                    -1
+#define __MAP_EXIT__                     -2
+#define __MAP_WALL__                     -3
+#define __MAP_HUMAN_QUITE__              make_float3(-1.f,-1.f,0.f)
+#define __MAP_NOMINALE_X_DIM__           10
+#define __MAP_NOMINALE_Y_DIM__           5
+#define __MAP_NOMINALE_WALL__            10
+#define __MAP_NOMINALE_POPULATION__      1
+#define __MAP_NOMINALE_POPULATION_SIZE__ 10
+
+// POPULATION
+
 
 // Export 
 #define __EXPORT_TYPE_VIDEO__           0    

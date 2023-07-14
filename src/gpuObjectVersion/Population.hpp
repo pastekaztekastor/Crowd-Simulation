@@ -9,7 +9,6 @@
 #define POPULATION_HPP
 
 // Déclaration de la classe Population
-
 #include "utils/utils.hpp"
 
 class Population
@@ -19,14 +18,16 @@ private:
     std::vector<int3> etats;
     std::vector<int2> exits;
     std::vector<uint> mapCost;
+    std::vector<float> pDeplacement;
     color col;
-public:
-    Population(std::string name);
 
+public:
+    Population();
+    Population(std::string name);
     Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
+
     void initRandomEtats(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements);
     void initRandomExits(int nbExit, uint2 simulationDim, std::vector<int> mapElements);
-
     void initRandom(int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
 
     const std::string &getName() const;
@@ -39,11 +40,11 @@ public:
     void setMapCost(const std::vector<unsigned int> &mapCost);
     const color &getCol() const;
     void setCol(const color &col);
-    void setColor(uint r, uint g, uint b);
+    void setCol(uint r, uint g, uint b);
 
-    void printEtats();
-    void printExits();
-    void printMapCost(uint2 dimension);
+    void printEtats() const;
+    void printExits() const;
+    void printMapCost(uint2 dimension) const;
     void print(uint2 dimension);
 
     ~Population();

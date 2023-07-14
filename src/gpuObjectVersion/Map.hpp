@@ -9,7 +9,6 @@
 #define MAP_HPP
 
 // Déclaration de la classe Map
-
 #include "utils/utils.hpp"
 #include "Population.hpp"
 
@@ -23,31 +22,36 @@ private:
 
     void initMapFromWallPositions();
     void addPopulationToMap(int index);
-
 public:
+
     Map();
+    Map(uint2 dimension);
+    Map(uint2 dimension, int nbWall);
+    Map(uint2 dimension, int nbWall, uint nbPopulations);
+    Map(uint2 dimension, int nbWall, uint nbPopulations, int populationSize);
 
     void initRandomPopulation(uint nbPopulations, int populationSize);
-
     void initRandomWallPositions(uint nbWallPositions);
     void initRandomWallPositions(float purcenteOccupation);
-
     void initWithFile(std::string filePath);
     /**
      * @brief Créer la liste des mure uniquement à pratire du fichier PNG obligatoire
      * le vide c'est noir pure
      * les mure c'est blanc pure
-     * 
+     *
      * @return void
      */
-    
+
     void setWallPositions(std::vector<uint2> wallPositions);
+    const std::vector<Population> &getPopulations() const;
+    void setPopulations(const std::vector<Population> &populations);
+    const std::vector<uint2> &getWallPositions() const;
+    const std::vector<int> &getMap() const;
+    void setMap(const std::vector<int> &map);
+    const uint2 &getDimensions() const;
+    void setDimensions(const uint2 &dimensions);
 
     void addPopulation(Population population);
-
-    std::vector<int>        getMap() const;
-    std::vector<Population> getPopulations() const;
-    std::vector<uint2>      getWallPositions() const;
 
     void printPopulations();
     void printWallPositions();
