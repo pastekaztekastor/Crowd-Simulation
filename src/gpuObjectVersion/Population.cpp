@@ -7,16 +7,21 @@
 
 #include "Population.hpp"
 
-Population::Population(){
+Population::Population()
+{
+    this->pDeplacement = {1,1,1,1,1,1,1};
     this->name = "NO_NAME";
     this->col = {(uint)(rand()%255), (uint)(rand()%255), (uint)(rand()%255)};
 }
-Population::Population(std::string name){
+Population::Population(std::string name)
+{
+    this->pDeplacement = {1,1,1,1,1,1,1};
     this->name = name;
     this->col = {(uint)(rand()%255), (uint)(rand()%255), (uint)(rand()%255)};
 }
 Population::Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements)
 {
+    this->pDeplacement = {1,1,1,1,1,1,1};
     this->name = name;
     this->col = {(uint)(rand()%255), (uint)(rand()%255), (uint)(rand()%255)};
     Population::initRandom(nbPopulations, nbExit, simulationDim, mapElements);
