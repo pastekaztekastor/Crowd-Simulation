@@ -7,37 +7,40 @@
 
 #include "Kernel.hpp"
 
-#ifndef GRAPHICS_CARD_PRESENT
-
-// CONSTRUCTOR CPU
+#ifdef GRAPHICS_CARD_PRESENT
+// CONSTRUCTOR GPU
 Kernel::Kernel()
 {
 }
 
-// FUNCTIONS CPU
+// FUNCTIONS GPU
 void Kernel::initKerel(Map map) {
-
 }
+
 void Kernel::computeNextFrame() {
-
 }
 
-// GETTER AND SETTER CPU
+// GETTER AND SETTER GPU
+
 const std::vector<individu> &Kernel::getPopulation() const {
     return population;
 }
+
 void Kernel::setPopulation(const std::vector<individu> &population) {
     Kernel::population = population;
 }
+
 const std::vector<int> &Kernel::getCostMap() const {
     return costMap;
 }
+
 void Kernel::setCostMap(const std::vector<int> &costMap) {
     Kernel::costMap = costMap;
 }
 
-// DESTRUCTOR CPU
+// DESTRUCTOR GPU
 Kernel::~Kernel()
 {
 }
+
 #endif //KERNEL_CPU

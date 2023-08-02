@@ -6,153 +6,262 @@
 *******************************************************************************/
 
 #include "Population.hpp"
-
+// Default constructor for the Population class
 Population::Population()
 {
-    this->pDeplacement = {1,1,1,1,1,1,1};
+    // Set the probability of displacement for each individual to the default values
+    // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
+    this->pDeplacement = {1, 1, 1, 1, 1, 1, 1};
+
+    // Set the name of the population to a default value "NO_NAME"
     this->name = "NO_NAME";
-    this->col = {(uint)(rand()%255), (uint)(rand()%255), (uint)(rand()%255)};
+
+    // Generate a random color to represent the population in the visualization
+    // The color is represented using RGB values, with each component ranging from 0 to 255
+    this->col = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
 }
+// Constructor for the Population class with a specified name
 Population::Population(std::string name)
 {
-    this->pDeplacement = {1,1,1,1,1,1,1};
+    // Set the probability of displacement for each individual to the default values
+    // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
+    this->pDeplacement = {1, 1, 1, 1, 1, 1, 1};
+
+    // Set the name of the population to the specified 'name'
     this->name = name;
-    this->col = {(uint)(rand()%255), (uint)(rand()%255), (uint)(rand()%255)};
+
+    // Generate a random color to represent the population in the visualization
+    // The color is represented using RGB values, with each component ranging from 0 to 255
+    this->col = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
 }
+
+// Constructor for the Population class with specified parameters to initialize the population
 Population::Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements)
 {
-    this->pDeplacement = {1,1,1,1,1,1,1};
+    // Set the probability of displacement for each individual to the default values
+    // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
+    this->pDeplacement = {1, 1, 1, 1, 1, 1, 1};
+
+    // Set the name of the population to the specified 'name'
     this->name = name;
-    this->col = {(uint)(rand()%255), (uint)(rand()%255), (uint)(rand()%255)};
+
+    // Generate a random color to represent the population in the visualization
+    // The color is represented using RGB values, with each component ranging from 0 to 255
+    this->col = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
+
+    // Initialize the population randomly based on the given parameters
     Population::initRandom(nbPopulations, nbExit, simulationDim, mapElements);
 }
 
-void Population::initRandomEtats(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements){
-    std::cout << "init Random Etats" << std::endl;
+// Initialize states randomly for the population
+void Population::initRandomStates(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements)
+{
+    std::cout << "init Random States" << std::endl;
+
+    // Iterate 'nbPopulations' times to assign random states to individuals in the population
     for (size_t i = 0; i < nbPopulations; i++)
     {
         int3 coord;
         bool isPicked = false;
-        do 
+
+        // Repeat until a valid random coordinate is found that corresponds to an empty cell on the map and is not already picked
+        do
         {
-            coord = {(int)(rand()%simulationDim.x), (int)(rand()%simulationDim.y), 0};
-            for (auto && etat : this->etats)
+            // Generate a random coordinate within the simulation dimensions (0 to simulationDim.x-1 and 0 to simulationDim.y-1)
+            coord = {(int)(rand() % simulationDim.x), (int)(rand() % simulationDim.y), 0};
+
+            // Check if the generated coordinate is already picked by another individual
+            for (auto &&etat : this->states)
             {
                 if (etat.x == coord.x && etat.y == coord.y)
                 {
+                    // If the coordinate is already picked, set 'isPicked' to true and break the loop
                     isPicked = true;
                     break;
                 }
             }
-            
-        } while ( (mapElements[coord.y * simulationDim.x + coord.x] != __MAP_EMPTY__) || isPicked );
 
-        this->etats.push_back(coord);
+            // Check if the generated coordinate corresponds to an empty cell on the map
+        } while ((mapElements[coord.y * simulationDim.x + coord.x] != __MAP_EMPTY__) || isPicked);
+
+        // Add the random coordinate to the states vector, representing an individual's position
+        this->states.push_back(coord);
     }
+
     std::cout << "end" << std::endl;
 }
-void Population::initRandomExits(int nbExit, uint2 simulationDim, std::vector<int> mapElements){
+
+// Initializes exits randomly for the population.
+void Population::initRandomExits(int nbExit, uint2 simulationDim, std::vector<int> mapElements)
+{
     for (size_t i = 0; i < nbExit; i++)
     {
         int2 coord;
         bool isPicked = false;
-        do 
+
+        // Repeat until a valid random coordinate is found that corresponds to an empty cell on the map and is not already picked
+        do
         {
-            coord = {(int)(rand()%simulationDim.x), (int)(rand()%simulationDim.y)};
-            for (auto && exit : this->exits)
+            // Generate a random coordinate within the simulation dimensions (0 to simulationDim.x-1 and 0 to simulationDim.y-1)
+            coord = {(int)(rand() % simulationDim.x), (int)(rand() % simulationDim.y)};
+
+            // Check if the generated coordinate is already picked by another exit
+            for (auto &&exit : this->exits)
             {
                 if (exit.x == coord.x && exit.y == coord.y)
                 {
+                    // If the coordinate is already picked, set 'isPicked' to true and break the loop
                     isPicked = true;
                     break;
                 }
             }
-            
-        } while ( (mapElements[coord.y * simulationDim.x + coord.y] != __MAP_EMPTY__) || isPicked );
 
+            // Check if the generated coordinate corresponds to an empty cell on the map
+        } while ((mapElements[coord.y * simulationDim.x + coord.y] != __MAP_EMPTY__) || isPicked);
+
+        // Add the random coordinate to the exits vector, representing an exit's position
         this->exits.push_back(coord);
     }
 }
-void Population::initRandom(int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements){
+
+
+// Initializes the population randomly.
+void Population::initRandom(int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements)
+{
+    // Initialize exits randomly
     Population::initRandomExits(nbExit, simulationDim, mapElements);
-    Population::initRandomEtats(nbPopulations,simulationDim, mapElements);
+
+    // Initialize states randomly for the population
+    Population::initRandomStates(nbPopulations, simulationDim, mapElements);
 }
 
-
+// Gets the name of the population.
 const std::string &Population::getName() const {
     return name;
 }
-void Population::setName(const std::string &name) {
+// Sets the name of the population.
+void Population::setName(const std::string &name)
+{
     Population::name = name;
 }
-const std::vector<int3> &Population::getEtats() const {
-    return etats;
+// Get the current states of individuals in the population
+const std::vector<int3> &Population::getStates() const {
+    return states;
 }
-void Population::setEtats(const std::vector<int3> &etats) {
-    Population::etats = etats;
+
+// Set the states of individuals in the population.
+void Population::setStates(const std::vector<int3> &states) {
+    Population::states = states;
 }
+
+// Get the positions of exits in the simulation.
 const std::vector<int2> &Population::getExits() const {
     return exits;
 }
+
+// Set the positions of exits in the simulation.
 void Population::setExits(const std::vector<int2> &exits) {
     Population::exits = exits;
 }
+
+// Get the cost map for navigation in the simulation.
 const std::vector<unsigned int> &Population::getMapCost() const {
     return mapCost;
 }
+
+// Set the cost map for navigation in the simulation.
 void Population::setMapCost(const std::vector<unsigned int> &mapCost) {
     Population::mapCost = mapCost;
 }
-const color &Population::getCol() const {
+
+// Get the color representing the population in the visualization.
+const color &Population::getColor() const {
     return col;
 }
-void Population::setCol(const color &col) {
+
+// Set the color representing the population in the visualization.
+void Population::setColor(const color &col) {
     Population::col = col;
 }
-void Population::setCol(uint r, uint g, uint b){
-    this->col = {r,g,b};
-}
 
-void Population::printEtats() const {
-    std::cout << " Liste de position des individus de de la population : " << this->name << std::endl;
-    for (auto && coord : this->etats)
+// Set the color representing the population in the visualization using RGB components.
+void Population::setColor(uint r, uint g, uint b) {
+    this->col = {r, g, b};
+}
+// Print the list of positions of individuals in the population.
+void Population::printStates() const {
+    // Print the header with the name of the population
+    std::cout << "List of positions of individuals in the population: " << this->name << std::endl;
+
+    // Iterate through each coordinate in the 'states' vector
+    for (auto && coord : this->states)
     {
+        // Print the x, y, and z components of the coordinate in a formatted manner
         std::cout << "  [" << coord.x << "," << coord.y << "] " << coord.z << std::endl;
     }
 }
+
+
+// Print the list of positions of exits in the population.
 void Population::printExits() const {
-    std::cout << " Liste de position des sorties de la population : " << this->name << std::endl;
+    // Print the header with the name of the population
+    std::cout << "List of positions of exits in the population: " << this->name << std::endl;
+
+    // Iterate through each coordinate in the 'exits' vector
     for (auto && coord : this->exits)
     {
-        std::cout << "  [" << coord.x << "," << coord.y << "] " << std::endl;
+        // Print the x and y components of the coordinate in a formatted manner
+        std::cout << "  [" << coord.x << "," << coord.y << "]" << std::endl;
     }
 }
-void Population::printMapCost(uint2 dimension) const {
-    std::cout << " Carte de cout de la population : " << this->name << std::endl;
-    std::cout <<"  ";
-        for (int x = 0; x < dimension.x; x++)
-        {
-            printf("%2d  ",x); 
-        }
-        std::cout<<"  "<<std::endl;
 
+// Print the cost map of the population.
+void Population::printMapCost(uint2 dimension) const {
+    // Print the header with the name of the population
+    std::cout << "Cost map of the population: " << this->name << std::endl;
+
+    // Print the top row of x-axis labels
+    std::cout << "  ";
+    for (int x = 0; x < dimension.x; x++)
+    {
+        printf("%2d  ", x);
+    }
+    std::cout << "  " << std::endl;
+
+    // Iterate through each row (y-axis) in the cost map
     for (int y = 0; y < dimension.y; y++)
     {
-        printf("%2d ",y); 
+        // Print the y-axis label for the current row
+        printf("%2d ", y);
+
+        // Iterate through each column (x-axis) in the cost map
         for (int x = 0; x < dimension.x; x++)
         {
+            // Print the cost value at the current position (x, y) in a formatted manner
             printf(" %2d ", this->mapCost[y * dimension.x + x]);
         }
+
+        // Move to the next line after printing all values in the row
         std::cout << std::endl;
     }
 }
-void Population::print(uint2 dimension){
-    std::cout << "POPULATION : " << this->name << std::endl;
 
-    Population::printEtats();
+// Print information about the population, including states, exits, and the cost map (if available).
+void Population::print(uint2 dimension) {
+    // Print the header with the name of the population
+    std::cout << "POPULATION: " << this->name << std::endl;
+
+    // Print the list of positions of individuals in the population
+    Population::printStates();
+
+    // Print the list of positions of exits in the population
     Population::printExits();
-    if(this->mapCost.size()>0) Population::printMapCost(dimension);
 
+    // Check if the cost map is available and print it
+    if (this->mapCost.size() > 0)
+        Population::printMapCost(dimension);
+
+    // Print an empty line for better readability
     std::cout << std::endl;
 }
 

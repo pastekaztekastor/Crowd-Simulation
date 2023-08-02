@@ -67,7 +67,8 @@ typedef struct { int x ; int y ; }int2;
 typedef struct { uint x; uint y; }uint2;
 typedef struct { int x ; int y ; int z ; }int3;
 typedef struct { uint x; uint y; uint z; }uint3;
-
 typedef struct { uint r; uint g; uint b; }color;
+
+typedef struct { uint3 position; int from; std::vector<int> pMovement; }individu;
 
 #endif // UTILS_HPP
