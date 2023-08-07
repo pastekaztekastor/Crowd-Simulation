@@ -30,10 +30,10 @@ void Map::initMapFromWallPositions()
 // Adds a population to the map at the specified index.
 void Map::addPopulationToMap(int index)
 {
-    // Clear the existing positions of individuals from the map and mark them as empty cells
+    // Clear the existing positions of individuals from the map and mark them as picked cells
     for (auto &&etat : this->populations[index].getStates())
     {
-        this->map[etat.y * this->dimensions.x + etat.x] = __MAP_EMPTY__;
+        this->map[etat.y * this->dimensions.x + etat.x] = 0;
     }
 
     // Mark the exit positions of the population on the map
@@ -43,9 +43,7 @@ void Map::addPopulationToMap(int index)
     }
 }
 
-
 // Public
-
 // Constructor for Map class without any parameters.
 Map::Map()
 {
@@ -164,6 +162,136 @@ void Map::initRandomWallPositions(float percentageOccupation)
     // Call the 'initRandomWallPositions' function with the calculated 'nbWallPositions'.
     Map::initRandomWallPositions(nbWallPositions);
 }
+/*
+void Map::initCostMap() {
+    // Création de la carte de cout temporaire.
+    std::vector<int> mapCostTmp;
+    // pour chaque population
+    for (Population& population : populations) {
+        // Initialisation de la carte de coût
+        mapCostTmp.resize(dimensions.x * dimensions.y, INT_MAX);
+
+        // Initialisation des sorties avec une valeur de coût de 0.
+        for (const int2& exit : population.getExits()) {
+            uint index = exit.x + exit.y * dimensions.x;
+            mapCostTmp[index] = 0;
+        }
+
+        // Initialisation des obstacles avec une valeur de coût de -1
+        for (const uint2& wall : wallPositions) {
+            uint index = wall.x + wall.y * dimensions.x;
+            mapCostTmp[index] = -1;
+        }
+
+        bool needsUpdate = true;
+        int nbPasses = 0;
+
+
+
+        while (needsUpdate) {
+            needsUpdate = false;
+
+            // De gauche à droite et de haut en bas
+            for (int i = 0; i < dimensions.x; i++) {
+                for (int j = 0; j < dimensions.y; j++) {
+                    int index = i + j * dimensions.x;
+                    if (i > 0 && mapCostTmp[index - 1] != -1 && mapCostTmp[index] > mapCostTmp[index - 1] + 1) {
+                        mapCostTmp[index] = mapCostTmp[index - 1] + 1;
+                        needsUpdate = true;
+                    }
+                    if (j > 0 && mapCostTmp[index - dimensions.x] != -1 && mapCostTmp[index] > mapCostTmp[index - dimensions.x] + 1) {
+                        mapCostTmp[index] = mapCostTmp[index - dimensions.x] + 1;
+                        needsUpdate = true;
+                    }
+                }
+            }
+
+            // De droite à gauche et de bas en haut
+            for (int i = (int) dimensions.x - 1; i >= 0; i--) {
+                for (int j = (int) dimensions.y - 1; j >= 0; j--) {
+                    int index = i + j * dimensions.x;
+
+                    if (i < dimensions.x - 1 && mapCostTmp[index + 1] != -1 & mapCostTmp[index] > mapCostTmp[index + 1] + 1) {
+                        mapCostTmp[index] = mapCostTmp[index + 1] + 1;
+                        needsUpdate = true;
+                    }
+                    if (j < dimensions.y - 1 && mapCostTmp[index + dimensions.x] != -1 & mapCostTmp[index] > mapCostTmp[index + dimensions.x] + 1) {
+                        mapCostTmp[index] = mapCostTmp[index + dimensions.x] + 1;
+                        needsUpdate = true;
+                    }
+                }
+            }
+            nbPasses ++;
+        }
+        std::vector<uint> mapCostFinal;
+        for (auto & cost : mapCostTmp) {
+            mapCostFinal.push_back((uint)cost);
+        }
+        population.setMapCost(mapCostFinal);
+    }
+}
+*/
+void Map::initCostMap() {
+    // Remplir la carte de coût avec des valeurs élevées
+    for (Population& population : populations) {
+        std::vector<int> mapCostTmp;
+        mapCostTmp.resize(dimensions.x * dimensions.y, dimensions.x * dimensions.y+1);
+
+        // Définir les positions des sorties
+        for (auto & exit : population.getExits()) {
+            mapCostTmp[exit.x + exit.y * dimensions.x] = 0;
+        }
+
+        // Définir les déplacements possibles (haut, bas, gauche, droite) // Changer ...
+        std::vector<std::pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+
+        // Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie
+        bool updated;
+        do {
+            updated = false;
+
+            // Parcourir chaque case de la carte
+            for (uint y = 0; y < dimensions.y; ++y) {
+                for (uint x = 0; x < dimensions.x; ++x) {
+                    // Vérifier si la case actuelle n'est pas un mur
+                    if (map[x + y * dimensions.x] != __MAP_WALL__ ) {
+                        int currentCost = mapCostTmp[x + y * dimensions.x];
+
+                        // Explorer les déplacements possibles à partir du point actuel
+                        for (const auto &direction: directions) {
+                            int newX = x + direction.first;
+                            int newY = y + direction.second;
+
+                            // Vérifier si les nouvelles coordonnées sont valides et si ce n'est pas un mur
+                            if (newX >= 0 &&
+                                newY >= 0 &&
+                                newX < static_cast<int>(dimensions.x) &&
+                                newY < static_cast<int>(dimensions.y) &&
+                                map[newX + newY * dimensions.x] != __MAP_WALL__
+                                ) {
+
+                                int newCost = currentCost + 1;
+
+                                // Mettre à jour le coût si nécessaire
+                                if (newCost < mapCostTmp[newX + newY * dimensions.x]) {
+                                    mapCostTmp[newX + newY * dimensions.x] = newCost;
+                                    updated = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } while (updated);
+
+        std::vector<uint> mapCostFinal;
+        for (auto & cost : mapCostTmp) {
+            mapCostFinal.push_back((uint)cost);
+        }
+        population.setMapCost(mapCostFinal);
+    }
+}
+
 
 // Initializes the map based on a file containing map data.
 void Map::initWithFile(std::string filePath)
@@ -231,7 +359,7 @@ void Map::setDimensions(const uint2 &dimensions)
 }
 
 // Add a new population to the map.
-void Map::addPopulation(Population population)
+void Map::addPopulation(const Population& population)
 {
     // Push the provided 'population' object to the vector of populations.
     // This adds the 'population' to the list of populations on the map.

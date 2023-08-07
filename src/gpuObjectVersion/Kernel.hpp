@@ -14,9 +14,9 @@
 class Kernel
 {
 private:
-    /* data */
     std::vector<individu> population;
-    std::vector<int> costMap;
+    std::vector<std::vector<uint>> costMap;
+    std::vector<std::vector<float>> pMovement;
 
 #ifdef GRAPHICS_CARD_PRESENT
     // Graphique card Stuff
@@ -25,10 +25,10 @@ private:
 public:
     Kernel();
 
-    void initKerel(Map map);
+    void initKerel(const Map& map);
 
-    const std::vector<int> &getCostMap() const;
-    void setCostMap(const std::vector<int> &costMap);
+    const std::vector<std::vector<uint>> &getCostMap() const;
+    void setCostMap(const std::vector<std::vector<uint>> &costMap);
 
     const std::vector<individu> &getPopulation() const;
     void setPopulation(const std::vector<individu> &population);

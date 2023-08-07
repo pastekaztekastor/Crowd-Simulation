@@ -17,18 +17,18 @@ private:
     std::vector<int3> states;       // Current states of individuals in the population
     std::vector<int2> exits;        // Positions of exits in the simulation
     std::vector<uint> mapCost;      // Cost map for navigation
-    std::vector<float> pDeplacement;// Probability of displacement for each individual
-    color col;                      // Color representing the population in the visualization
+    std::vector<float> pMovement;   // Probability of displacement for each individual
+    color pcolor;                   // Color representing the population in the visualization
 
 public:
     // Default constructor
     Population();
 
     // Constructor with a specified name
-    Population(std::string name);
+    explicit Population(std::string name);
 
     // Constructor with parameters to initialize the population
-    Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
+    explicit Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
 
     // Initialize states randomly for the population
     void initRandomStates(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements);
@@ -124,7 +124,7 @@ public:
      *
      * @return const std::vector<unsigned int>& A constant reference to the vector containing the cost map.
      */
-    const std::vector<unsigned int> &getMapCost() const;
+    const std::vector<unsigned int> getMapCost() const;
 
     // Set the cost map for navigation
     /**
@@ -159,6 +159,22 @@ public:
      * @param b The blue component of the color (0-255).
      */
     void setColor(uint r, uint g, uint b);
+    /**
+     * Get the probability of displacement for each individual in the population.
+     * The probability of displacement is represented as a vector of floating-point values.
+     *
+     * @return A constant reference to the vector containing the probability of displacement for each individual.
+     */
+    std::vector<float> getPMovement() const;
+
+    /**
+     * Set the probability of displacement for each individual in the population.
+     * The probability of displacement is represented as a vector of floating-point values.
+     *
+     * @param pMovement A constant reference to the vector containing the new probability of displacement for each individual.
+     */
+    void setPDeplacement(const std::vector<float> &pMovement);
+
 
     // Print the current states of individuals in the population
     /**

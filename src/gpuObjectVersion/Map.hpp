@@ -36,7 +36,6 @@ private:
     void addPopulationToMap(int index);
 
 public:
-
     /**
      * Constructor for the Map class without any parameters.
      * Sets the default dimensions of the map and initializes random wall positions with a default number of walls.
@@ -114,7 +113,6 @@ public:
      * @param percentageOccupation Percentage of wall occupation (ranging from 0.0 to 1.0) for the map dimensions.
      */
     void initRandomWallPositions(float percentageOccupation);
-
     /**
      * Initializes the map based on a file containing map data.
      * This function is intended to read map data from the specified 'filePath'
@@ -123,6 +121,7 @@ public:
      *
      * @param filePath Path to the file containing map data.
      */
+    void initCostMap();
     void initWithFile(std::string filePath);
     /**
      * Get the reference to the vector of populations.
@@ -187,7 +186,7 @@ public:
      *
      * @param population Population object to be added to the map.
      */
-    void addPopulation(Population population);
+    void addPopulation(const Population& population);
     /**
      * Print the populations of the map.
      * Displays information about each population present on the map, including their states and positions.

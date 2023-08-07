@@ -38,6 +38,7 @@ else()
             src/gpuObjectVersion/main.cpp
 
             src/gpuObjectVersion/utils/utils.cpp
+            src/gpuObjectVersion/utils/matrixMove.cpp
 
             src/gpuObjectVersion/Kernel.cpp
             src/gpuObjectVersion/Map.cpp
@@ -55,7 +56,7 @@ set(HEADERS
     src/gpuObjectVersion/Map.hpp
     src/gpuObjectVersion/Population.hpp
     src/gpuObjectVersion/Settings.hpp
-    src/gpuObjectVersion/Simulation.hpp)
+    src/gpuObjectVersion/Simulation.hpp src/gpuObjectVersion/utils/matrixMove.cpp)
 
 # Spécifier le répertoire de sortie pour l'exécutable
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/exe)

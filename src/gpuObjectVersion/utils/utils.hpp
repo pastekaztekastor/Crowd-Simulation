@@ -6,6 +6,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
+#include <random> // Pour std::default_random_engine
+
+// #include "matrixMove.cpp"
 
 // Define
 #define uint unsigned int
@@ -21,11 +25,11 @@
 #define __MAP_EXIT__                     -2
 #define __MAP_WALL__                     -3
 #define __MAP_HUMAN_QUITE__              {-1.f,-1.f,0.f}
-#define __MAP_NOMINALE_X_DIM__           10
-#define __MAP_NOMINALE_Y_DIM__           5
-#define __MAP_NOMINALE_WALL__            10
+#define __MAP_NOMINALE_X_DIM__           4
+#define __MAP_NOMINALE_Y_DIM__           4
+#define __MAP_NOMINALE_WALL__            2
 #define __MAP_NOMINALE_POPULATION__      1
-#define __MAP_NOMINALE_POPULATION_SIZE__ 10
+#define __MAP_NOMINALE_POPULATION_SIZE__ 5
 
 // POPULATION
 
@@ -69,6 +73,9 @@ typedef struct { int x ; int y ; int z ; }int3;
 typedef struct { uint x; uint y; uint z; }uint3;
 typedef struct { uint r; uint g; uint b; }color;
 
-typedef struct { uint3 position; int from; std::vector<int> pMovement; }individu;
+typedef struct { int3 position; int from; }individu;
+
+// Matrix
+std::vector<float> getMatrixMove();
 
 #endif // UTILS_HPP

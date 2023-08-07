@@ -6,33 +6,34 @@
 *******************************************************************************/
 
 #include "Population.hpp"
+
 // Default constructor for the Population class
 Population::Population()
 {
     // Set the probability of displacement for each individual to the default values
     // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
-    this->pDeplacement = {1, 1, 1, 1, 1, 1, 1};
+    this->pMovement = getMatrixMove();
 
     // Set the name of the population to a default value "NO_NAME"
     this->name = "NO_NAME";
 
     // Generate a random color to represent the population in the visualization
     // The color is represented using RGB values, with each component ranging from 0 to 255
-    this->col = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
+    this->pcolor = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
 }
 // Constructor for the Population class with a specified name
 Population::Population(std::string name)
 {
     // Set the probability of displacement for each individual to the default values
     // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
-    this->pDeplacement = {1, 1, 1, 1, 1, 1, 1};
+    this->pMovement = {1, 1, 1, 1, 1, 1, 1};
 
     // Set the name of the population to the specified 'name'
     this->name = name;
 
     // Generate a random color to represent the population in the visualization
     // The color is represented using RGB values, with each component ranging from 0 to 255
-    this->col = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
+    this->pcolor = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
 }
 
 // Constructor for the Population class with specified parameters to initialize the population
@@ -40,14 +41,14 @@ Population::Population(std::string name, int nbPopulations, int nbExit, uint2 si
 {
     // Set the probability of displacement for each individual to the default values
     // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
-    this->pDeplacement = {1, 1, 1, 1, 1, 1, 1};
+    this->pMovement = {1, 1, 1, 1, 1, 1, 1};
 
     // Set the name of the population to the specified 'name'
     this->name = name;
 
     // Generate a random color to represent the population in the visualization
     // The color is represented using RGB values, with each component ranging from 0 to 255
-    this->col = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
+    this->pcolor = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
 
     // Initialize the population randomly based on the given parameters
     Population::initRandom(nbPopulations, nbExit, simulationDim, mapElements);
@@ -67,6 +68,7 @@ void Population::initRandomStates(int nbPopulations, uint2 simulationDim, std::v
         // Repeat until a valid random coordinate is found that corresponds to an empty cell on the map and is not already picked
         do
         {
+            isPicked = false;
             // Generate a random coordinate within the simulation dimensions (0 to simulationDim.x-1 and 0 to simulationDim.y-1)
             coord = {(int)(rand() % simulationDim.x), (int)(rand() % simulationDim.y), 0};
 
@@ -165,7 +167,7 @@ void Population::setExits(const std::vector<int2> &exits) {
 }
 
 // Get the cost map for navigation in the simulation.
-const std::vector<unsigned int> &Population::getMapCost() const {
+const std::vector<unsigned int> Population::getMapCost() const {
     return mapCost;
 }
 
@@ -176,18 +178,29 @@ void Population::setMapCost(const std::vector<unsigned int> &mapCost) {
 
 // Get the color representing the population in the visualization.
 const color &Population::getColor() const {
-    return col;
+    return pcolor;
 }
 
 // Set the color representing the population in the visualization.
 void Population::setColor(const color &col) {
-    Population::col = col;
+    Population::pcolor = col;
 }
 
 // Set the color representing the population in the visualization using RGB components.
 void Population::setColor(uint r, uint g, uint b) {
-    this->col = {r, g, b};
+    this->pcolor = {r, g, b};
 }
+
+// Returns a constant reference to the probability of displacement for each individual in the population.
+std::vector<float> Population::getPMovement() const {
+    return pMovement;
+}
+
+// Sets the probability of displacement for each individual in the population.
+void Population::setPDeplacement(const std::vector<float> &pMovement) {
+    Population::pMovement = pMovement;
+}
+
 // Print the list of positions of individuals in the population.
 void Population::printStates() const {
     // Print the header with the name of the population
@@ -221,10 +234,10 @@ void Population::printMapCost(uint2 dimension) const {
     std::cout << "Cost map of the population: " << this->name << std::endl;
 
     // Print the top row of x-axis labels
-    std::cout << "  ";
+    std::cout << "   ";
     for (int x = 0; x < dimension.x; x++)
     {
-        printf("%2d  ", x);
+        printf("%2d ", x);
     }
     std::cout << "  " << std::endl;
 
@@ -238,7 +251,7 @@ void Population::printMapCost(uint2 dimension) const {
         for (int x = 0; x < dimension.x; x++)
         {
             // Print the cost value at the current position (x, y) in a formatted manner
-            printf(" %2d ", this->mapCost[y * dimension.x + x]);
+            printf("%2u ", this->mapCost[y * dimension.x + x]);
         }
 
         // Move to the next line after printing all values in the row
@@ -268,6 +281,4 @@ void Population::print(uint2 dimension) {
 Population::~Population()
 {
 }
-
-
 
