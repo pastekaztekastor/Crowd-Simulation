@@ -2,14 +2,73 @@
 #define EXPORT_HPP
 
 #include "utils/utils.hpp"
+#include "Simulation.hpp"
+#include "Map.hpp"
 
 class Export
 {
 private:
-    
+    // Pour la vidéo
+    std::vector<cv::Mat> videoFrames;
+    std::string videoFilename;
+    std::string videoPath;
+    int videoSizeFactor;
+    int videoRatioFrame;
+    int videoNbFrame;
+    cv::VideoWriter videoWriter;
+    cv::Mat videoCalcCost;
+    int videoCalcCostPlot;
+
+    // Pour les fichié temporaire
+    std::string tmpPath;
+    int frameCounter;
+
 public:
-    Export(/* args */);
+    /**
+     * Constructor for the Export class, responsible for exporting simulation frames to video.
+     * Initializes various parameters for video export, including file names, paths, and settings.
+     *
+     * @param map The map object used for the simulation.
+     */
+    Export(Map map);
+
     ~Export();
+
+    const std::vector<cv::Mat> &getVideoFrames() const;
+    void setVideoFrames(const std::vector<cv::Mat> &videoFrames);
+    const std::string &getVideoFilename() const;
+    void setVideoFilename(const std::string &videoFilename);
+    const std::string &getVideoPath() const;
+    void setVideoPath(const std::string &videoPath);
+    int getVideoSizeFactor() const;
+    void setVideoSizeFactor(int videoSizeFactor);
+    int getVideoRatioFrame() const;
+    void setVideoRatioFrame(int videoRatioFrame);
+    int getVideoNbFrame() const;
+    void setVideoNbFrame(int videoNbFrame);
+    const cv::VideoWriter &getVideoWriter() const;
+    void setVideoWriter(const cv::VideoWriter &videoWriter);
+    const cv::Mat &getVideoCalcCost() const;
+    void setVideoCalcCost(const cv::Mat &videoCalcCost);
+    int getVideoCalcCostPlot() const;
+    void setVideoCalcCostPlot(int videoCalcCostPlot);
+    const std::string &getTmpPath() const;
+    void setTmpPath(const std::string &tmpPath);
+    int getFrameCounter() const;
+    void setFrameCounter(int frameCounter);
+
+    // Créer un frame à partire de la simulation.
+    /**
+     *
+     * @param kernel
+     */
+    void creatFrame(Kernel kernel);
+
+    // Une fois la simulaiton terminé utilise tous les fichiers temporaires pour générer la vidéo.
+    /**
+     *
+     */
+    void compileFramesToVid();
 };
 
 #endif //EXPORT_HPP

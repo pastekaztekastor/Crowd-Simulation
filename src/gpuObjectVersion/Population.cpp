@@ -13,6 +13,7 @@ Population::Population()
     // Set the probability of displacement for each individual to the default values
     // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
     this->pMovement = getMatrixMove();
+    initDirections();
 
     // Set the name of the population to a default value "NO_NAME"
     this->name = "NO_NAME";
@@ -21,6 +22,43 @@ Population::Population()
     // The color is represented using RGB values, with each component ranging from 0 to 255
     this->pcolor = {(uint)(rand() % 255), (uint)(rand() % 255), (uint)(rand() % 255)};
 }
+
+// Constructor that initializes a Population object based on density and exits images.
+// The provided image files are loaded to populate the wallPositions and map.
+Population::Population(std::string filePathDensity, std::string filePathExits) {
+    // Load density image
+    cv::Mat imageDensity = cv::imread(filePathDensity, cv::IMREAD_COLOR);
+    if (imageDensity.empty()) {
+        std::cout << "Error importing image: " << filePathDensity << std::endl;
+    }
+
+    // Load exits image
+    cv::Mat imageExits = cv::imread(filePathExits, cv::IMREAD_COLOR);
+    if (imageExits.empty()) {
+        std::cout << "Error importing image: " << filePathExits << std::endl;
+    }
+
+    // Iterate through the images to populate wallPositions and map
+    for (int y = 0; y < imageDensity.rows; y++) {
+        for (int x = 0; x < imageDensity.cols; x++) {
+            cv::Vec3b pixelDensity = imageDensity.at<cv::Vec3b>(y, x);
+            cv::Vec3b pixelExit = imageExits.at<cv::Vec3b>(y, x);
+
+            cv::Scalar color(pixelExit[0], pixelExit[1], pixelExit[2]);
+            int p = pixelDensity[1];
+
+            if (color == __COLOR_GREEN__) {
+                this->exits.push_back({x, y});
+            }
+
+            // TODO: Consult with mathematicians for clarification on the condition here
+            if (static_cast<uint>(rand() % (p)) < 10) {
+                this->states.push_back({x, y, 0});
+            }
+        }
+    }
+}
+
 // Constructor for the Population class with a specified name
 Population::Population(std::string name)
 {
@@ -181,6 +219,17 @@ const color &Population::getColor() const {
     return pcolor;
 }
 
+// Returns a constant reference to the vector of possible movement directions for the population.
+const std::vector<std::pair<int, int>>& Population::getDirections() const {
+    return directions;
+}
+
+// Sets the vector of possible movement directions for the population.
+void Population::setDirections(const std::vector<std::pair<int, int>>& directions) {
+    Population::directions = directions;
+}
+
+
 // Set the color representing the population in the visualization.
 void Population::setColor(const color &col) {
     Population::pcolor = col;
@@ -197,7 +246,7 @@ std::vector<float> Population::getPMovement() const {
 }
 
 // Sets the probability of displacement for each individual in the population.
-void Population::setPDeplacement(const std::vector<float> &pMovement) {
+void Population::setPMovement(const std::vector<float> &pMovement) {
     Population::pMovement = pMovement;
 }
 
@@ -237,7 +286,7 @@ void Population::printMapCost(uint2 dimension) const {
     std::cout << "   ";
     for (int x = 0; x < dimension.x; x++)
     {
-        printf("%2d ", x);
+        printf("%3d ", x);
     }
     std::cout << "  " << std::endl;
 
@@ -245,13 +294,13 @@ void Population::printMapCost(uint2 dimension) const {
     for (int y = 0; y < dimension.y; y++)
     {
         // Print the y-axis label for the current row
-        printf("%2d ", y);
+        printf("%3d ", y);
 
         // Iterate through each column (x-axis) in the cost map
         for (int x = 0; x < dimension.x; x++)
         {
             // Print the cost value at the current position (x, y) in a formatted manner
-            printf("%2u ", this->mapCost[y * dimension.x + x]);
+            printf("%3d ", this->mapCost[y * dimension.x + x]);
         }
 
         // Move to the next line after printing all values in the row
@@ -278,7 +327,30 @@ void Population::print(uint2 dimension) {
     std::cout << std::endl;
 }
 
+// Removes a state from the population's states vector based on the provided parameters.
+void Population::removeStat(const int3 &param) {
+    for (size_t i = 0; i < states.size(); ++i) {
+        if (states[i].x == param.x && states[i].y == param.y) {
+            states.erase(states.begin() + i);
+            break;  // Once the element is found and erased, exit the loop
+        }
+    }
+}
+
+
 Population::~Population()
 {
+}
+
+// Initializes the vector of possible movement directions based on the pMovement values.
+void Population::initDirections() {
+    int sizeMatrice = static_cast<int>(std::sqrt(pMovement.size()));
+    int midleMat = (sizeMatrice - 1) / 2;
+
+    for (size_t i = 0; i < pMovement.size(); i++) {
+        if (pMovement[i] > 0) {
+            directions.push_back({static_cast<int>(i % sizeMatrice) - midleMat, static_cast<int>(i / sizeMatrice) - midleMat});
+        }
+    }
 }
 

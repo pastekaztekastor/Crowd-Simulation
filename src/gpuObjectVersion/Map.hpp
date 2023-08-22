@@ -37,6 +37,13 @@ private:
 
 public:
     /**
+     * Constructor that initializes a Map object using an image file.
+     * The image is used to populate wallPositions and map.
+     *
+     * @param filePath Path to the image file.
+     */
+    Map(std::string filePath);
+    /**
      * Constructor for the Map class without any parameters.
      * Sets the default dimensions of the map and initializes random wall positions with a default number of walls.
      * Then, initializes the map based on the wall positions.
@@ -114,15 +121,21 @@ public:
      */
     void initRandomWallPositions(float percentageOccupation);
     /**
-     * Initializes the map based on a file containing map data.
-     * This function is intended to read map data from the specified 'filePath'
-     * and initialize the map, wall positions, and populations accordingly.
-     * The file should contain information about wall positions, population data, etc.
+     * Initializes the map using an image file and returns a status code.
+     * The image is processed to populate wallPositions and map.
      *
-     * @param filePath Path to the file containing map data.
+     * @param filePath Path to the image file.
+     * @return Status code: 1 if successful, 0 if there was an error.
+     */
+    int initWithFile(std::string filePath);
+
+    /**
+     * Initializes the cost map for navigation based on exits and possible movements.
+     * The cost map represents the minimum cost (distance) required to reach each cell from exits,
+     * taking into account possible movements in up, down, left, and right directions.
+     * The cost values are computed using flood fill.
      */
     void initCostMap();
-    void initWithFile(std::string filePath);
     /**
      * Get the reference to the vector of populations.
      * Returns a constant reference to the vector of populations 'populations'.
@@ -186,7 +199,7 @@ public:
      *
      * @param population Population object to be added to the map.
      */
-    void addPopulation(const Population& population);
+    void addPopulation(Population population);
     /**
      * Print the populations of the map.
      * Displays information about each population present on the map, including their states and positions.

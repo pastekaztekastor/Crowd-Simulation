@@ -9,6 +9,15 @@
 #include <algorithm>
 #include <random> // Pour std::default_random_engine
 
+#include <time.h>
+#include <unistd.h>        // chdir
+#include <sys/stat.h>      // mkdir
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
+
 // #include "matrixMove.cpp"
 
 // Define
@@ -73,9 +82,29 @@ typedef struct { int x ; int y ; int z ; }int3;
 typedef struct { uint x; uint y; uint z; }uint3;
 typedef struct { uint r; uint g; uint b; }color;
 
-typedef struct { int3 position; int from; }individu;
+typedef struct { int3 position; int from; int id; }individu;
 
 // Matrix
 std::vector<float> getMatrixMove();
+
+/**
+ * Interpolates between two colors using Euclidean distance in RGB space.
+ * Calculates the normalized Euclidean distance between the colors.
+ *
+ * @param a First color.
+ * @param b Second color.
+ * @return Normalized Euclidean distance between the colors.
+ */
+float colorInterpol(color a, color b);
+
+/**
+ * Interpolates between two OpenCV Scalar colors using Euclidean distance in RGB space.
+ * Calculates the normalized Euclidean distance between the colors.
+ *
+ * @param a First OpenCV Scalar color.
+ * @param b Second OpenCV Scalar color.
+ * @return Normalized Euclidean distance between the colors.
+ */
+float colorInterpol(cv::Scalar a, cv::Scalar b);
 
 #endif // UTILS_HPP

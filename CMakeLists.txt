@@ -32,7 +32,8 @@ if (CUDA_FOUND)
             src/gpuObjectVersion/Map.cpp
             src/gpuObjectVersion/Population.cpp
             src/gpuObjectVersion/Settings.cpp
-            src/gpuObjectVersion/Simulation.cpp)
+            src/gpuObjectVersion/Simulation.cpp
+            src/gpuObjectVersion/Export.cpp)
 else()
     set(SOURCES
             src/gpuObjectVersion/main.cpp
@@ -44,7 +45,8 @@ else()
             src/gpuObjectVersion/Map.cpp
             src/gpuObjectVersion/Population.cpp
             src/gpuObjectVersion/Settings.cpp
-            src/gpuObjectVersion/Simulation.cpp)
+            src/gpuObjectVersion/Simulation.cpp
+            src/gpuObjectVersion/Export.cpp)
 endif()
 
 
@@ -56,10 +58,18 @@ set(HEADERS
     src/gpuObjectVersion/Map.hpp
     src/gpuObjectVersion/Population.hpp
     src/gpuObjectVersion/Settings.hpp
-    src/gpuObjectVersion/Simulation.hpp src/gpuObjectVersion/utils/matrixMove.cpp)
+    src/gpuObjectVersion/Simulation.hpp
+    src/gpuObjectVersion/Export.hpp
+    src/gpuObjectVersion/utils/matrixMove.cpp)
 
 # Spécifier le répertoire de sortie pour l'exécutable
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/exe)
+
+# Find OpenCV package
+find_package(OpenCV REQUIRED)
+
+# Add OpenCV include directories
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Compiler les fichiers source avec g++
 add_executable(GPUObjSimulation ${SOURCES} ${HEADERS})
@@ -69,3 +79,4 @@ if (CUDA_FOUND)
 endif()
 
 target_link_libraries(GPUObjSimulation PRIVATE ${OpenCV_LIBS})
+# Link your executable with OpenCV libraries

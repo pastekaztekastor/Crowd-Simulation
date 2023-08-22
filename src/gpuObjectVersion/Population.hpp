@@ -19,10 +19,29 @@ private:
     std::vector<uint> mapCost;      // Cost map for navigation
     std::vector<float> pMovement;   // Probability of displacement for each individual
     color pcolor;                   // Color representing the population in the visualization
+    std::vector<std::pair<int, int>> directions;
+
+
+private:
+    /**
+     * Initialize the vector of possible movement directions based on the pMovement values.
+     * The movement directions are determined from non-zero elements in the pMovement vector.
+     */
+    void initDirections();
+
 
 public:
     // Default constructor
     Population();
+
+    /**
+     * Constructor that initializes a Population object based on density and exits images.
+     * The provided image files are loaded to populate the wallPositions and map.
+     *
+     * @param filePathDensity Path to the density image file.
+     * @param filePathExits Path to the exits image file.
+     */
+    Population(std::string filePathDensity, std::string filePathExits);
 
     // Constructor with a specified name
     explicit Population(std::string name);
@@ -31,7 +50,6 @@ public:
     explicit Population(std::string name, int nbPopulations, int nbExit, uint2 simulationDim, std::vector<int> mapElements);
 
     // Initialize states randomly for the population
-    void initRandomStates(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements);
     /**
      * Initializes states randomly for the population.
      * Randomly assigns positions to 'nbPopulations' individuals within the simulation dimensions.
@@ -42,6 +60,7 @@ public:
      * @param simulationDim Dimensions of the simulation grid (width, height).
      * @param mapElements Map elements representing the state of each cell in the simulation grid.
     */
+    void initRandomStates(int nbPopulations, uint2 simulationDim, std::vector<int> mapElements);
 
     // Initialize exit positions randomly for the population
     /**
@@ -142,6 +161,22 @@ public:
      */
     const color &getColor() const;
 
+    /**
+     * Get the vector of possible movement directions for the population.
+     * The movement directions are represented as a vector of pairs of integers.
+     *
+     * @return A constant reference to the vector containing possible movement directions.
+     */
+    const std::vector<std::pair<int, int>>& getDirections() const;
+
+    /**
+     * Set the vector of possible movement directions for the population.
+     * The movement directions are represented as a vector of pairs of integers.
+     *
+     * @param directions A constant reference to the vector containing the new possible movement directions.
+     */
+    void setDirections(const std::vector<std::pair<int, int>>& directions);
+
     // Set the color representing the population in the visualization
     /**
      * Set the color representing the population in the visualization.
@@ -173,8 +208,7 @@ public:
      *
      * @param pMovement A constant reference to the vector containing the new probability of displacement for each individual.
      */
-    void setPDeplacement(const std::vector<float> &pMovement);
-
+    void setPMovement(const std::vector<float> &pMovement);
 
     // Print the current states of individuals in the population
     /**
@@ -204,8 +238,16 @@ public:
      */
     void print(uint2 dimension);
 
+    /**
+    * Remove a state from the population's states vector based on the provided parameters.
+    *
+    * @param param The int3 parameters specifying the state to be removed (x, y, z).
+    */
+    void removeStat(const int3 &param);
+
     // Destructor
     ~Population();
+
 };
 
 #endif // POPULATION_HPP

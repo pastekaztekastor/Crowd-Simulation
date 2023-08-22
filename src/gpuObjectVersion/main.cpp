@@ -31,15 +31,10 @@ int main(int argc, char const *argv[])
     // Create a Map object
     // Note: The usage of 'new' is not recommended as it can cause memory leaks.
     // Instead, consider using smart pointers or stack-based objects.
-    Map map = *new Map();
+    Map map = *new Map("../../inMap.png");
 
     // Create a Population object named "Test1"
-    Population population = *new Population("Test1");
-
-    // Initialize the Population with random positions for 10 individuals
-    // The '1' here might be a parameter specifying the seed for randomness.
-    // 'map.getDimensions()' returns the dimensions of the map, and 'map.getMap()' returns the map data.
-    population.initRandom(__MAP_NOMINALE_POPULATION_SIZE__, 1, map.getDimensions(), map.getMap());
+    Population population = *new Population("../../inP1Density1.png","../../inP1Exits.png");
 
     // Add the created Population to the Map and calculat Map Cost
     map.addPopulation(population);

@@ -44,7 +44,15 @@ void Map::addPopulationToMap(int index)
 }
 
 // Public
-// Constructor for Map class without any parameters.
+// Constructor that initializes a Map object using an image file.
+Map::Map(std::string filePath) {
+    // Initialize the map from the provided image file
+    if (initWithFile(filePath)) {
+        // Initialize the map data based on the wall positions
+        initMapFromWallPositions();
+    }
+}
+
 Map::Map()
 {
     // Set the default dimensions of the map
@@ -162,14 +170,14 @@ void Map::initRandomWallPositions(float percentageOccupation)
     // Call the 'initRandomWallPositions' function with the calculated 'nbWallPositions'.
     Map::initRandomWallPositions(nbWallPositions);
 }
-/*
+
 void Map::initCostMap() {
     // Création de la carte de cout temporaire.
     std::vector<int> mapCostTmp;
     // pour chaque population
     for (Population& population : populations) {
         // Initialisation de la carte de coût
-        mapCostTmp.resize(dimensions.x * dimensions.y, INT_MAX);
+        mapCostTmp.resize(dimensions.x * dimensions.y, dimensions.x * dimensions.y);
 
         // Initialisation des sorties avec une valeur de coût de 0.
         for (const int2& exit : population.getExits()) {
@@ -185,8 +193,6 @@ void Map::initCostMap() {
 
         bool needsUpdate = true;
         int nbPasses = 0;
-
-
 
         while (needsUpdate) {
             needsUpdate = false;
@@ -228,51 +234,53 @@ void Map::initCostMap() {
             mapCostFinal.push_back((uint)cost);
         }
         population.setMapCost(mapCostFinal);
+        std::cout << "NOMBRE DE PASSE CARTE COUT : " << nbPasses << std::endl;
     }
 }
-*/
-void Map::initCostMap() {
-    // Remplir la carte de coût avec des valeurs élevées
-    for (Population& population : populations) {
-        std::vector<int> mapCostTmp;
-        mapCostTmp.resize(dimensions.x * dimensions.y, dimensions.x * dimensions.y+1);
+/*
 
-        // Définir les positions des sorties
-        for (auto & exit : population.getExits()) {
+// Initializes the cost map for navigation based on exits and possible movements.
+void Map::initCostMap() {
+    // Fill the cost map with high values
+    for (Population &population : populations) {
+        std::vector<int> mapCostTmp;
+        mapCostTmp.resize(dimensions.x * dimensions.y, dimensions.x * dimensions.y + 1);
+
+        // Set exit positions
+        for (const auto &exit : population.getExits()) {
             mapCostTmp[exit.x + exit.y * dimensions.x] = 0;
         }
 
-        // Définir les déplacements possibles (haut, bas, gauche, droite) // Changer ...
+        // Define possible movements (up, down, left, right)
         std::vector<std::pair<int, int>> directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
-        // Effectuer l'inondation jusqu'à ce que la carte de coût soit remplie
+        // Perform flood fill until the cost map is filled
         bool updated;
         do {
             updated = false;
 
-            // Parcourir chaque case de la carte
+            // Iterate over each cell on the map
             for (uint y = 0; y < dimensions.y; ++y) {
                 for (uint x = 0; x < dimensions.x; ++x) {
-                    // Vérifier si la case actuelle n'est pas un mur
-                    if (map[x + y * dimensions.x] != __MAP_WALL__ ) {
+                    // Check if the current cell is not a wall
+                    if (map[x + y * dimensions.x] != __MAP_WALL__) {
                         int currentCost = mapCostTmp[x + y * dimensions.x];
 
-                        // Explorer les déplacements possibles à partir du point actuel
-                        for (const auto &direction: directions) {
+                        // Explore possible movements from the current cell
+                        for (const auto &direction : directions) {
                             int newX = x + direction.first;
                             int newY = y + direction.second;
 
-                            // Vérifier si les nouvelles coordonnées sont valides et si ce n'est pas un mur
+                            // Check if the new coordinates are valid and not a wall
                             if (newX >= 0 &&
                                 newY >= 0 &&
                                 newX < static_cast<int>(dimensions.x) &&
                                 newY < static_cast<int>(dimensions.y) &&
-                                map[newX + newY * dimensions.x] != __MAP_WALL__
-                                ) {
+                                map[newX + newY * dimensions.x] != __MAP_WALL__) {
 
                                 int newCost = currentCost + 1;
 
-                                // Mettre à jour le coût si nécessaire
+                                // Update the cost if necessary
                                 if (newCost < mapCostTmp[newX + newY * dimensions.x]) {
                                     mapCostTmp[newX + newY * dimensions.x] = newCost;
                                     updated = true;
@@ -284,23 +292,50 @@ void Map::initCostMap() {
             }
         } while (updated);
 
+        // Convert the temporary cost map to the final format and set it for the population
         std::vector<uint> mapCostFinal;
-        for (auto & cost : mapCostTmp) {
-            mapCostFinal.push_back((uint)cost);
+        for (const auto &cost : mapCostTmp) {
+            mapCostFinal.push_back(static_cast<uint>(cost));
         }
         population.setMapCost(mapCostFinal);
     }
 }
 
+*/
+// Initializes the map using an image file and returns a status code.
+int Map::initWithFile(std::string filePath) {
+    // Load the image
+    cv::Mat image = cv::imread(filePath, cv::IMREAD_COLOR);
+    if (image.empty()) {
+        std::cout << "Error importing image: " << filePath << std::endl;
+        return 0;  // Return 0 to indicate failure
+    }
 
-// Initializes the map based on a file containing map data.
-void Map::initWithFile(std::string filePath)
-{
-    // TODO: Implement this function to read map data from the specified 'filePath'
-    // and initialize the map, wall positions, and populations accordingly.
-    // The file should contain information about wall positions, population data, etc.
+    // Assign values to the Map structure based on the loaded image
+    this->dimensions = {static_cast<uint>(image.cols), static_cast<uint>(image.rows)};
+
+    // Iterate through the image to populate wallPositions and map
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+            cv::Scalar color(pixel[0], pixel[1], pixel[2]);
+
+            if (color == __COLOR_BLACK__) {
+                this->wallPositions.push_back({static_cast<uint>(x), static_cast<uint>(y)});
+            }
+        }
+    }
+
+    // Fill the map
+    map.resize(dimensions.x * dimensions.y, __MAP_EMPTY__); // Initialize to __MAP_EMPTY__
+
+    // Place the walls
+    for (const auto &wallPos : wallPositions) {
+        map[wallPos.x + wallPos.y * dimensions.x] = __MAP_WALL__;
+    }
+
+    return 1;  // Return 1 to indicate success
 }
-
 
 // Get the reference to the vector of populations.
 const std::vector<Population> &Map::getPopulations() const
@@ -359,11 +394,19 @@ void Map::setDimensions(const uint2 &dimensions)
 }
 
 // Add a new population to the map.
-void Map::addPopulation(const Population& population)
+void Map::addPopulation(Population population)
 {
     // Push the provided 'population' object to the vector of populations.
     // This adds the 'population' to the list of populations on the map.
+    for (auto & a : population.getStates()){
+        for (auto & b : this->wallPositions){
+            if (a.x == b.x && a.y == b.y) {
+                population.removeStat(a);
+            }
+        }
+    }
     this->populations.push_back(population);
+
 }
 // Print the populations of the map.
 void Map::printPopulations()
@@ -418,7 +461,7 @@ void Map::printMap(int index)
             else if (this->map[y * this->dimensions.x + x] == __MAP_EXIT__)
                 std::cout << " X ";
             else if (this->map[y * this->dimensions.x + x] >= 0)
-                std::cout << "[P]";
+                std::cout << " o ";
         }
         std::cout << std::endl;
     }
