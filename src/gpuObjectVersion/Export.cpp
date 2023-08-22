@@ -1,6 +1,6 @@
 #include "Export.hpp"
 
-Ex/**
+/**
  * Constructor for the Export class, responsible for exporting simulation frames to video.
  * Initializes various parameters for video export, including file names, paths, and settings.
  *
@@ -48,7 +48,6 @@ Export::Export(Map map)
 
 Export::~Export()
 {
-    this->frameCounter = 0;
 }
 
 const std::vector<cv::Mat> &Export::getVideoFrames() const {
