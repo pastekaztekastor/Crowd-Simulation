@@ -248,6 +248,7 @@ public:
     // Destructor
     ~Population();
 
+    cv::Scalar getColorScalar();
 };
 
 #endif // POPULATION_HPP

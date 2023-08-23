@@ -9,6 +9,7 @@ class Export
 {
 private:
     // Pour la vidéo
+    uint2 dimensionSimulation;
     std::vector<cv::Mat> videoFrames;
     std::string videoFilename;
     std::string videoPath;
@@ -59,16 +60,23 @@ public:
 
     // Créer un frame à partire de la simulation.
     /**
-     *
+     * TODO write comment
      * @param kernel
      */
     void creatFrame(Kernel kernel);
 
     // Une fois la simulaiton terminé utilise tous les fichiers temporaires pour générer la vidéo.
     /**
-     *
+     * TODO write comment
      */
-    void compileFramesToVid();
+    void compileFramesToVid(Map map);
+
+    // créer le calque avec les couts qui sont affichés
+    /**
+     * TODO comment
+     * @param map
+     */
+    void creatCalcCost(Map map);
 };
 
 #endif //EXPORT_HPP

@@ -20,7 +20,7 @@ private:
     std::vector<bool> isEmptyMap;
     std::vector<std::vector<uint>> costMaps_s;
     std::vector<std::vector<float>> pMovements_s;
-    std::vector<std::vector<std::pair<int, int>>> directions_s
+    std::vector<std::vector<std::pair<int, int>>> directions_s;
 
 #ifdef GRAPHICS_CARD_PRESENT
     // Graphique card Stuff
@@ -34,7 +34,6 @@ public:
     const std::vector<std::vector<uint>> &getCostMap() const;
     void setCostMap(const std::vector<std::vector<uint>> &costMap);
 
-    const std::vector<individu> &getPopulation() const;
     void setPopulation(const std::vector<individu> &population);
 
     // Computes the next frame of the simulation.
@@ -45,6 +44,8 @@ public:
     void computeNextFrame();
 
     ~Kernel();
+
+    const std::vector<individu> &getPopulation() const;
 };
 
 #endif //KERNEL_HPP

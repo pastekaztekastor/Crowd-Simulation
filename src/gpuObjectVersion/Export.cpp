@@ -17,7 +17,8 @@ Export::Export(Map map)
           videoNbFrame(0),
           tmpPath("tmp/frames/"),
           frameCounter(0),
-          videoCalcCostPlot(__VIDEO_CALC_COST_PLOT_OFF__)
+          videoCalcCostPlot(__VIDEO_CALC_COST_PLOT_OFF__),
+          dimensionSimulation(map.getDimensions())
 {
     if (map.getDimensions().x < __MAX_X_DIM_JPEG__ &&
         map.getDimensions().y < __MAX_Y_DIM_JPEG__) {
@@ -140,24 +141,133 @@ void Export::setFrameCounter(int frameCounter) {
 
 void Export::creatFrame(Kernel kernel) {
 
+    // Check if the video folder exists, create if not
+    struct stat info;
+    if (stat(this->tmpPath.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
+        std::cout << "The folder already exists." << std::endl;
+    } else {
+        int status = mkdir(this->tmpPath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if (status == 0) {
+            std::cout << "The folder was created successfully." << std::endl;
+        } else {
+            std::cout << "Error creating the folder." << std::endl;
+        }
+    }
+
+    /*
+     * Créer un fichier txt.
+     *  - nom du fichier : this->frameCounter;
+     *  - chemin : this->tmpPath;
+     *  - contenue du fichier :
+     *    - une ligne par éléments dans kernel.getPopulation();
+     *    - chaque ligne contient " kernel.getPopulation()[i].x kernel.getPopulation()[i].y kernel.getPopulation()[i].z "
+     */
+
+    // Create a txt file
+    char filePath[256];
+    snprintf(filePath, sizeof(filePath), "%s/%d.txt", exportObj->tmpPath, exportObj->frameCounter);
+
+    std::vector<individu> population = kernel.getPopulation();
+    FILE *file = fopen(filePath, "w");
+    if (file) {
+        for (auto & i : population) {
+            fprintf(file, "%d %d %d %d %d\n", i.id, i.position.x, i.position.y, i.position.z, i.from);
+        }
+        fclose(file);
+    } else {
+        printf("Error creating the file.\n");
+    }
 }
 
-void Export::compileFramesToVid() {
-    // on créer le calce de cout
+void Export::compileFramesToVid(Map map) {
+    // créer la vidéo
+    cv::Mat frameType(map.getDimensions().x * videoSizeFactor, map.getDimensions().y * videoSizeFactor, CV_8UC3,__COLOR_BLACK__);
+    videoWriter.open(videoPath, cv::VideoWriter::fourcc('a','v','c','1'), __VIDEO_FPS__, frameType.size(), true);
 
-    _exportData->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_OFF__;
-    if ( _exportData->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_ON__ ){
-        _exportData->videoCalcCost = cv::Mat(_simParam.dimension.y * _exportData->videoSizeFactor, _simParam.dimension.x * _exportData->videoSizeFactor, CV_8UC3, __COLOR_ALPHA__);
-        for (size_t i = 0; i < _simParam.dimension.x * _simParam.dimension.y; i++){
-            // Paramètres du texte
-            string texte = to_string(_simParam.cost[i]);
-            cv::Point position((xPosof(i, _simParam.dimension.x, _simParam.dimension.y ) * _exportData->videoSizeFactor) + (_exportData->videoSizeFactor * 0,9), (yPosof(i, _simParam.dimension.x, _simParam.dimension.y) * _exportData->videoSizeFactor) + (_exportData->videoSizeFactor * 0.9));
-            int epaisseur = 1;
-            float taillePolice = 0.8;
-            int ligneType = cv::LINE_AA;
+    // Vérifier si le VideoWriter a été correctement initialisé
+    if (!videoWriter.isOpened()) {
+        std::cout << "Erreur lors de l'ouverture du fichier : " << std::endl;
+    }
+    else
+    {
+        // ouvrir toutes les frames :
+        for (int i = 1; i <= frameCounter; i++) {
+            cv::Mat frame(map.getDimensions().x * videoSizeFactor, map.getDimensions().y * videoSizeFactor, CV_8UC3,__COLOR_BLACK__);
 
-            // Écrire le texte sur l'image
-            cv::putText(_exportData->videoCalcCost, texte, position, cv::FONT_HERSHEY_SIMPLEX, taillePolice, __COLOR_GREY__, epaisseur, ligneType);
+            char filePath[256];
+            snprintf(filePath, sizeof(filePath), "%s/%d.txt", tmpPath.c_str(), i);
+
+            // on place les gens de couleur LOL
+            FILE *file = fopen(filePath, "r");  // Ouvrir le fichier en mode lecture
+            if (file != NULL) {
+                // Traiter le contenu du fichier ici
+                int x, y, z, id, from;
+                while (fscanf(file, "%d %d %d %d %d", &id, &x, &y, &z, &from) == 5) {
+                    cv::Point center((x * videoSizeFactor) + (videoSizeFactor / 2),
+                                     (y * videoSizeFactor) + (videoSizeFactor / 2));
+                    float radius = (videoSizeFactor / 2) * 0.9;
+                    // TODO faire l'interpolation de couleur quand ils attende
+                    int thickness = -1;  // Remplacer par un nombre positif pour un contour solide
+                    cv::circle(frame, center, radius, map.getPopulations()[id].getColorScalar(), thickness);
+                }
+                // Fermer le fichier après traitement
+                fclose(file);
+            } else {
+                printf("Erreur lors de l'ouverture du fichier %s\n", filePath);
+            }
+
+            // on place les mures
+            for (auto &wall: map.getWallPositions()) {
+                cv::Point TL(wall.x * videoSizeFactor, wall.y * videoSizeFactor);
+                cv::Point BR(TL.x + videoSizeFactor, TL.y + videoSizeFactor);
+                cv::Rect rectangle(TL, BR);
+                cv::rectangle(frame, rectangle, __COLOR_WHITE__, -1);
+            }
+
+            // Placer les sorties
+            for (Population p: map.getPopulations()) {
+                for (auto &exit: p.getExits()) {
+                    cv::Point TL(exit.x * videoSizeFactor, exit.y * videoSizeFactor);
+                    cv::Point BR(TL.x + videoSizeFactor, TL.y + videoSizeFactor);
+                    cv::Rect rectangle(TL, BR);
+                    cv::rectangle(frame, rectangle, p.getColorScalar(), -1);
+                }
+            }
+            // Superposition avec le calque de cout de chaque case
+            if (videoCalcCostPlot == __VIDEO_CALC_COST_PLOT_ON__) {
+                // Paramètre pour la superposition
+                double alpha = 0.5; // Facteur de pondération pour l'image 1
+                double beta = 0.5;  // Facteur de pondération pour l'image 2
+                double gamma = 0.0; // Paramètre d'ajout d'un scalaire
+
+                // Superposer les images
+                cv::addWeighted(videoCalcCost, alpha, frame, beta, gamma, frame);
+            }
+
+            // Exporte la frame
+            videoWriter.write(frame);
+        }
+        videoWriter.release();
+    }
+
+}
+void Export::creatCalcCost(Map map){
+    if ( videoCalcCostPlot == __VIDEO_CALC_COST_PLOT_ON__){
+        if (map.getPopulations().size() == 1){
+            videoCalcCost = cv::Mat(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3, __COLOR_ALPHA__);
+            for (size_t i = 0; i < map.getPopulations()[0].getMapCost().size(); i++){
+                // Paramètres du texte
+                string texte = to_string(map.getPopulations()[0].getMapCost()[i]);
+                int x = 0; (i % map.getDimensions().x) * videoSizeFactor + (videoSizeFactor * 0,9);
+                int y = (i / map.getDimensions().y) * videoSizeFactor + (videoSizeFactor * 0.9);
+                cv::Point position(x, y);
+                int epaisseur = 1;
+                float taillePolice = 0.8;
+                int ligneType = cv::LINE_AA;
+
+                // Écrire le texte sur l'image
+                cv::putText(videoCalcCost, texte, position, cv::FONT_HERSHEY_SIMPLEX, taillePolice, __COLOR_GREY__, epaisseur, ligneType);
+            }
         }
     }
 }

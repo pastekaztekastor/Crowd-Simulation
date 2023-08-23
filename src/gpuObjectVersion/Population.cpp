@@ -354,3 +354,7 @@ void Population::initDirections() {
     }
 }
 
+cv::Scalar Population::getColorScalar() {
+    return scalarColor(pcolor.b, pcolor.g, pcolor.r);;
+}
+
