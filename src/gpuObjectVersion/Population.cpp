@@ -27,6 +27,8 @@ Population::Population()
 // The provided image files are loaded to populate the wallPositions and map.
 Population::Population(std::string filePathDensity, std::string filePathExits) {
     // Load density image
+    this->pMovement = getMatrixMove();
+    initDirections();
     cv::Mat imageDensity = cv::imread(filePathDensity, cv::IMREAD_COLOR);
     if (imageDensity.empty()) {
         std::cout << "Error importing image: " << filePathDensity << std::endl;
@@ -45,14 +47,15 @@ Population::Population(std::string filePathDensity, std::string filePathExits) {
             cv::Vec3b pixelExit = imageExits.at<cv::Vec3b>(y, x);
 
             cv::Scalar color(pixelExit[0], pixelExit[1], pixelExit[2]);
-            int p = pixelDensity[1];
+            float p = (float)pixelDensity[1]/(float)255;
 
             if (color == __COLOR_GREEN__) {
                 this->exits.push_back({x, y});
             }
+            int randomValue = rand();
+            float r = (float )randomValue / RAND_MAX;
 
-            // TODO: Consult with mathematicians for clarification on the condition here
-            if (static_cast<uint>(rand() % (p)) < 10) {
+            if (r < p) {
                 this->states.push_back({x, y, 0});
             }
         }
@@ -64,7 +67,8 @@ Population::Population(std::string name)
 {
     // Set the probability of displacement for each individual to the default values
     // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
-    this->pMovement = {1, 1, 1, 1, 1, 1, 1};
+    this->pMovement = getMatrixMove();
+    initDirections();
 
     // Set the name of the population to the specified 'name'
     this->name = name;
@@ -79,7 +83,8 @@ Population::Population(std::string name, int nbPopulations, int nbExit, uint2 si
 {
     // Set the probability of displacement for each individual to the default values
     // The values below indicate equal probabilities in all directions (up, down, left, right, etc.)
-    this->pMovement = {1, 1, 1, 1, 1, 1, 1};
+    this->pMovement = getMatrixMove();
+    initDirections();
 
     // Set the name of the population to the specified 'name'
     this->name = name;
@@ -354,7 +359,7 @@ void Population::initDirections() {
     }
 }
 
-cv::Scalar Population::getColorScalar() {
-    return scalarColor(pcolor.b, pcolor.g, pcolor.r);;
+cv::Scalar Population::getColorScalar() const {
+    return cv::Scalar(pcolor.b, pcolor.g, pcolor.r);;
 }
 

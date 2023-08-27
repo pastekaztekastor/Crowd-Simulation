@@ -3,7 +3,11 @@
 
 #include "utils/utils.hpp"
 #include "Simulation.hpp"
+#include "Kernel.hpp"
 #include "Map.hpp"
+
+#define __PATH_TEMP_FRAME__     "../../tmp/frames/"
+#define __PATH_VIDEO__          "../../video/"
 
 class Export
 {

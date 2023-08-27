@@ -10,7 +10,7 @@ class Simulation
 {
 private:
     Map map;
-    Export expt; 
+    //Export expt;
 
 public:
     Simulation();

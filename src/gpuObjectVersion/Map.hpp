@@ -226,6 +226,8 @@ public:
     void print();
 
     ~Map();
+
+    std::vector<bool> getMapWall() const;
 };
 
 #endif // MAP_HPP

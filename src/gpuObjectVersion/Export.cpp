@@ -11,11 +11,11 @@ Export::Export(Map map)
                         std::to_string(map.getDimensions().x) + "X-" +
                         std::to_string(map.getDimensions().y) + "Y-" +
                         std::to_string(map.getPopulations().size()) + "P.mp4"),
-          videoPath("video/"),
+          videoPath(__PATH_VIDEO__),
           videoSizeFactor(1),
           videoRatioFrame(__VIDEO_RATIO_FRAME__), // TODO: Implement dynamic value here
           videoNbFrame(0),
-          tmpPath("tmp/frames/"),
+          tmpPath(__PATH_TEMP_FRAME__),
           frameCounter(0),
           videoCalcCostPlot(__VIDEO_CALC_COST_PLOT_OFF__),
           dimensionSimulation(map.getDimensions())
@@ -28,18 +28,18 @@ Export::Export(Map map)
     // Check if the video folder exists, create if not
     struct stat info;
     if (stat(this->videoPath.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
-        std::cout << "The folder already exists." << std::endl;
+        if (__PRINT_DEBUG__)std::cout << "The folder already exists." << std::endl;
     } else {
         int status = mkdir(this->videoPath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (status == 0) {
-            std::cout << "The folder was created successfully." << std::endl;
+            if (__PRINT_DEBUG__)std::cout << "The folder was created successfully." << std::endl;
         } else {
-            std::cout << "Error creating the folder." << std::endl;
+            if (__PRINT_DEBUG__)std::cout << "Error creating the folder." << std::endl;
         }
     }
 
     // Determine videoCalcCostPlot value based on map dimensions
-    if (max(map.getDimensions().x, map.getDimensions().y) > 50) {
+    if (std::max(map.getDimensions().x, map.getDimensions().y) > 50) {
         this->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_OFF__;
     } else {
         this->videoCalcCostPlot = __VIDEO_CALC_COST_PLOT_ON__;
@@ -144,13 +144,13 @@ void Export::creatFrame(Kernel kernel) {
     // Check if the video folder exists, create if not
     struct stat info;
     if (stat(this->tmpPath.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
-        std::cout << "The folder already exists." << std::endl;
+        if (__PRINT_DEBUG__)std::cout << "The folder already exists." << std::endl;
     } else {
         int status = mkdir(this->tmpPath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (status == 0) {
-            std::cout << "The folder was created successfully." << std::endl;
+            if (__PRINT_DEBUG__)std::cout << "The folder was created successfully." << std::endl;
         } else {
-            std::cout << "Error creating the folder." << std::endl;
+            if (__PRINT_DEBUG__)std::cout << "Error creating the folder." << std::endl;
         }
     }
 
@@ -165,7 +165,7 @@ void Export::creatFrame(Kernel kernel) {
 
     // Create a txt file
     char filePath[256];
-    snprintf(filePath, sizeof(filePath), "%s/%d.txt", exportObj->tmpPath, exportObj->frameCounter);
+    snprintf(filePath, sizeof(filePath), "%s%d.txt", tmpPath.c_str(), frameCounter);
 
     std::vector<individu> population = kernel.getPopulation();
     FILE *file = fopen(filePath, "w");
@@ -177,16 +177,17 @@ void Export::creatFrame(Kernel kernel) {
     } else {
         printf("Error creating the file.\n");
     }
+    this->frameCounter ++;
 }
 
 void Export::compileFramesToVid(Map map) {
     // créer la vidéo
     cv::Mat frameType(map.getDimensions().x * videoSizeFactor, map.getDimensions().y * videoSizeFactor, CV_8UC3,__COLOR_BLACK__);
-    videoWriter.open(videoPath, cv::VideoWriter::fourcc('a','v','c','1'), __VIDEO_FPS__, frameType.size(), true);
+    videoWriter.open(videoPath, cv::VideoWriter::fourcc( 'H','2','6','4'), __VIDEO_FPS__, frameType.size(), true);
 
     // Vérifier si le VideoWriter a été correctement initialisé
     if (!videoWriter.isOpened()) {
-        std::cout << "Erreur lors de l'ouverture du fichier : " << std::endl;
+        if (__PRINT_DEBUG__)std::cout << "Erreur lors de l'ouverture du fichier : " << std::endl;
     }
     else
     {
@@ -249,16 +250,16 @@ void Export::compileFramesToVid(Map map) {
         }
         videoWriter.release();
     }
-
 }
+
 void Export::creatCalcCost(Map map){
     if ( videoCalcCostPlot == __VIDEO_CALC_COST_PLOT_ON__){
         if (map.getPopulations().size() == 1){
             videoCalcCost = cv::Mat(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3, __COLOR_ALPHA__);
             for (size_t i = 0; i < map.getPopulations()[0].getMapCost().size(); i++){
                 // Paramètres du texte
-                string texte = to_string(map.getPopulations()[0].getMapCost()[i]);
-                int x = 0; (i % map.getDimensions().x) * videoSizeFactor + (videoSizeFactor * 0,9);
+                std::string texte = std::to_string(map.getPopulations()[0].getMapCost()[i]);
+                int x = (i % map.getDimensions().x) * videoSizeFactor + (videoSizeFactor * 0.9);
                 int y = (i / map.getDimensions().y) * videoSizeFactor + (videoSizeFactor * 0.9);
                 cv::Point position(x, y);
                 int epaisseur = 1;

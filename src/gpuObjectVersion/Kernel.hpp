@@ -17,10 +17,12 @@ private:
     uint2 dimentionMap;
     std::vector<individu> population;
     std::vector<uint> shuffleIndex;
-    std::vector<bool> isEmptyMap;
+    std::vector<bool> isEmptyMapPopulation;
+    std::vector<bool> isEmptyMapWall;
     std::vector<std::vector<uint>> costMaps_s;
     std::vector<std::vector<float>> pMovements_s;
     std::vector<std::vector<std::pair<int, int>>> directions_s;
+    uint simulated; // personnes encore simulées.
 
 #ifdef GRAPHICS_CARD_PRESENT
     // Graphique card Stuff
@@ -41,7 +43,7 @@ public:
      * Computes the next frame of the simulation for each individual in a shuffled order.
      * Uses movement probabilities, cost maps, and available directions to determine the next positions.
      */
-    void computeNextFrame();
+    int computeNextFrame();
 
     ~Kernel();
 

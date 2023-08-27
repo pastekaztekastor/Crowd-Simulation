@@ -130,7 +130,8 @@ void Map::initRandomPopulation(uint nbPopulations, int populationSize)
     {
         // Create a new population with a unique identifier 'i', the specified 'populationSize',
         // a default number of exits, and the map dimensions and elements.
-        this->populations.push_back(Population(std::to_string(i), populationSize, __POPULATION_NOMINAL_NB_EXIT__, this->dimensions, this->map));
+        // TODO fix
+        // this->populations.push_back(Population(std::to_string(i), populationSize, __POPULATION_NOMINAL_NB_EXIT__, this->dimensions, this->map));
     }
 }
 
@@ -480,4 +481,13 @@ void Map::print()
 
 Map::~Map(){
     //TO DO
+}
+
+std::vector<bool> Map::getMapWall() const {
+    std::vector<bool> out;
+    for (auto &i : map) {
+        if (i == __MAP_WALL__)  { out.push_back(false); }
+        else                    { out.push_back(true);  }
+    }
+    return out;
 }

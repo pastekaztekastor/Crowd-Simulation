@@ -29,6 +29,8 @@
 #define __POPULATION_NOMINAL_SIZE__     10
 #define __POPULATION_NOMINAL_NB_EXIT__  1
 
+#define __PRINT_DEBUG__                 true
+
 // Map
 #define __MAP_EMPTY__                    -1
 #define __MAP_EXIT__                     -2
@@ -74,6 +76,10 @@
 #define __COLOR_BLACK__                 cv::Scalar(0, 0, 0)
 #define __COLOR_GREY__                  cv::Scalar(125, 125, 125)
 #define __COLOR_ALPHA__                 cv::Scalar(0, 0, 0, 0)
+
+// Path
+#define __PATH_DENSITY__                "../../input Image/2/population.png"
+#define __PATH_EXIT__                   "../../input Image/2/exit.png"
 
 // Struct 
 typedef struct { int x ; int y ; }int2;

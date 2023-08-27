@@ -17,13 +17,14 @@ Kernel::Kernel(const Map& map)
 
 // FUNCTIONS CPU
 void Kernel::initKerel(const Map& map) {
-    this->isEmptyMap.resize(map.getMap().size(), true);
+    this->isEmptyMapWall= map.getMapWall();
+    this->isEmptyMapPopulation.resize(map.getMap().size(), true);
 
     for (int i = 0; i< map.getPopulations().size(); i++) {
         //Création du vecteur population
         for(auto &&individu : map.getPopulations()[i].getStates()){
             this->population.push_back({individu, i});
-            this->isEmptyMap[individu.x + individu.y * map.getDimensions().x] = false;
+            this->isEmptyMapPopulation[individu.x + individu.y * map.getDimensions().x] = false;
         }
         // copy des cartes de couts
         this->costMaps_s.push_back(map.getPopulations()[i].getMapCost());
@@ -39,7 +40,8 @@ void Kernel::initKerel(const Map& map) {
 }
 
 // Computes the next frame of the simulation.
-void Kernel::computeNextFrame() {
+int Kernel::computeNextFrame() { // TODO expliquer la sortie qui est le nb personne restantte dans la simulation
+    int out = 0;
     // Create a random number generator
     std::random_device rd;
     std::default_random_engine rng(rd());
@@ -53,14 +55,17 @@ void Kernel::computeNextFrame() {
         if (this->population[i].position.x == -1 && this->population[i].position.y == -1) {
             continue; // Move to the next individual
         }
-
+        else {
+            out ++;
+        }
         // Initialize variables for position calculations
         int dimensionDep = static_cast<int>(std::sqrt(this->pMovements_s[this->population[i].from].size()));
 
-        uint2 coordAccMapPxy = {static_cast<uint>(this->population[i].position.x), static_cast<uint>(this->population[i].position.y)};
-        uint2 coordAccDepPxy = {static_cast<uint>(dimensionDep), static_cast<uint>(dimensionDep)};
-        uint2 coordNextMapPxy = {0, 0};
-        uint2 coordNextDepPxy = {0, 0};
+        int2 coordAccMapPxy = {(this->population[i].position.x), (this->population[i].position.y)};
+        int2 coordAccDepPxy = {(dimensionDep-1)/2, (dimensionDep-1)/2};
+
+        int2 coordNextMapPxy = {0, 0};
+        int2 coordNextDepPxy = {0, 0};
 
         uint coordAccMapPi = coordAccMapPxy.x + coordAccMapPxy.y * dimentionMap.x;
         uint coordAccDepPi = coordAccDepPxy.x + coordAccDepPxy.y * dimensionDep;
@@ -68,24 +73,26 @@ void Kernel::computeNextFrame() {
         uint coordNextDepPi = 0;
 
         // Step -1: Generate a list of available next positions
-        std::vector<uint2> allNextPositions;
+        std::vector<int2> allNextPositions;
         for (auto &nextPossiblePosition : this->directions_s[this->population[i].from]) {
             // Check if the position is within simulation boundaries
             coordNextMapPxy = {coordAccMapPxy.x + nextPossiblePosition.first, coordAccMapPxy.y + nextPossiblePosition.second};
             coordNextMapPi = coordNextMapPxy.x + coordNextMapPxy.y * dimentionMap.x;
 
             if (coordNextMapPxy.x < 0 || coordNextMapPxy.x >= dimentionMap.x ||
-                coordNextMapPxy.y < 0 || coordNextMapPxy.y >= dimentionMap.y) {
+                coordNextMapPxy.y < 0 || coordNextMapPxy.y >= dimentionMap.y ||
+                !isEmptyMapWall[coordNextMapPi] ||
+                costMaps_s[population[i].from][coordNextMapPi] >= costMaps_s[population[i].from][coordAccMapPi]) {
                 continue;
             }
 
-            if (isEmptyMap[coordNextMapPi]) {
-                allNextPositions.push_back(coordNextMapPxy);
+            if (isEmptyMapPopulation[coordNextMapPi]) {
+                allNextPositions.push_back({nextPossiblePosition.first, nextPossiblePosition.second});
             }
         }
 
         // Step -2: Calculate movement probabilities for available positions
-        std::vector<std::pair<uint2, float>> weightCumulCroissant;
+        std::vector<std::pair<int2, float>> weightCumulCroissant;
         float sumWeight = 0.f;
 
         for (auto &nextPosition : allNextPositions) {
@@ -102,7 +109,7 @@ void Kernel::computeNextFrame() {
 
         // Step -3: Select the next position based on cumulative weights
         uint2 nextPos = {0, 0};
-        int r = rand() * sumWeight;
+        float r = ((float)rand()/RAND_MAX) * sumWeight;
 
         for (auto &weightByPossibleIndex : weightCumulCroissant) {
             if (r < weightByPossibleIndex.second) {
@@ -119,6 +126,7 @@ void Kernel::computeNextFrame() {
             this->population[i].position.y = -1;
         }
     }
+    return out;
 }
 
 // GETTER AND SETTER CPU
