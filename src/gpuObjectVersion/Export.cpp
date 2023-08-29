@@ -171,7 +171,7 @@ void Export::creatFrame(Kernel kernel) {
     FILE *file = fopen(filePath, "w");
     if (file) {
         for (auto & i : population) {
-            fprintf(file, "%d %d %d %d %d\n", i.id, i.position.x, i.position.y, i.position.z, i.from);
+            fprintf(file, "%d %d %d %d %d\n",  i.from, i.id, i.position.x, i.position.y, i.position.z);
         }
         fclose(file);
     } else {
@@ -181,9 +181,10 @@ void Export::creatFrame(Kernel kernel) {
 }
 
 void Export::compileFramesToVid(Map map) {
+    std::string fullVideoPath = videoPath + videoFilename;
     // créer la vidéo
-    cv::Mat frameType(map.getDimensions().x * videoSizeFactor, map.getDimensions().y * videoSizeFactor, CV_8UC3,__COLOR_BLACK__);
-    videoWriter.open(videoPath, cv::VideoWriter::fourcc( 'H','2','6','4'), __VIDEO_FPS__, frameType.size(), true);
+    cv::Mat frameType(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3,__COLOR_GREY__);
+    videoWriter.open(fullVideoPath, cv::VideoWriter::fourcc( 'a', 'v', 'c', '1'), __VIDEO_FPS__, frameType.size(), true);
 
     // Vérifier si le VideoWriter a été correctement initialisé
     if (!videoWriter.isOpened()) {
@@ -193,17 +194,17 @@ void Export::compileFramesToVid(Map map) {
     {
         // ouvrir toutes les frames :
         for (int i = 1; i <= frameCounter; i++) {
-            cv::Mat frame(map.getDimensions().x * videoSizeFactor, map.getDimensions().y * videoSizeFactor, CV_8UC3,__COLOR_BLACK__);
+            cv::Mat frame(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3,__COLOR_GREY__);
 
             char filePath[256];
-            snprintf(filePath, sizeof(filePath), "%s/%d.txt", tmpPath.c_str(), i);
+            snprintf(filePath, sizeof(filePath), "%s%d.txt", tmpPath.c_str(), i);
 
             // on place les gens de couleur LOL
             FILE *file = fopen(filePath, "r");  // Ouvrir le fichier en mode lecture
             if (file != NULL) {
                 // Traiter le contenu du fichier ici
                 int x, y, z, id, from;
-                while (fscanf(file, "%d %d %d %d %d", &id, &x, &y, &z, &from) == 5) {
+                while (fscanf(file, "%d %d %d %d %d", &from, &id, &x, &y, &z) == 5) {
                     cv::Point center((x * videoSizeFactor) + (videoSizeFactor / 2),
                                      (y * videoSizeFactor) + (videoSizeFactor / 2));
                     float radius = (videoSizeFactor / 2) * 0.9;
@@ -235,7 +236,8 @@ void Export::compileFramesToVid(Map map) {
                 }
             }
             // Superposition avec le calque de cout de chaque case
-            if (videoCalcCostPlot == __VIDEO_CALC_COST_PLOT_ON__) {
+            /*
+            if (videoCalcCostPlot == __VIDEO_CALC_COST_PLOT_OFF__) {
                 // Paramètre pour la superposition
                 double alpha = 0.5; // Facteur de pondération pour l'image 1
                 double beta = 0.5;  // Facteur de pondération pour l'image 2
@@ -244,9 +246,11 @@ void Export::compileFramesToVid(Map map) {
                 // Superposer les images
                 cv::addWeighted(videoCalcCost, alpha, frame, beta, gamma, frame);
             }
+            */
 
             // Exporte la frame
             videoWriter.write(frame);
+            progressBar(i, frameCounter, 200, frameCounter);
         }
         videoWriter.release();
     }
@@ -255,7 +259,7 @@ void Export::compileFramesToVid(Map map) {
 void Export::creatCalcCost(Map map){
     if ( videoCalcCostPlot == __VIDEO_CALC_COST_PLOT_ON__){
         if (map.getPopulations().size() == 1){
-            videoCalcCost = cv::Mat(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3, __COLOR_ALPHA__);
+            videoCalcCost = cv::Mat(map.getDimensions().x * videoSizeFactor, map.getDimensions().y * videoSizeFactor, CV_8UC3, __COLOR_ALPHA__);
             for (size_t i = 0; i < map.getPopulations()[0].getMapCost().size(); i++){
                 // Paramètres du texte
                 std::string texte = std::to_string(map.getPopulations()[0].getMapCost()[i]);

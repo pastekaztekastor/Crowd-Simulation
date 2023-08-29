@@ -407,7 +407,7 @@ void Map::addPopulation(Population population)
         }
     }
     this->populations.push_back(population);
-
+    initCostMap();
 }
 // Print the populations of the map.
 void Map::printPopulations()

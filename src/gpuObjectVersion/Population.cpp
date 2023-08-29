@@ -27,6 +27,7 @@ Population::Population()
 // The provided image files are loaded to populate the wallPositions and map.
 Population::Population(std::string filePathDensity, std::string filePathExits) {
     // Load density image
+    srand(time(NULL));
     this->pMovement = getMatrixMove();
     initDirections();
     cv::Mat imageDensity = cv::imread(filePathDensity, cv::IMREAD_COLOR);

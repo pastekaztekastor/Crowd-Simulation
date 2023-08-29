@@ -44,6 +44,12 @@ public:
      * Uses movement probabilities, cost maps, and available directions to determine the next positions.
      */
     int computeNextFrame();
+    // Computes the next frame of the simulation.
+    /**
+     * Computes the next frame of the simulation for each individual in a shuffled order.
+     * Uses movement probabilities, cost maps, and available directions to determine the next positions.
+     */
+    int computeNextFrame2();
 
     ~Kernel();
 
