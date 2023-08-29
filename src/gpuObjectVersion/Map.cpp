@@ -179,7 +179,9 @@ void Map::initCostMap() {
     for (Population& population : populations) {
         // Initialisation de la carte de coût
         mapCostTmp.resize(dimensions.x * dimensions.y, dimensions.x * dimensions.y);
-
+        for (auto &i : mapCostTmp){
+            i = dimensions.x * dimensions.y;
+        }
         // Initialisation des sorties avec une valeur de coût de 0.
         for (const int2& exit : population.getExits()) {
             uint index = exit.x + exit.y * dimensions.x;
@@ -407,7 +409,6 @@ void Map::addPopulation(Population population)
         }
     }
     this->populations.push_back(population);
-    initCostMap();
 }
 // Print the populations of the map.
 void Map::printPopulations()

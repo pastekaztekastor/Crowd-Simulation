@@ -1,6 +1,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include "setup.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
@@ -9,7 +10,6 @@
 #include <algorithm>
 #include <time.h>
 #include <random> // Pour std::default_random_engine
-
 #include <time.h>
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
@@ -30,7 +30,7 @@
 #define __POPULATION_NOMINAL_SIZE__     10
 #define __POPULATION_NOMINAL_NB_EXIT__  1
 
-#define __PRINT_DEBUG__                 false
+// #define __PRINT_DEBUG__                 false
 
 // Map
 #define __MAP_EMPTY__                    -1
@@ -51,7 +51,7 @@
 #define __EXPORT_TYPE_VALUE__           1    
 #define __EXPORT_TYPE_ALL__             2 
 
-#define __VIDEO_FPS__                   120
+// #define __VIDEO_FPS__                   120
 #define __VIDEO_CALC_COST_PLOT_ON__     1
 #define __VIDEO_CALC_COST_PLOT_OFF__    0
 #define __VIDEO_RATIO_FRAME__           1
@@ -79,9 +79,9 @@
 #define __COLOR_ALPHA__                 cv::Scalar(0, 0, 0, 0)
 
 // Path
-#define __PATH_MAP__                    "../../input Image/14/map.png"
-#define __PATH_DENSITY__                "../../input Image/14/population.png"
-#define __PATH_EXIT__                   "../../input Image/14/exit.png"
+#define __PATH_MAP__                    "../../input Image/8/map.png"
+#define __PATH_DENSITY__                "../../input Image/8/population.png"
+#define __PATH_EXIT__                   "../../input Image/8/exit.png"
 #define __PATH_DENSITY2__               "../../input Image/8/population2.png"
 #define __PATH_EXIT2__                  "../../input Image/8/exit2.png"
 

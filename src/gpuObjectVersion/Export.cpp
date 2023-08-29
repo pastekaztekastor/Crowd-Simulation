@@ -193,7 +193,7 @@ void Export::compileFramesToVid(Map map) {
     else
     {
         // ouvrir toutes les frames :
-        for (int i = 1; i <= frameCounter; i++) {
+        for (int i = 1; i < frameCounter; i++) {
             cv::Mat frame(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3,__COLOR_GREY__);
 
             char filePath[256];
@@ -210,7 +210,7 @@ void Export::compileFramesToVid(Map map) {
                     float radius = (videoSizeFactor / 2) * 0.9;
                     // TODO faire l'interpolation de couleur quand ils attende
                     int thickness = -1;  // Remplacer par un nombre positif pour un contour solide
-                    cv::circle(frame, center, radius, map.getPopulations()[id].getColorScalar(), thickness);
+                    cv::circle(frame, center, radius, map.getPopulations()[from].getColorScalar(), thickness);
                 }
                 // Fermer le fichier après traitement
                 fclose(file);
@@ -250,7 +250,7 @@ void Export::compileFramesToVid(Map map) {
 
             // Exporte la frame
             videoWriter.write(frame);
-            progressBar(i, frameCounter, 200, frameCounter);
+            progressBar(i, frameCounter-1, 200, i+1);
         }
         videoWriter.release();
     }
