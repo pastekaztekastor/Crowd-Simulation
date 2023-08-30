@@ -61,7 +61,7 @@ Population::Population(std::string filePathDensity, std::string filePathExits) {
             }
         }
     }
-    pcolor = {(uint)rand()%255, (uint)rand()%255, (uint)rand()/255};
+    pcolor = {(uint)rand()%150, (uint)rand()%150, (uint)rand()/150};
 }
 
 // Constructor for the Population class with a specified name

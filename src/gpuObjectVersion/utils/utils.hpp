@@ -62,8 +62,8 @@
 
 #define __SIM_MAX_WAITING__             100
 
-#define __MAX_X_DIM_JPEG__              1920
-#define __MAX_Y_DIM_JPEG__              1080
+#define __MAX_X_DIM_JPEG__              3000
+#define __MAX_Y_DIM_JPEG__              3000
 
 // Print 
 #define __DEBUG_PRINT_NONE__            0 

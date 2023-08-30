@@ -212,7 +212,10 @@ void Export::compileFramesToVid(Map map) {
                     float radius = (videoSizeFactor / 2) * 0.9;
                     // TODO faire l'interpolation de couleur quand ils attende
                     int thickness = -1;  // Remplacer par un nombre positif pour un contour solide
-                    cv::circle(frame, center, radius, map.getPopulations()[from].getColorScalar(), thickness);
+                    cv::Point TL(x * videoSizeFactor, y * videoSizeFactor);
+                    cv::Point BR(TL.x + videoSizeFactor, TL.y + videoSizeFactor);
+                    cv::Rect rectangle(TL, BR);
+                    cv::rectangle(frame, rectangle, map.getPopulations()[from].getColorScalar(), thickness);
                 }
                 // Fermer le fichier après traitement
                 fclose(file);
@@ -234,7 +237,8 @@ void Export::compileFramesToVid(Map map) {
                     cv::Point TL(exit.x * videoSizeFactor, exit.y * videoSizeFactor);
                     cv::Point BR(TL.x + videoSizeFactor, TL.y + videoSizeFactor);
                     cv::Rect rectangle(TL, BR);
-                    cv::rectangle(frame, rectangle, p.getColorScalar(), -1);
+                    cv::Scalar c = cv::Scalar(p.getColorScalar()[0]-30, p.getColorScalar()[1]-30, p.getColorScalar()[2]-30);
+                    cv::rectangle(frame, rectangle, c, -1);
                 }
             }
             // Superposition avec le calque de cout de chaque case

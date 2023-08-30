@@ -101,16 +101,29 @@ int main(int argc, char const *argv[])
         std::string nameVarMatrix = std::string("__MATRIX_POP_") +
                                     std::to_string(i) +
                                     std::string("__");
+        std::string nameVarColor = std::string("__COLOR_POP_") +
+                                   std::to_string(i) +
+                                   std::string("__");
         Population population = *new Population(pathPopulation,pathExit);
         // Création de la matrice pour la population
         std::vector<float> floatVector;
-        std::istringstream iss(configVariables[nameVarMatrix]);
+        std::istringstream iss1(configVariables[nameVarMatrix]);
         std::string token;
-        while (std::getline(iss, token, ',')) {
+        while (std::getline(iss1, token, ',')) {
             float floatValue = std::stof(token);
             floatVector.push_back(floatValue);
         }
         population.setPMovement(floatVector);
+
+        // Création de la couleur pour la population
+        std::vector<int> intVector;
+        std::istringstream iss2(configVariables[nameVarColor]);
+        while (std::getline(iss2, token, ',')) {
+            int intValue = std::stof(token);
+            intVector.push_back(intValue);
+        }
+        population.setColor(intVector[0],intVector[1],intVector[2]);
+
         map.addPopulation(population);
     }
     //calculat Map Cost
