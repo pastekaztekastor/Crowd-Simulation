@@ -61,6 +61,7 @@ Population::Population(std::string filePathDensity, std::string filePathExits) {
             }
         }
     }
+    pcolor = {(uint)rand()%255, (uint)rand()%255, (uint)rand()/255};
 }
 
 // Constructor for the Population class with a specified name
@@ -254,6 +255,7 @@ std::vector<float> Population::getPMovement() const {
 // Sets the probability of displacement for each individual in the population.
 void Population::setPMovement(const std::vector<float> &pMovement) {
     Population::pMovement = pMovement;
+    initDirections();
 }
 
 // Print the list of positions of individuals in the population.
@@ -352,6 +354,7 @@ Population::~Population()
 void Population::initDirections() {
     int sizeMatrice = static_cast<int>(std::sqrt(pMovement.size()));
     int midleMat = (sizeMatrice - 1) / 2;
+    directions.clear();
 
     for (size_t i = 0; i < pMovement.size(); i++) {
         if (pMovement[i] > 0) {

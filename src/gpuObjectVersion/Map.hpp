@@ -135,7 +135,7 @@ public:
      * taking into account possible movements in up, down, left, and right directions.
      * The cost values are computed using flood fill.
      */
-    void initCostMap();
+    int initCostMap();
     /**
      * Get the reference to the vector of populations.
      * Returns a constant reference to the vector of populations 'populations'.

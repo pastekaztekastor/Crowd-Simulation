@@ -1,0 +1,5 @@
+__NAME_VIDEO__ Sample 14
+__PONDERATION_ABSOLUE__ true
+__VIDEO_FPS__ 120
+__NB_FRAMES_MAX__ 1000
+__MATRIX_POP_0__ 1.f,1.f,1.f,1.f,0.f,1.f,1.f,1.f,1.f

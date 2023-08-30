@@ -18,6 +18,7 @@ Export::Export(Map map)
           tmpPath(__PATH_TEMP_FRAME__),
           frameCounter(0),
           videoCalcCostPlot(__VIDEO_CALC_COST_PLOT_OFF__),
+          fps(__VIDEO_FPS__),
           dimensionSimulation(map.getDimensions())
 {
     if (map.getDimensions().x < __MAX_X_DIM_JPEG__ &&
@@ -182,9 +183,10 @@ void Export::creatFrame(Kernel kernel) {
 
 void Export::compileFramesToVid(Map map) {
     std::string fullVideoPath = videoPath + videoFilename;
+
     // créer la vidéo
     cv::Mat frameType(map.getDimensions().y * videoSizeFactor, map.getDimensions().x * videoSizeFactor, CV_8UC3,__COLOR_GREY__);
-    videoWriter.open(fullVideoPath, cv::VideoWriter::fourcc( 'a', 'v', 'c', '1'), __VIDEO_FPS__, frameType.size(), true);
+    videoWriter.open(fullVideoPath, cv::VideoWriter::fourcc( 'a', 'v', 'c', '1'), fps, frameType.size(), true);
 
     // Vérifier si le VideoWriter a été correctement initialisé
     if (!videoWriter.isOpened()) {
@@ -275,4 +277,12 @@ void Export::creatCalcCost(Map map){
             }
         }
     }
+}
+
+int Export::getFps() const {
+    return fps;
+}
+
+void Export::setFps(int fps) {
+    Export::fps = fps;
 }

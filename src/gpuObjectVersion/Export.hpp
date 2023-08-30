@@ -8,6 +8,8 @@
 
 #define __PATH_TEMP_FRAME__     "../../tmp/frames/"
 #define __PATH_VIDEO__          "../../video/"
+#define __VIDEO_FPS__                   120
+
 
 class Export
 {
@@ -20,6 +22,13 @@ private:
     int videoSizeFactor;
     int videoRatioFrame;
     int videoNbFrame;
+    int fps;
+public:
+    int getFps() const;
+
+    void setFps(int fps);
+
+private:
     cv::VideoWriter videoWriter;
     cv::Mat videoCalcCost;
     int videoCalcCostPlot;

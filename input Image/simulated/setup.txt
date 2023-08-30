@@ -1,0 +1,5 @@
+__NAME_VIDEO__ VidéoSimulation
+__PONDERATION_ABSOLUE__ false
+__VIDEO_FPS__ 10
+__NB_FRAMES_MAX__ 1000
+__MATRIX_POP_0__ 0.f,1.f,0.f,1.f,0.f,1.f,0.f,1.f,0.

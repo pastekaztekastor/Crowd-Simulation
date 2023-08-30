@@ -13,6 +13,10 @@
 #include <time.h>
 #include <unistd.h>        // chdir
 #include <sys/stat.h>      // mkdir
+#include <fstream>
+#include <filesystem>
+#include <sstream>
+
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>

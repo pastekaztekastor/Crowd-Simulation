@@ -172,7 +172,8 @@ void Map::initRandomWallPositions(float percentageOccupation)
     Map::initRandomWallPositions(nbWallPositions);
 }
 
-void Map::initCostMap() {
+int Map::initCostMap() {
+    int nbPasses = 0;
     // Création de la carte de cout temporaire.
     std::vector<int> mapCostTmp;
     // pour chaque population
@@ -195,7 +196,6 @@ void Map::initCostMap() {
         }
 
         bool needsUpdate = true;
-        int nbPasses = 0;
 
         while (needsUpdate) {
             needsUpdate = false;
@@ -237,8 +237,9 @@ void Map::initCostMap() {
             mapCostFinal.push_back((uint)cost);
         }
         population.setMapCost(mapCostFinal);
-        std::cout << "NOMBRE DE PASSE CARTE COUT : " << nbPasses << std::endl;
+        if(__PRINT_DEBUG__) std::cout << "NOMBRE DE PASSE CARTE COUT : " << nbPasses << std::endl;
     }
+    return nbPasses;
 }
 /*
 
