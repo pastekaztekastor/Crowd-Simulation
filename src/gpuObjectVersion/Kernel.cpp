@@ -202,17 +202,6 @@ int Kernel::computeNextFrame2() { // TODO expliquer la sortie qui est le nb pers
                 allNextPositions.push_back({nextPossiblePosition.first, nextPossiblePosition.second});
             }
         }
-        /*
-         *
-        int min = INT_MAX;
-        for (auto &nextPosition : allNextPositions) {
-            coordNextMapPxy = {coordAccMapPxy.x + nextPosition.x, coordAccMapPxy.y + nextPosition.y};
-            coordNextDepPxy = {coordAccDepPxy.x + nextPosition.x, coordAccDepPxy.y + nextPosition.y};
-            coordNextMapPi = coordNextMapPxy.x + coordNextMapPxy.y * dimentionMap.x;
-            coordNextDepPi = coordNextDepPxy.x + coordNextDepPxy.y * dimensionDep;
-            min = std::min(min, (int)this->costMaps_s[this->population[i].from][coordNextMapPi]);
-        }
-         */
 
         // Step -2: Calculate movement probabilities for available positions
         std::vector<std::pair<int2, float>> weightCumulCroissant;
@@ -225,33 +214,29 @@ int Kernel::computeNextFrame2() { // TODO expliquer la sortie qui est le nb pers
             coordNextDepPi = coordNextDepPxy.x + coordNextDepPxy.y * dimensionDep;
 
             float weight = this->costMaps_s[this->population[i].from][coordNextMapPi];
-            /**if (weight > min){
-                continue;
-            }*/
             float costWeight = weight * this->pMovements_s[this->population[i].from][coordNextDepPi];
             sumWeight += costWeight;
             weightCumulCroissant.push_back({coordNextMapPxy, sumWeight});
         }
 
         // Step -3: Select the next position based on cumulative weights
-        uint2 nextPos = {0, 0};
         float r = ((float)rand()/RAND_MAX) * sumWeight;
 
         for (auto &weightByPossibleIndex : weightCumulCroissant) {
-            // if (r <= weightByPossibleIndex.second) {
-            population[i].position.x = weightByPossibleIndex.first.x;
-            population[i].position.y = weightByPossibleIndex.first.y;
-            // Update if the individual has reached the exit
-            isEmptyMapPopulation[coordAccMapPi] = true;
-            if (costMaps_s[population[i].from][population[i].position.x + population[i].position.y * dimentionMap.x] == 0) {
-                population[i].position.x = -1;
-                population[i].position.y = -1;
-                out--;
-            } else {
-                isEmptyMapPopulation[population[i].position.x + population[i].position.y * dimentionMap.x] = false;
+            if (r <= weightByPossibleIndex.second) {
+                population[i].position.x = weightByPossibleIndex.first.x;
+                population[i].position.y = weightByPossibleIndex.first.y;
+                // Update if the individual has reached the exit
+                isEmptyMapPopulation[coordAccMapPi] = true;
+                if (costMaps_s[population[i].from][population[i].position.x + population[i].position.y * dimentionMap.x] == 0) {
+                    population[i].position.x = -1;
+                    population[i].position.y = -1;
+                    out--;
+                } else {
+                    isEmptyMapPopulation[population[i].position.x + population[i].position.y * dimentionMap.x] = false;
+                }
+                break;
             }
-            break;
-            //}
         }
 
         // TODO: Count the number of frames the individual has waited

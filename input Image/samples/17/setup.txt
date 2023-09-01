@@ -1,0 +1,12 @@
+__NAME_VIDEO__ Samples 17
+__PONDERATION_ABSOLUE__ false
+__VIDEO_FPS__ 60
+__NB_FRAMES_MAX__ 5000
+__MATRIX_POP_0__ 0.f,1.f,0.f,1.f,0.f,1.f,0.f,1.f,0.
+__MATRIX_POP_1__ 0.f,1.f,0.f,1.f,0.f,1.f,0.f,1.f,0.
+__MATRIX_POP_2__ 0.f,1.f,0.f,1.f,0.f,1.f,0.f,1.f,0.
+__MATRIX_POP_3__ 0.f,1.f,0.f,1.f,0.f,1.f,0.f,1.f,0.
+__COLOR_POP_0__ 255,0,0
+__COLOR_POP_1__ 0,255,0
+__COLOR_POP_2__ 0,0,255
+__COLOR_POP_3__ 255,255,0

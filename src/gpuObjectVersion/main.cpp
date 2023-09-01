@@ -195,6 +195,7 @@ int main(int argc, char const *argv[])
     double expt_time = (double)(end - start) / CLOCKS_PER_SEC;
     std::cout << "Vidéo enregistré dans : " << extp.getVideoPath() << extp.getVideoFilename() << std::endl;
 
+    int tmpTotal = expt_time + simul_time + init_time;
     std::cout << "RÉSUMÉ " << std::endl
               << " - calculé en " << frame << " frames " << std::endl;
     if(init_time > 60) {
@@ -216,10 +217,8 @@ int main(int argc, char const *argv[])
         std::cout << " - temps pour l'export vidéo   " << expt_time << " sec " << std::endl;
     }
 
-    int tmpTotal = expt_time + simul_time + init_time;
     if(tmpTotal > 60) {
-        tmpTotal /= 60;
-        std::cout << " - temps total                 " << tmpTotal << " min " << std::endl;
+        std::cout << " - temps total                 " << (float)(tmpTotal /= 60) << " min " << std::endl;
     } else {
         std::cout << " - temps total                 " << tmpTotal << " sec " << std::endl;
     }

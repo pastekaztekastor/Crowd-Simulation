@@ -79,7 +79,7 @@
 #define __COLOR_GREEN__                 cv::Scalar(0, 255, 0)
 #define __COLOR_RED__                   cv::Scalar(0, 0, 255)
 #define __COLOR_BLACK__                 cv::Scalar(0, 0, 0)
-#define __COLOR_GREY__                  cv::Scalar(125, 125, 125)
+#define __COLOR_GREY__                  cv::Scalar(50, 50, 50)
 #define __COLOR_ALPHA__                 cv::Scalar(0, 0, 0, 0)
 
 // Path
